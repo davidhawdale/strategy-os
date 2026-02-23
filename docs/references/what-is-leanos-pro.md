@@ -1,253 +1,121 @@
 # What is LeanOS Pro?
 
-**A swiss knife for building and operating a business.**
+AI-native operating system for building and running a business. One person operates with 5–10× effectiveness.
 
-LeanOS absorbs the knowledge required to build and run a business — strategy, product, engineering, sales, marketing, customer success, operations — and makes it available through specialized agents and skills.
-
-**Result:** One person operates with 5-10x effectiveness.
-
----
-
-## Four Architectural Principles
-
-| Principle | What It Means |
-|-----------|---------------|
-| **Single location** | Everything in one place. No scattered docs, no context switching. |
-| **Strategy in Canvas** | 16 living documents that drive all decisions. The context is all there. |
-| **State in Artifacts** | Deliverables and outputs stored by domain. Source of truth. |
-| **Operations in Threads** | Work executes through causal reasoning. Every action is traceable. |
-
----
-
-## The Five Functions
-
-```
-STRATEGIZE → CREATE → GROW → RETAIN → OPERATE
-                 ↑__________|__________|
-                       INTELLIGENCE
-```
-
-Every business runs on five core functions. LeanOS has agents and skills for each.
-
-### STRATEGIZE
-
-*Figure out what to build and why.*
-
-- **Market understanding:** TAM/SAM/SOM, competitive landscape, customer segments, problem validation
-- **Business model:** Value proposition, pricing strategy, unit economics, growth architecture
-- **Execution planning:** Goal setting, experiment design, channel discovery, compliance, fundraising
-
-### CREATE
-
-*Build products, design systems, and content.*
-
-- **Code generation:** Natural language → Production Python/FastAPI (4-stage IR pipeline), React + Tailwind, Shopify
-- **Design systems:** Intent extraction → Foundations → Tokens → Policies → Component contracts (base, app, marketing, AI) → Figma specs
-- **Product design:** Strategy → User stories → Flows → Specs → Engineering handoff, DHM prioritization
-- **Content production:** Blog posts, emails, landing pages, pitch decks, case studies, battle cards
-
-### GROW
-
-*Acquire customers.*
-
-- **Outbound:** Account research, decision-maker discovery, personalized sequences, qualification
-- **Inbound:** Lead scoring, personalized response, nurture sequences, content attribution
-- **Campaigns:** Planning, channel prioritization, budget allocation, content strategy
-- **Partnerships:** Discovery, qualification, enablement, co-sell coordination
-
-### RETAIN
-
-*Keep customers and grow revenue.*
-
-- **Customer success:** Health scores, adoption tracking, milestone monitoring, QBR preparation
-- **Retention:** Churn prediction, save playbooks, executive escalation, competitive defense
-- **Expansion:** Opportunity identification, renewal management, proposal generation, upsell execution
-
-### OPERATE
-
-*Make it all run smoothly.*
-
-- **Signal processing:** Collect, deduplicate, enrich, route to execution engines
-- **Scoring models:** PQL, fit, risk, health — with continuous calibration
-- **Resource allocation:** Goal-to-engine mapping, priority ranking, capacity planning
-- **Performance:** Engine metrics, benchmark comparison, pattern detection, hypothesis validation
-
-### INTELLIGENCE
-
-*Powers all five functions.*
-
-- **Reasoning:** Causal, abductive, inductive, analogical, dialectical, counterfactual
-- **Structuring:** Alignment, constraint, decision, diagnostic, evaluative, planning, prescriptive, risk, validation
-- **Domain expertise:** Security, cryptography, behavioral science, category theory
-- **Knowledge synthesis:** Process expert sources → structured insights → actionable playbooks
+15 specialized agents governed by an AI orchestrator. 172 skills covering every business function. All transparent, all modifiable, all yours for $499 once.
 
 ---
 
 ## How It Works
 
-### Execution Model
-
 ```
-You (decisions)
-    ↓
-Agents (orchestration)
-    ↓
-Skills (execution)
-```
-
-| Layer | What It Does | Count |
-|-------|--------------|-------|
-| **Agents** | Orchestrate multi-step workflows, route to skills, maintain context | 41 |
-| **Skills** | Execute atomic tasks with domain expertise | 186 |
-| **You** | Approve high-impact decisions, set direction | — |
-
-**Example:**
-```
-You: "Get me 10 qualified leads in financial services"
-    ↓
-sls-outbound-manager agent activates
-    ↓
-sls-researching-prospects skill → finds companies
-sls-finding-contacts skill → identifies decision-makers
-sls-personalizing-outreach skill → drafts sequences
-sls-qualifying-prospects skill → scores and filters
-    ↓
-You: Review 10 qualified leads
+You (direction + approvals at gates)
+       ↑ escalations
+Orchestrator (governance) → reads state, reasons, writes work orders
+       ↓ Task delegation
+Functions (execution) — 15 specialized agents
+       ↓
+State Layer — state/, information/, execution/
 ```
 
-### Information Architecture
+The orchestrator is not a router. On each cycle it observes all state files, reasons about the highest-priority gap, writes a work order, delegates to the right agent, and evaluates what changed. You respond when it escalates — strategy pivots, brand voice direction, design approvals, channel setup. Everything else executes autonomously.
+
+Canvas targets → Goals → Gaps → Work orders → Execution → Gap closes
+
+---
+
+## 15 Agents
+
+| Agent | Model | Function |
+|-------|-------|----------|
+| orchestrator | opus | Governance — reads state, reasons, writes work orders |
+| observer | haiku | State refresh, gap computation, health scoring |
+| planner | sonnet | Goal lifecycle — define, track, resolve |
+| strategist | sonnet | 16-section canvas through 4 gated phases |
+| narrator | opus | Full foundation pipeline — ICP, brand, design system, channels |
+| builder | sonnet | Spec pipeline + codegen + frontend |
+| modeler | sonnet | Feature specs, wireframes, prioritization |
+| tester | sonnet | Test design, execution, bug diagnosis |
+| deployer | sonnet | Deployment, monitoring, incident response |
+| reacher | sonnet | Content, visuals, campaigns |
+| converter | sonnet | Acquisition pipeline to close |
+| nurturer | sonnet | Post-close customer lifecycle |
+| researcher | sonnet | Market research, competitive analysis, source extraction |
+| reviewer | sonnet | Independent quality validation |
+| pruner | sonnet | Deprecation, archival, dead weight removal |
+
+---
+
+## 172 Skills
+
+Skills are domain procedures loaded on demand. Each skill is a self-contained methodology — procedure, quality checks, output format. Agents read skills from disk when their workflow step needs them. Skills not needed for the current task consume no context.
+
+| Domain | Skills | Agents |
+|--------|--------|--------|
+| Strategy | 14 | strategist |
+| Acquisition | 17 | converter |
+| Customer success | 14 | nurturer |
+| Awareness / content | 8 | reacher |
+| Narrative & design foundations | 6 + 16 | narrator |
+| Engineering (backend + frontend) | 36 | builder |
+| Product modeling | 6 | modeler |
+| Quality & critique | 11 | reviewer |
+| Research | 3 | researcher |
+| Observer / state | 5 | observer |
+| Behavioral science | 6 | reacher, converter, modeler |
+| System governance | 12 | orchestrator |
+| Testing & QA | 5 | tester |
+| Deployment | 3 | deployer |
+
+---
+
+## Directory Structure
 
 ```
-strategy/
-├── canvas/     ← Living strategy (16 sections)
-└── goals/      ← What you're trying to achieve
-
-threads/        ← Operational execution (causal reasoning)
-
-artifacts/      ← Deliverables and outputs
+{your-project}/
+├── strategy/
+│   ├── canvas/          # 16-section business canvas
+│   ├── foundations/     # ICP, brand voice, design system, channels
+│   ├── goals/           # Goal definitions (active/ + archive/)
+│   └── policies/        # Operational policies
+├── state/
+│   ├── product/         # Build status, feature state
+│   ├── market/          # Content, channels, audience
+│   ├── revenue/         # Pipeline, customers, metrics
+│   ├── operations/      # Deployments, incidents
+│   └── assets/          # Skill registry, capability map
+├── information/
+│   ├── gaps/            # Gap files per domain
+│   ├── pressures/       # Pressure signals
+│   └── health/          # System health scores
+├── execution/
+│   ├── active/          # Active work orders + output
+│   ├── completed/       # Archived threads
+│   └── queue/           # Escalations and pending signals
+├── knowledge/           # Domain knowledge — frameworks, playbooks, research
+└── .claude/
+    ├── agents/          # 15 agent definitions
+    └── skills/          # 172 domain skills
 ```
 
-Information exists in ONE location only. Threads reference Canvas. Goals derive from Canvas. Artifacts link to Threads.
+---
 
-### Autonomy Model
+## Business Modes
 
-```
-Impact = Reversibility × Scope × Cost
-
-Impact < 0.8  → Auto-execute
-Impact ≥ 0.8  → Request approval
-```
-
-| Impact | Behavior | Examples |
-|--------|----------|----------|
-| < 0.8 | Auto-execute | Research account, draft email, update health score |
-| ≥ 0.8 | Request approval | Send outreach, publish content, change pricing |
-
-| Mode | Behavior |
-|------|----------|
-| `auto` | Execute all actions, notify on completion |
-| `ask` | Request approval for any action |
-| `hybrid` | Auto-execute low-impact, ask for high-impact |
-
-### Decision Framework
-
-Every decision follows the 6-stage causal flow:
-
-```
-1. INPUT        What's the context? What triggered this?
-      ↓
-2. HYPOTHESIS   What do we believe is true?
-      ↓
-3. IMPLICATION  If true, what changes? What should we do?
-      ↓
-4. DECISION     What are we actually doing? Why?
-      ↓
-5. ACTIONS      Specific steps with ownership
-      ↓
-6. LEARNING     What happened? What did we learn? → Updates Canvas
-```
-
-This flow is enforced for all threads. No action without reasoning. No reasoning without learning.
-
-### Operating Modes
+Set in `strategy/canvas/00.mode.md`. Affects prioritization, impact scoring, and resource allocation.
 
 | Mode | Optimizes For |
 |------|---------------|
 | **BOOTSTRAP** | Profitability, cash flow, fast decisions |
 | **VENTURE** | Growth rate, market size, defensibility |
 
-Mode is set in `strategy/canvas/00.mode.md` and affects impact calculations, prioritization, resource allocation, and experiment design.
-
----
-
-## System Scope
-
-| Component | Count |
-|-----------|-------|
-| Agents | 41 |
-| Skills | 186 |
-| Canvas Sections | 16 |
-| Reasoning Modes | 6 |
-| Structuring Modes | 11 |
-
-**Verticals covered:**
-- Engineering (backend IR pipeline, frontend, testing, design systems)
-- Product (core, PLG activation, conversion, experiments, growth)
-- Sales (outbound, partnerships, enablement, strategy)
-- Marketing (inbound, content, campaigns, strategy)
-- Customer (success, expansion, retention, advocacy)
-- RevOps (signals, scoring, allocation, evaluation)
-- Foundations (setup, research, model, launch, canvas audit/validation)
-- Intelligence (security, behavioral science, knowledge synthesis)
-
----
-
-## Cost Comparison
-
-| Item | Traditional | LeanOS |
-|------|-------------|--------|
-| SaaS stack | $5-20k/month | $0 |
-| AI costs | Varies | ~$200/month |
-| Specialists | $200k+/year | $0 |
-| **Total** | **$300k+/year** | **~$2,400/year** |
-
----
-
-## Success Metrics
-
-**Operational efficiency:**
-- Auto-execution rate: >95%
-- Human involvement: High-impact decisions only
-
-**Information quality:**
-- Zero duplication (single source of truth)
-- 100% decision traceability
-- All context in one place
-
-**Business effectiveness:**
-- 1-person team operates with 5-10x effectiveness
-
----
-
-## Best Fit
-
-- Solo founders who want to operate a complete business
-- Small teams (1-3) with clear roles
-- Bootstrapped or venture-backed startups
-- Comfort with CLI/git and markdown as your operating system
-
 ---
 
 ## Getting Started
 
-1. Copy LeanOS Pro base to `{project-name}/`
-2. Populate Canvas in `strategy/canvas/`
-3. Create first goal using `sys-defining-goals`
-4. Let LeanOS execute
+1. Copy the project template: `cp docs/reference/what-is-PROJECT.template.md docs/reference/what-is-{your-project}.md`
+2. Fill in every section — the orchestrator reads this for context
+3. Run `claude --agent orchestrator`
+4. The orchestrator bootstraps canvas → foundations → goals and then enters its governance loop
 
----
-
-## References
-
-- [Capabilities Detail](./leanos-capabilities.md) — Agent and skill breakdowns
-- [Agents & Skills Index](./agents-skills-index.md) — Complete catalog
+**[Get LeanOS Pro](https://bellabe.github.io/leanos)**

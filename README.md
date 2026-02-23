@@ -139,20 +139,20 @@ Core validates your idea. [Pro](https://bellabe.github.io/leanos) builds and run
 
 | Capability | Core | Pro |
 |-----------|------|-----|
-| Agents | 3 | 39 |
-| Skills | 15 | 191 |
+| Agents | 3 | 15 |
+| Skills | 15 | 172 |
 | Goal system | Full | Full |
 | Reasoning | Full (6 modes) | Full + domain intelligence |
 | Market research | Full | Full |
+| Orchestrator-governed execution | -- | Full (reads state, writes work orders, delegates) |
 | Business modeling | -- | Pricing, unit economics, cost structure |
 | GTM planning | -- | Channels, assumptions, launch plan |
 | Engineering | -- | Backend IR pipeline, frontend, Shopify |
-| Design systems | -- | Intent to web/infographic specs (16 skills) |
+| Design systems | -- | Intent to web/infographic specs |
 | Sales | -- | Outbound, partnerships, enablement |
-| Marketing | -- | Inbound, content, campaigns |
+| Marketing | -- | Content, campaigns, brand foundations |
 | Customer success | -- | Onboarding, retention, expansion |
-| RevOps | -- | Signals, scoring, allocation |
-| Product | -- | Features, PLG, growth mechanics |
+| Product | -- | Features, wireframes, prioritization |
 | Critique | -- | Quality validation across artifacts |
 | Behavioral science | -- | Choice architecture, nudges |
 
