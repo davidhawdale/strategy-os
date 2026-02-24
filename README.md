@@ -1,8 +1,6 @@
 # LeanOS Core
 
-**MIT License**
-
-The validation layer of LeanOS. Helps founders decide whether to build — before they've committed resources to building.
+The validation layer of LeanOS Pro. Helps founders decide whether to build - before they've committed resources to building.
 
 ---
 
@@ -186,7 +184,9 @@ This package is the input to Pro. Pro's orchestrator reads `strategy/values.md` 
 
 ```bash
 # Clone Core
-git clone https://github.com/leanos/core
+git clone https://github.com/lean-os my-project-name
+rm -rf .git
+git init
 
 # Run the canvas builder
 claude --agent strategist
