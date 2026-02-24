@@ -1,12 +1,58 @@
 ---
 name: rsn-learning-outcomes
 description: Extracts insights and improves performance from experience. Applies single-loop (fix action), double-loop (fix frame), reflection (extract insight), experimentation (test belief), and calibration (adjust confidence) modes. Use when correcting mistakes, learning from outcomes, testing hypotheses, or improving predictions. Triggers on "why did this fail", "what can we learn", "test this", "how accurate are we", "pattern of failures".
-license: Complete terms in LICENSE.txt
+serves: sys
+affects: all
+domain: reasoning
 ---
 
 # Learning
 
+
+## Reads
+
+| Source | Purpose |
+|--------|---------|
+| User brief/conversation | Problem context, constraints, goals |
+| Information sources | Domain knowledge, prior solutions (optional) |
+
+## Writes
+
+| Output | Content |
+|--------|---------|
+| Inline recommendations | Ideas, solutions, insights, learning frameworks |
+
 Systematic improvement from experience. Convert outcomes into better future performance.
+
+## Process
+
+1. **[K] Detect learning trigger** — Gap detected, experience completed, belief needs testing, or predictions off
+2. **[K] Select learning mode** — Choose single-loop, double-loop, reflection, experimentation, or calibration
+3. **[S] Execute mode process** — Follow mode-specific workflow systematically
+4. **[K] Extract insights** — Identify transferable patterns and updated beliefs
+5. **[R] Validate learning** — Confirm insights are actionable and conditions-bounded
+
+**Evaluation methods for [R] steps:**
+- **Pattern validation** — Require 3+ instances before generalizing (single/double-loop)
+- **Insight transferability** — Verify conditions when insight applies (reflection)
+- **Experimental rigor** — Check falsifiability and success criteria (experimentation)
+- **Calibration accuracy** — Require 30+ predictions for meaningful adjustment (calibration)
+
+## Boundaries
+
+**In scope:**
+- Correcting actions (single-loop)
+- Questioning frames (double-loop)
+- Extracting insights from experience (reflection)
+- Testing beliefs through experiments
+- Adjusting prediction confidence (calibration)
+- Creating learning artifacts (heuristics, playbooks, checklists)
+
+**Out of scope:**
+- Executing corrected actions (use rsn-reasoning-problems.causal)
+- Gathering information to inform learning (use rsn-perceiving-information)
+- Creative problem-solving for new situations (use rsn-creating-ideas)
+- Deep reasoning with new frames (use rsn-reasoning-problems)
 
 ## Core Principle
 
