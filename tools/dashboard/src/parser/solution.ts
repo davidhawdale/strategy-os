@@ -1,5 +1,6 @@
 import type {
   SolutionDesign,
+  Positioning,
   SolutionPhase,
   GrowthLoop,
   HypothesisConstraint,
@@ -18,6 +19,9 @@ export function parseSolutionDesign(section: Section): { solution: SolutionDesig
   const growthArchitecture = extractField(text, 'Growth Architecture');
   const architectureRationale = extractField(text, 'Architecture Rationale');
   const lastUpdated = extractField(text, 'Last Updated');
+
+  // Positioning
+  const positioning = parsePositioning(text);
 
   // Phases
   const phases = parsePhases(text);
@@ -55,6 +59,7 @@ export function parseSolutionDesign(section: Section): { solution: SolutionDesig
     solution: {
       growthArchitecture,
       architectureRationale,
+      positioning,
       phases,
       featureMap,
       mvpScope,
@@ -65,6 +70,29 @@ export function parseSolutionDesign(section: Section): { solution: SolutionDesig
     },
     warnings,
   };
+}
+
+function parsePositioning(text: string): Positioning | undefined {
+  const block = text.match(/\*\*Positioning:\*\*\s*\n([\s\S]*?)(?=\*\*Feature Map|\*\*Phase|---|\n##)/i);
+  if (!block) return undefined;
+
+  const content = block[1];
+
+  // Extract positioning statement
+  const statementMatch = content.match(/Positioning statement:\s*(.+(?:\n(?!\s*-).+)*)/i);
+  const statement = statementMatch ? statementMatch[1].trim() : undefined;
+
+  // Extract category framing
+  const categoryMatch = content.match(/-\s*Category framing:\s*(.+)/i);
+  const category = categoryMatch ? categoryMatch[1].trim() : undefined;
+
+  // Extract category rationale
+  const rationaleMatch = content.match(/-\s*Category rationale:\s*(.+)/i);
+  const categoryRationale = rationaleMatch ? rationaleMatch[1].trim() : undefined;
+
+  if (!statement && !category) return undefined;
+
+  return { statement, category, categoryRationale };
 }
 
 function parsePhases(text: string): SolutionPhase[] {
@@ -118,8 +146,7 @@ function parseMVPScope(text: string): MVPScope | undefined {
       continue;
     }
     if (/^-\s*Aha moment:/i.test(trimmed)) {
-      const ahaMoment = trimmed.replace(/^-\s*Aha moment:\s*/i, '');
-      // We'll capture it below
+      // Captured separately below via regex
       continue;
     }
     if (/^-\s*Time-to-value/i.test(trimmed)) {
@@ -152,8 +179,6 @@ function parseGrowthLoops(text: string): GrowthLoop[] {
   const block = text.match(/\*\*Growth Loops:\*\*\s*\n([\s\S]*?)(?=\*\*Constraints|---|\n##)/i);
   if (!block) return loops;
 
-  // Each loop starts with a numbered line
-  const loopPattern = /\d+\.\s*\*\*(.+?)\*\*:?\s*(.+?)(?:Requirements:\s*(.+?))?(?:\[([T][123](?:-[T]?[123])?)\])?$/gm;
   const lines = block[1].split('\n');
 
   let currentLoop: Partial<GrowthLoop> | null = null;

@@ -4,7 +4,7 @@ description: Calculates unit economics (LTV, CAC, payback, margins) with range-b
 serves: strategist
 domain: unit-economics
 affects: unit-economics-hypothesis
-depends-on: none
+depends-on: stg-designing-channels (channel mix, per-channel CAC, investment split)
 produces: unit economics hypothesis in register format
 ---
 
@@ -25,10 +25,12 @@ Assemble input table:
 | ARPU | Pricing tiers | T2 (hypothesis) | {range} |
 | Gross margin | Category benchmark, adjusted for COGS | T2 | {range} |
 | Churn rate | Benchmark for category + ACV range | T2 (no customer data) | {range} |
-| S&M spend | Cost structure estimate | T2 | {range} |
+| S&M spend | Channel strategy (stg-designing-channels) or cost structure estimate | T2 | {range} |
 | Growth model | Solution design | T1 (a choice, not a prediction) | {model} |
 
 Produce: input table with tier labels and source citations.
+
+If channel strategy outputs are available (from stg-designing-channels), use per-channel CAC estimates and investment splits as the primary source for S&M spend and blended CAC inputs. This provides more rigorous CAC decomposition than freestanding S&M estimation.
 
 **Gate:** `inputs_gathered: bool` -- all 5 inputs have values, tier labels, and sources.
 - Pass: Step 2.

@@ -14,7 +14,6 @@ import { parseDestructionLog } from './destruction';
 const HYPOTHESIS_SECTIONS: { sectionId: SectionId; hypothesisId: HypothesisId }[] = [
   { sectionId: 'problem', hypothesisId: 'problem' },
   { sectionId: 'segment', hypothesisId: 'segment' },
-  { sectionId: 'valueProposition', hypothesisId: 'valueProposition' },
   { sectionId: 'unitEconomics', hypothesisId: 'unitEconomics' },
 ];
 
@@ -52,7 +51,6 @@ export function parse(markdown: string): ParseResult {
   const hypotheses: Record<HypothesisId, Hypothesis> = {
     problem: emptyHypothesis('problem'),
     segment: emptyHypothesis('segment'),
-    valueProposition: emptyHypothesis('valueProposition'),
     unitEconomics: emptyHypothesis('unitEconomics'),
   };
 
@@ -149,7 +147,6 @@ function emptyRegister(): HypothesisRegister {
     hypotheses: {
       problem: emptyHypothesis('problem'),
       segment: emptyHypothesis('segment'),
-      valueProposition: emptyHypothesis('valueProposition'),
       unitEconomics: emptyHypothesis('unitEconomics'),
     },
   };

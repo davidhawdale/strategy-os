@@ -30,6 +30,7 @@ skills:
   - stg-scoring-problems
   - stg-analyzing-competition
   - stg-designing-pricing
+  - stg-designing-channels
   - stg-calculating-economics
   - stg-designing-solutions
   - stg-extracting-insights
@@ -107,10 +108,9 @@ Autonomous end-to-end strategy construction from governor input.
    For each hypothesis, apply the compression procedure:
    a. **Problem hypothesis:** Enumerate candidate problems, score frequency/severity/breadth/alternatives' inadequacy, eliminate on 2+ failures. Record what was eliminated and why.
    b. **Segment hypothesis:** Enumerate candidate segments by observable characteristics, score segment fit from public signals, eliminate weak segments. Record elimination rationale.
-   c. **Value proposition hypothesis:** For each surviving problem-segment pair, enumerate possible VP framings. Apply JTBD three-dimension test (functional, emotional, social). Eliminate VPs that address only the functional job. Test against VP testability structure: For [target] who [problem], [product] is [category] that [differentiator]. Unlike [alternative], it [unique capability]. Each clause is a testable sub-hypothesis. Record which clauses have T1/T2 evidence and which are T3.
-   d. **Unit economics hypothesis:** Develop pricing inputs (value anchor, competitive pricing, tier architecture), then calculate LTV/CAC/payback as ranges. Apply mode-specific thresholds. Label every number with its tier and source.
-   e. **Solution design:** Select growth architecture, map features to problems, define MVP scope and aha moment, design growth loops.
-   - **Gate:** All four hypotheses written with: claim, evidence (tier-labeled), assumptions, kill condition, possibility space with >= 2 candidates considered. Solution design section written with growth architecture, feature map, MVP scope. If a hypothesis cannot be constructed, mark as UNVALIDATED with explicit gap statement. Do not fabricate.
+   c. **Unit economics hypothesis:** Develop pricing inputs (stg-designing-pricing), design channel strategy with per-channel CAC and investment mix (stg-designing-channels), then calculate LTV/CAC/payback as ranges with integrated cost structure (stg-calculating-economics). Label every number with its tier and source.
+   d. **Solution design:** Select growth architecture, assemble positioning from hypothesis outputs and competitive analysis, map features to problems, define MVP scope and aha moment, design growth loops. Positioning is a derived composition -- every clause traces to a hypothesis claim or research output.
+   - **Gate:** All three hypotheses written with: claim, evidence (tier-labeled), assumptions, kill condition, possibility space with >= 2 candidates considered. Solution design section written with growth architecture, positioning, feature map, MVP scope. If a hypothesis cannot be constructed, mark as UNVALIDATED with explicit gap statement. Do not fabricate.
 
 5. **Destruction phase (adversarial self-challenge).** Run the Self-Challenge Protocol below on all constructed hypotheses.
    - **Gate:** Destruction log written with: pre-mortem, red-team response, constraint inversions for all load-bearing assumptions, evidence concentration risk check.
@@ -134,7 +134,7 @@ Re-evaluate existing register.
 **Procedure:**
 
 1. Read `strategy/hypotheses.md`. If it does not exist, tell governor to run BUILD first.
-2. For each of the four hypotheses:
+2. For each of the three hypotheses:
    a. Read claim, evidence, assumptions, research sources, elimination rationale.
    b. **Fresh research.** WebSearch for new data since last review — new competitors, market shifts, regulatory changes, public signals about the segment. Re-run market sizing and competitive mapping if data is stale.
    c. Test evidence quality: behavioral or hypothetical? Cited or asserted? Quantified or vague? Tier-labeled correctly?
@@ -153,10 +153,10 @@ Full register review with Sell & Grow readiness check.
 **Procedure:**
 
 1. Read `strategy/hypotheses.md`.
-2. Run full CHALLENGE pass on all four hypotheses.
-3. Check Sell & Grow readiness: all four hypotheses must be SUPPORTED (not RESEARCHED). Solution design must be adequate for Revenue Architecture consumption.
-4. **Cross-hypothesis consistency check.** Are segment characteristics consistent between problem and VP? Are unit economics consistent with growth architecture? Are assumptions from one hypothesis contradicted by evidence in another?
-5. **"Too clean" signal check.** If all four hypotheses align without tension, flag: "A register without tension has not been honest about its uncertainties. Real strategies have tensions -- broad market but hard-to-reach segment, acute problem but uncertain WTP, strong VP but thin moat."
+2. Run full CHALLENGE pass on all three hypotheses.
+3. Check Sell & Grow readiness: all three hypotheses must be SUPPORTED (not RESEARCHED). Solution design (including positioning) must be adequate for Revenue Architecture consumption.
+4. **Cross-hypothesis consistency check.** Are segment characteristics consistent with the problem? Are unit economics consistent with growth architecture? Is the positioning statement still consistent with current hypothesis claims? Are assumptions from one hypothesis contradicted by evidence in another?
+5. **"Too clean" signal check.** If all three hypotheses align without tension, flag: "A register without tension has not been honest about its uncertainties. Real strategies have tensions -- broad market but hard-to-reach segment, acute problem but uncertain WTP, strong positioning but thin moat."
 6. Report readiness status with specific gaps if not ready.
 
 ---
@@ -263,11 +263,11 @@ List every assumption embedded in each hypothesis. For each:
 
 "It is 12 months from now. This strategy failed. Write the post-mortem."
 
-Reverse the cognitive direction -- attack instead of defend. Apply to: VP, growth model, channel strategy, unit economics. Be specific about what killed it.
+Reverse the cognitive direction -- attack instead of defend. Apply to: positioning, growth model, channel strategy, unit economics. Be specific about what killed it.
 
 ### 3. Red-Team
 
-"You are the incumbent. A startup launched with this VP targeting your customers. What do you do in 90 days?"
+"You are the incumbent. A startup launched with this positioning targeting your customers. What do you do in 90 days?"
 
 Produce specific competitive responses. If the red-team response does not change anything in the strategy, either the strategy is robust or the red team was not trying hard enough -- run it again with more aggression.
 
@@ -278,7 +278,7 @@ Take each load-bearing assumption and invert it:
 - "What if the segment is 40% smaller?"
 - "What if time-to-value is 5x longer?"
 
-Trace consequences through all four hypotheses. Record in the Destruction Log.
+Trace consequences through all three hypotheses and the solution design. Record in the Destruction Log.
 
 ---
 
@@ -346,7 +346,7 @@ Enforce throughout: "Frameworks organize evidence -- they are not substitutes fo
 
 The hypothesis register (`strategy/hypotheses.md`) contains:
 
-**Four hypotheses:** Problem, Segment, Value Proposition, Unit Economics. Each with:
+**Three hypotheses:** Problem, Segment, Unit Economics. Each with:
 - Claim (one paragraph)
 - Confidence state (unvalidated / researched / supported / broken)
 - Possibility space (candidates considered, eliminated, alternatives carried)
@@ -358,10 +358,11 @@ The hypothesis register (`strategy/hypotheses.md`) contains:
 
 **One derived design artifact:** Solution Design (not a hypothesis). Contains:
 - Growth architecture + rationale
+- Positioning (assembled from hypothesis claims and competitive analysis -- not independently falsifiable)
 - Feature map (feature, problem, job dimension, priority, tier)
 - MVP scope (included, aha moment, time-to-value, excluded with rationale)
 - Growth loops (mechanism, requirements, tier)
-- Constraints from all four hypotheses
+- Constraints from all three hypotheses
 - Adequacy criteria
 
 **Destruction log:** Pre-mortem, red-team response, constraint inversions, evidence concentration risk.
@@ -378,7 +379,7 @@ The hypothesis register (`strategy/hypotheses.md`) contains:
 
 ## Sell & Grow Interface
 
-The Sell & Grow chain reads `strategy/hypotheses.md` directly. It proceeds when all four hypotheses are SUPPORTED (not RESEARCHED).
+The Sell & Grow chain reads `strategy/hypotheses.md` directly. It proceeds when all three hypotheses are SUPPORTED (not RESEARCHED).
 
 RESEARCHED status tells Sell & Grow: "System did research, but no customer validation yet. Can prepare positioning hypotheses from this data but cannot commit."
 
@@ -386,7 +387,7 @@ RESEARCHED status tells Sell & Grow: "System did research, but no customer valid
 |------------|------------------|
 | Validated problem | Problem hypothesis (claim + evidence + research sources) |
 | Target segment | Segment hypothesis (claim + evidence + possibility space) |
-| Value proposition | VP hypothesis (claim + jobs + clause validation table) |
+| Value proposition / positioning | Solution Design (positioning subsection -- assembled from hypothesis claims + competitive analysis) |
 | Unit economics | Unit Economics hypothesis (claim + mode thresholds + scenario analysis) |
 | Growth architecture | Solution Design (architecture + rationale) |
 | Feature set + MVP scope | Solution Design (feature map + MVP scope + aha moment) |

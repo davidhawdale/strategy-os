@@ -1,4 +1,4 @@
-import type { RegisterMetadata, PanelId, ParseResult } from '../model/types';
+import type { RegisterMetadata, PanelId } from '../model/types';
 
 interface Props {
   metadata: RegisterMetadata;

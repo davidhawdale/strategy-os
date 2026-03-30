@@ -35,6 +35,24 @@ export function SolutionPanel({ view }: Props) {
         </div>
       )}
 
+      {/* Positioning */}
+      {view.positioning && (
+        <div className="solution-positioning">
+          <h3 className="section-heading">Positioning</h3>
+          {view.positioning.statement && (
+            <blockquote className="positioning-statement">{view.positioning.statement}</blockquote>
+          )}
+          {view.positioning.category && (
+            <p className="positioning-category">
+              <strong>Category:</strong> {view.positioning.category}
+            </p>
+          )}
+          {view.positioning.categoryRationale && (
+            <p className="positioning-rationale">{view.positioning.categoryRationale}</p>
+          )}
+        </div>
+      )}
+
       {/* Phase timeline */}
       {view.phases.length > 0 && (
         <div className="phase-timeline">

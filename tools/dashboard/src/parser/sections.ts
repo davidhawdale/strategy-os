@@ -7,7 +7,6 @@ export type SectionId =
   | 'root'
   | 'problem'
   | 'segment'
-  | 'valueProposition'
   | 'unitEconomics'
   | 'solutionDesign'
   | 'destructionLog';
@@ -21,9 +20,8 @@ export interface Section {
 const SECTION_PATTERNS: [RegExp, SectionId][] = [
   [/^##\s+1\.\s+Problem/i, 'problem'],
   [/^##\s+2\.\s+Segment/i, 'segment'],
-  [/^##\s+3\.\s+Value\s+Proposition/i, 'valueProposition'],
-  [/^##\s+4\.\s+Unit\s+Economics/i, 'unitEconomics'],
-  [/^##\s+5\.\s+Solution/i, 'solutionDesign'],
+  [/^##\s+3\.\s+Unit\s+Economics/i, 'unitEconomics'],
+  [/^##\s+4\.\s+Solution/i, 'solutionDesign'],
   [/^##\s+Destruction\s+Log/i, 'destructionLog'],
 ];
 

@@ -1,4 +1,4 @@
-import type { HypothesisDetailView, HypothesisId } from '../../model/types';
+import type { HypothesisDetailView } from '../../model/types';
 import { ConfidenceBadge } from '../shared/ConfidenceBadge';
 import { TierBadge } from '../shared/TierBadge';
 import { BlastRadiusBadge } from '../shared/BlastRadiusBadge';
@@ -188,40 +188,6 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
         </div>
       )}
 
-      {/* VP: Jobs Addressed */}
-      {view.jobs && (
-        <div className="detail-section">
-          <h3 className="section-heading">Jobs Addressed</h3>
-          <dl className="jobs-list">
-            {view.jobs.functional && <><dt>Functional</dt><dd>{view.jobs.functional}</dd></>}
-            {view.jobs.emotional && <><dt>Emotional</dt><dd>{view.jobs.emotional}</dd></>}
-            {view.jobs.social && <><dt>Social</dt><dd>{view.jobs.social}</dd></>}
-          </dl>
-        </div>
-      )}
-
-      {/* VP: Clause Validation */}
-      {view.vpClauses && view.vpClauses.length > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">VP Clause Validation</h3>
-          <DataTable
-            caption="Value proposition clause validation"
-            columns={[
-              { key: 'clause', header: 'Clause', render: r => r.clause },
-              {
-                key: 'status', header: 'Status', render: r => {
-                  const cls = r.status === 'tested' ? 'text-passes' : 'text-warning';
-                  return <span className={cls}>{r.status}</span>;
-                }
-              },
-              { key: 'tier', header: 'Tier', render: r => <TierBadge tier={r.tier} /> },
-              { key: 'evidence', header: 'Evidence', render: r => r.evidence || '' },
-            ]}
-            data={view.vpClauses}
-          />
-        </div>
-      )}
-
       {/* Economics: Phase Economics */}
       {view.phaseEconomics && view.phaseEconomics.length > 0 && (
         <div className="detail-section">
@@ -271,13 +237,42 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
             caption="Monthly cost structure"
             columns={[
               { key: 'category', header: 'Category', render: r => r.category },
-              { key: 'type', header: 'Type', render: r => r.type },
+              { key: 'items', header: 'Items', render: r => r.items || '' },
               { key: 'monthly', header: 'Monthly', render: r => r.monthly },
               { key: 'tier', header: 'Tier', render: r => <TierBadge tier={r.tier} /> },
+              { key: 'source', header: 'Source', render: r => r.source || '' },
             ]}
             data={view.costStructure}
             compact
           />
+        </div>
+      )}
+
+      {/* Economics: Channel Strategy */}
+      {view.channelStrategy && view.channelStrategy.channels.length > 0 && (
+        <div className="detail-section">
+          <h3 className="section-heading">Channel Strategy</h3>
+          <DataTable
+            caption="GTM channel strategy"
+            columns={[
+              { key: 'channel', header: 'Channel', render: r => r.channel },
+              { key: 'reach', header: 'Segment Reach', render: r => r.segmentReach },
+              { key: 'cac', header: 'CAC Estimate', render: r => r.cacEstimate },
+              { key: 'split', header: 'Investment Split', render: r => r.investmentSplit },
+              { key: 'tier', header: 'Tier', render: r => <TierBadge tier={r.tier} /> },
+            ]}
+            data={view.channelStrategy.channels}
+            compact
+          />
+          {view.channelStrategy.coherence && (
+            <p className="channel-meta"><strong>Coherence:</strong> {view.channelStrategy.coherence}</p>
+          )}
+          {view.channelStrategy.acvConstraint && (
+            <p className="channel-meta"><strong>ACV constraint:</strong> {view.channelStrategy.acvConstraint}</p>
+          )}
+          {view.channelStrategy.sequencingRationale && (
+            <p className="channel-meta"><strong>Sequencing:</strong> {view.channelStrategy.sequencingRationale}</p>
+          )}
         </div>
       )}
 

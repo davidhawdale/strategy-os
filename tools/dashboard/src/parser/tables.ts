@@ -1,11 +1,10 @@
-import type { Content, Table } from 'mdast';
+import type { Table } from 'mdast';
 import type {
   PainScoreEntry,
-  VPClause,
   EpistemicTier,
-  PhaseEconomics,
   EconomicInput,
   CostEntry,
+  ChannelEntry,
   ModeThreshold,
   DestructionAssumption,
   BlastRadius,
@@ -13,9 +12,7 @@ import type {
   EvidenceConcentrationEntry,
   FeatureMapEntry,
 } from '../model/types';
-import { tableToRows, findTableNearHeading } from './sections';
-
-const TIERS: Set<string> = new Set(['T1', 'T2', 'T3']);
+import { tableToRows } from './sections';
 
 function parseTier(s: string): EpistemicTier | undefined {
   const cleaned = s.trim().toUpperCase();
@@ -44,18 +41,6 @@ export function parsePainScoringTable(table: Table): PainScoreEntry[] {
   }));
 }
 
-export function parseVPClauseTable(table: Table): VPClause[] {
-  const rows = tableToRows(table);
-  if (rows.length < 2) return [];
-
-  return rows.slice(1).map(row => ({
-    clause: row[0] || '',
-    status: row[1] || '',
-    tier: parseTier(row[2] || ''),
-    evidence: row[3] || undefined,
-  }));
-}
-
 export function parseEconomicInputsTable(table: Table): EconomicInput[] {
   const rows = tableToRows(table);
   if (rows.length < 2) return [];
@@ -73,11 +58,47 @@ export function parseCostStructureTable(table: Table): CostEntry[] {
   const rows = tableToRows(table);
   if (rows.length < 2) return [];
 
+  const headers = rows[0];
+  const hasItems = headers.some(h => /Items/i.test(h));
+
+  return rows.slice(1).map(row => {
+    const category = row[0] || '';
+    // Extract Fixed/Variable from category name (e.g., "Fixed: Team" or "Variable: Hosting")
+    const typeFromCategory = /^Variable/i.test(category) ? 'Variable' as const : 'Fixed' as const;
+
+    if (hasItems) {
+      // New format: Category | Items | Monthly Cost (range) | Tier | Source
+      return {
+        category,
+        items: row[1] || '',
+        type: typeFromCategory,
+        monthly: row[2] || '',
+        tier: parseTier(row[3] || ''),
+        source: row[4] || undefined,
+      };
+    }
+    // Legacy format: Category | Type | Monthly | Tier
+    return {
+      category,
+      items: '',
+      type: (row[1]?.trim() === 'Variable' ? 'Variable' : 'Fixed') as 'Fixed' | 'Variable',
+      monthly: row[2] || '',
+      tier: parseTier(row[3] || ''),
+    };
+  });
+}
+
+export function parseChannelStrategyTable(table: Table): ChannelEntry[] {
+  const rows = tableToRows(table);
+  if (rows.length < 2) return [];
+
   return rows.slice(1).map(row => ({
-    category: row[0] || '',
-    type: (row[1]?.trim() === 'Variable' ? 'Variable' : 'Fixed') as 'Fixed' | 'Variable',
-    monthly: row[2] || '',
-    tier: parseTier(row[3] || ''),
+    channel: row[0] || '',
+    segmentReach: row[1] || '',
+    cacEstimate: row[2] || '',
+    investmentSplit: row[3] || '',
+    tier: parseTier(row[4] || ''),
+    source: row[5] || undefined,
   }));
 }
 

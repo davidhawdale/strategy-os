@@ -4,7 +4,7 @@ Created: {YYYY-MM-DD}
 Last Reviewed: {YYYY-MM-DD}
 Business Mode: {VENTURE | BOOTSTRAP | HYBRID}
 Build Method: {AUTONOMOUS | GOVERNOR_AUTHORED | MIXED}
-Sell & Grow Ready: {yes | no}
+Sell & Grow Ready: {yes | no} (requires all three hypotheses SUPPORTED)
 
 ---
 
@@ -66,51 +66,7 @@ Sell & Grow Ready: {yes | no}
 
 ---
 
-## 3. Value Proposition
-
-**Claim:** {For [target] who [problem], [product] is a [category] that [differentiator]. Unlike [alternative], it [unique capability].}
-
-**Confidence:** {unvalidated | researched | supported | broken}
-
-**Possibility Space:**
-- Considered: {list of candidate VP framings evaluated}
-- Eliminated: {for each: VP framing -- reason -- evidence}
-- Alternatives carried: {alternative VP framings still alive}
-
-**Jobs Addressed:**
-- Functional: {what they need accomplished}
-- Emotional: {how they want to feel}
-- Social: {how they want to be perceived}
-
-**Clause Validation:**
-| Clause | Status | Tier | Evidence |
-|--------|--------|------|----------|
-| Target customer: {who} | {tested/untested} | {T1/T2/T3} | {evidence or "none"} |
-| Problem: {what} | {tested/untested} | {T1/T2/T3} | {evidence or "none"} |
-| Category: {what} | {tested/untested} | {T1/T2/T3} | {evidence or "none"} |
-| Differentiator: {what} | {tested/untested} | {T1/T2/T3} | {evidence or "none"} |
-| vs Alternative: {what} | {tested/untested} | {T1/T2/T3} | {evidence or "none"} |
-| Unique capability: {what} | {tested/untested} | {T1/T2/T3} | {evidence or "none"} |
-
-**Evidence:**
-- [{TYPE}] [{T1|T2|T3}] {date} -- {source}: {detail}
-
-**Research Sources:**
-- [{T1|T2|T3}] {date accessed} -- {url or description}: {what it established}
-
-**Assumptions:**
-- [{K|B|O}] [{T1|T2|T3}] {claim} {[LOAD-BEARING]} {[BLAST:HIGH|MEDIUM|LOW]}
-  {-> Falsification: {condition}}
-  {-> Validation: {plan}}
-
-**Kill Condition:** {Observable condition that means this VP does not resonate}
-
-**Last Updated:** {YYYY-MM-DD}
-**Update Rationale:** {Why the confidence state last changed, if it changed}
-
----
-
-## 4. Unit Economics
+## 3. Unit Economics
 
 **Claim:** {Revenue model, LTV:CAC ratio range, payback period range, gross margin trajectory}
 
@@ -120,6 +76,31 @@ Sell & Grow Ready: {yes | no}
 - Considered: {list of revenue model alternatives evaluated}
 - Eliminated: {for each: model -- reason -- evidence}
 - Alternatives carried: {alternative economic models still alive}
+
+**Cost Structure:**
+
+| Category | Items | Monthly Cost (range) | Tier | Source |
+|----------|-------|---------------------|------|--------|
+| Fixed: Team | {roles x market rate} | {low -- high} | {T2/T3} | {source} |
+| Fixed: Infrastructure | {servers, CI/CD, monitoring} | {low -- high} | {T2/T3} | {source} |
+| Fixed: Software | {SaaS tools, licenses} | {low -- high} | {T2/T3} | {source} |
+| Fixed: Operations | {legal, accounting, insurance} | {low -- high} | {T2/T3} | {source} |
+| Variable: Hosting/Compute | {per-user cost, AI inference if applicable} | {low -- high} | {T2/T3} | {source} |
+| Variable: Payment Processing | {rate + per-txn} | {low -- high} | {T1} | {source} |
+| Variable: Support | {per-ticket cost} | {low -- high} | {T2/T3} | {source} |
+| Variable: Onboarding | {per-customer cost} | {low -- high} | {T2/T3} | {source} |
+
+**Derived:** Gross margin: {range}% | Burn rate: {range}/mo | Runway: {range} months
+
+**Channel Strategy:**
+
+| Channel | Segment Reach | CAC Estimate (range) | Investment Split | Tier | Source |
+|---------|--------------|---------------------|-----------------|------|--------|
+| {channel} | {how it reaches segment} | {low -- high} | {Phase 1% / Phase 2%} | {T2/T3} | {source} |
+
+- Channel-economics coherence: {does channel mix CAC align with LTV:CAC requirement?}
+- ACV-channel constraint: {from pricing -- which channels are viable at this ACV?}
+- Sequencing rationale: {which channels first and why -- bootstrap vs scale phase}
 
 **Mode Thresholds:**
 | Metric | Required | Estimate (range) | Tier | Source |
@@ -152,10 +133,10 @@ Sell & Grow Ready: {yes | no}
 
 ---
 
-## 5. Solution Design
+## 4. Solution Design
 
 *This is not a hypothesis. It is a design artifact derived from and constrained
-by the four hypotheses above. If any hypothesis changes, re-evaluate this section.*
+by the three hypotheses above. If any hypothesis changes, re-evaluate this section.*
 
 **Growth Architecture:** {PLG | Network | Traditional | Hybrid}
 
@@ -165,6 +146,13 @@ by the four hypotheses above. If any hypothesis changes, re-evaluate this sectio
 - Time-to-value: {from solution nature} -> {fast or slow}
 - Collaboration: {inherent or optional} -> {network effects or not}
 - Selection: {which architecture and why}
+
+**Positioning:**
+
+Positioning statement: For {target from Segment hypothesis} who {problem from Problem hypothesis}, {product} is a {category} that {differentiator}. Unlike {alternative from competitive analysis}, it {unique capability from aha moment}.
+
+- Category framing: {category name} {[GOVERNOR_DECISION] if category is ambiguous or contested}
+- Category rationale: {why this category -- derived from competitive gaps and segment mental models}
 
 **Feature Map:**
 
@@ -187,7 +175,6 @@ by the four hypotheses above. If any hypothesis changes, re-evaluate this sectio
 |------|-----------|----------------------|
 | Problem | {what the problem demands of the solution} | {what to re-evaluate} |
 | Segment | {what the segment demands} | {what to re-evaluate} |
-| VP | {what the VP promises the solution must deliver} | {what to re-evaluate} |
 | Unit Economics | {what the economics require of the cost structure} | {what to re-evaluate} |
 
 **Adequacy Criteria:**

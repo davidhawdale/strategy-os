@@ -3,14 +3,13 @@ import type { HypothesisRegister, HypothesisId, EvidenceType, EvidenceQualityVie
 const LABELS: Record<HypothesisId, string> = {
   problem: 'Problem',
   segment: 'Segment',
-  valueProposition: 'Value Proposition',
   unitEconomics: 'Unit Economics',
 };
 
 const TIER_WEIGHTS = { T1: 1.0, T2: 0.6, T3: 0.2 };
 
 export function computeEvidenceQuality(register: HypothesisRegister): EvidenceQualityView {
-  const ids: HypothesisId[] = ['problem', 'segment', 'valueProposition', 'unitEconomics'];
+  const ids: HypothesisId[] = ['problem', 'segment', 'unitEconomics'];
 
   const byHypothesis = ids.map(id => {
     const h = register.hypotheses[id];

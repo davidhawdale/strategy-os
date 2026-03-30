@@ -77,7 +77,7 @@ export function extractEvidenceItems(text: string, sectionName: string): { items
   return { items, warnings };
 }
 
-export function extractResearchSources(text: string, sectionName: string): { items: ResearchSource[]; warnings: ParseWarning[] } {
+export function extractResearchSources(text: string, _sectionName: string): { items: ResearchSource[]; warnings: ParseWarning[] } {
   const items: ResearchSource[] = [];
   const warnings: ParseWarning[] = [];
 
@@ -237,9 +237,6 @@ export function extractPossibilitySpace(text: string): {
   const eliminated: { candidate: string; reason: string }[] = [];
   const alternativesCarried: string[] = [];
 
-  // Split into sub-sections: Considered, Eliminated, Alternatives carried
-  const sections = block.split(/\n\s*-\s*(Considered|Eliminated|Alternatives carried):?/i);
-
   // Parse Considered items
   const consideredBlock = extractSubBlock(block, 'Considered');
   if (consideredBlock) {
@@ -334,21 +331,4 @@ export function extractObservableFilters(text: string): string[] {
     if (match) filters.push(match[1].trim());
   }
   return filters;
-}
-
-export function extractJobsAddressed(text: string): { functional?: string; emotional?: string; social?: string } | undefined {
-  const block = extractBlockAfterLabel(text, 'Jobs Addressed');
-  if (!block) return undefined;
-
-  const jobs: { functional?: string; emotional?: string; social?: string } = {};
-  for (const line of block.split('\n')) {
-    const trimmed = line.trim();
-    const match = trimmed.match(/^-\s*(Functional|Emotional|Social):\s*(.+)/i);
-    if (match) {
-      const key = match[1].toLowerCase() as 'functional' | 'emotional' | 'social';
-      jobs[key] = match[2].trim();
-    }
-  }
-
-  return (jobs.functional || jobs.emotional || jobs.social) ? jobs : undefined;
 }

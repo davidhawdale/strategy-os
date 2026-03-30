@@ -9,6 +9,7 @@ export function computeSolutionView(register: HypothesisRegister): SolutionView 
       growthLoops: [],
       constraints: [],
       adequacyCriteria: [],
+      positioning: undefined,
     };
   }
 
@@ -17,6 +18,7 @@ export function computeSolutionView(register: HypothesisRegister): SolutionView 
   return {
     hasSolutionDesign: true,
     growthArchitecture: sd.growthArchitecture,
+    positioning: sd.positioning,
     phases: sd.phases ?? [],
     featuresByPriority: {
       mvp: sd.featureMap.filter(f => f.priority === 'MVP'),

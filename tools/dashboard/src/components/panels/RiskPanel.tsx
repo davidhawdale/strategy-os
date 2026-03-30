@@ -11,7 +11,6 @@ const RISK_ORDER = ['critical', 'high', 'medium', 'low'] as const;
 const HYPOTHESIS_LABELS: Record<string, string> = {
   problem: 'Problem',
   segment: 'Segment',
-  valueProposition: 'Value Proposition',
   unitEconomics: 'Unit Economics',
 };
 

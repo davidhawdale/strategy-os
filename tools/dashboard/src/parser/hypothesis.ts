@@ -3,14 +3,10 @@ import type {
   HypothesisId,
   ConfidenceState,
   ParseWarning,
-  PainScoreEntry,
-  VPClause,
   PhaseEconomics,
-  EconomicInput,
+  ChannelStrategy,
   ScenarioAnalysis,
   EconomicScenario,
-  CostEntry,
-  ModeThreshold,
 } from '../model/types';
 import type { Section } from './sections';
 import { extractTablesFromNodes, tableToRows, findTableNearHeading } from './sections';
@@ -21,13 +17,12 @@ import {
   extractAssumptions,
   extractPossibilitySpace,
   extractObservableFilters,
-  extractJobsAddressed,
 } from './fields';
 import {
   parsePainScoringTable,
-  parseVPClauseTable,
   parseEconomicInputsTable,
   parseCostStructureTable,
+  parseChannelStrategyTable,
   parseModeThresholdsTable,
 } from './tables';
 
@@ -90,25 +85,6 @@ export function parseHypothesis(
     }
   }
 
-  if (id === 'valueProposition') {
-    hypothesis.jobsAddressed = extractJobsAddressed(text);
-
-    const vpTable = findTableNearHeading(section.nodes, /VP Clause|Clause/i);
-    if (vpTable) {
-      hypothesis.vpClauseValidation = parseVPClauseTable(vpTable);
-    } else {
-      // Try to find a table with "Clause" column
-      const tables = extractTablesFromNodes(section.nodes);
-      for (const t of tables) {
-        const rows = tableToRows(t);
-        if (rows.length > 0 && rows[0].some(h => /clause/i.test(h))) {
-          hypothesis.vpClauseValidation = parseVPClauseTable(t);
-          break;
-        }
-      }
-    }
-  }
-
   if (id === 'unitEconomics') {
     parseUnitEconomicsExtensions(section, hypothesis, warnings);
   }
@@ -119,7 +95,7 @@ export function parseHypothesis(
 function parseUnitEconomicsExtensions(
   section: Section,
   hypothesis: Hypothesis,
-  warnings: ParseWarning[]
+  _warnings: ParseWarning[]
 ): void {
   const text = section.rawText;
   const tables = extractTablesFromNodes(section.nodes);
@@ -163,9 +139,21 @@ function parseUnitEconomicsExtensions(
       }
     }
 
-    // Cost structure
-    if (headers.some(h => /Category/i.test(h)) && headers.some(h => /Type/i.test(h)) && headers.some(h => /Monthly/i.test(h))) {
+    // Cost structure (new format: Category | Items | Monthly Cost | Tier | Source)
+    // or legacy format: Category | Type | Monthly | Tier
+    if (headers.some(h => /Category/i.test(h)) && headers.some(h => /Monthly/i.test(h))) {
       hypothesis.costStructure = parseCostStructureTable(table);
+    }
+
+    // Channel strategy: Channel | Segment Reach | CAC Estimate | Investment Split | Tier | Source
+    if (headers.some(h => /Channel/i.test(h)) && headers.some(h => /CAC/i.test(h))) {
+      const channels = parseChannelStrategyTable(table);
+      if (channels.length > 0) {
+        hypothesis.channelStrategy = {
+          channels,
+          ...parseChannelStrategyMetadata(text),
+        };
+      }
     }
 
     // Mode thresholds
@@ -180,6 +168,21 @@ function parseUnitEconomicsExtensions(
 
   // Scenario analysis
   hypothesis.scenarioAnalysis = parseScenarioAnalysis(text);
+}
+
+function parseChannelStrategyMetadata(text: string): Omit<ChannelStrategy, 'channels'> {
+  const result: Omit<ChannelStrategy, 'channels'> = {};
+
+  const coherenceMatch = text.match(/-\s*Channel-economics coherence:\s*(.+)/i);
+  if (coherenceMatch) result.coherence = coherenceMatch[1].trim();
+
+  const acvMatch = text.match(/-\s*ACV-channel constraint:\s*(.+)/i);
+  if (acvMatch) result.acvConstraint = acvMatch[1].trim();
+
+  const seqMatch = text.match(/-\s*Sequencing rationale:\s*(.+)/i);
+  if (seqMatch) result.sequencingRationale = seqMatch[1].trim();
+
+  return result;
 }
 
 function parseScenarioAnalysis(text: string): ScenarioAnalysis | undefined {

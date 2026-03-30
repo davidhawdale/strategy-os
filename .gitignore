@@ -22,3 +22,5 @@ knowledge/
 
 # OS
 .DS_Store
+
+.wwebjs_cache/

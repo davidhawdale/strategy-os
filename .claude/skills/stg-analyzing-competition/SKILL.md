@@ -3,7 +3,7 @@ name: stg-analyzing-competition
 description: Maps competitive landscape, identifies positioning gaps, and assesses competitor response capability for red-team input. Use when researching competition during BUILD phase 1 or feeding destruction phase.
 serves: strategist
 domain: competitive-analysis
-affects: problem-hypothesis, vp-hypothesis, unit-economics-hypothesis
+affects: problem-hypothesis, unit-economics-hypothesis, solution-design-section
 depends-on: none
 produces: competitive landscape notes and red-team intelligence for hypothesis register
 ---

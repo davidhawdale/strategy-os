@@ -80,9 +80,8 @@ For each claim, determine which hypothesis it supports or challenges:
 |---------------|---------------|
 | Problem hypothesis | Pain existence, frequency, severity, alternatives |
 | Segment hypothesis | Who has the problem, observable characteristics |
-| VP hypothesis | Differentiation, positioning, jobs-to-be-done |
 | Unit Economics hypothesis | Pricing, costs, conversion rates, benchmarks |
-| Solution Design | Features, growth architecture, MVP approach |
+| Solution Design | Features, growth architecture, MVP approach, positioning, differentiation, jobs-to-be-done |
 | General | Domain knowledge, not hypothesis-specific |
 
 Explicitly search for claims that contradict current register. Challenging evidence is more valuable than confirming evidence.

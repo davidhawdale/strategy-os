@@ -30,16 +30,15 @@ The output is a hypothesis register — four validated hypotheses plus a solutio
 
 ## The Hypothesis Register
 
-One file. Four hypotheses. Each earns its confidence.
+One file. Three hypotheses. Each earns its confidence.
 
 | Hypothesis | What It Answers |
 |-----------|----------------|
 | **Problem** | What problem exists, for whom, and how acute? |
 | **Segment** | Who has it badly enough to pay? Observable filters, not demographics. |
-| **Value Proposition** | Why will your solution win? Functional, emotional, and social jobs. |
 | **Unit Economics** | Does the business model sustain itself? LTV:CAC, payback, margins. |
 
-Plus a **Solution Design** section (growth architecture, feature map, MVP scope, growth loops) derived from the four hypotheses.
+Plus a **Solution Design** section (growth architecture, positioning, feature map, MVP scope, growth loops) derived from the three hypotheses.
 
 ### Confidence States
 
@@ -178,14 +177,14 @@ Requires [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code). The 
 
 ## Sell & Grow Interface
 
-The register feeds directly into the Sell & Grow execution chain. The chain proceeds when all four hypotheses reach `SUPPORTED`:
+The register feeds directly into the Sell & Grow execution chain. The chain proceeds when all three hypotheses reach `SUPPORTED`:
 
 | Chain Step | Consumes From Register |
 |-----------|----------------------|
-| **Strategic Positioning** | VP hypothesis (claim + jobs), Segment hypothesis (target customer) |
+| **Strategic Positioning** | Solution Design (positioning subsection), Segment hypothesis (target customer) |
 | **Revenue Architecture** | Solution Design (growth architecture, MVP, growth loops), Unit Economics (pricing) |
-| **Negotiation** | VP (value anchor), Unit Economics (pricing structure) |
-| **Content Distribution** | VP (positioning), Solution Design (demo formats) |
+| **Negotiation** | Solution Design (positioning -- value anchor), Unit Economics (pricing structure) |
+| **Content Distribution** | Solution Design (positioning), Solution Design (demo formats) |
 | **Channel Intelligence** | Segment (where they gather), Unit Economics (CAC benchmarks) |
 
 ---

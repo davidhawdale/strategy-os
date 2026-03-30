@@ -3,7 +3,6 @@ import type { HypothesisRegister, HypothesisId, HypothesisDetailView } from '../
 const LABELS: Record<HypothesisId, string> = {
   problem: 'Problem',
   segment: 'Segment',
-  valueProposition: 'Value Proposition',
   unitEconomics: 'Unit Economics',
 };
 
@@ -35,11 +34,10 @@ export function computeHypothesisDetail(register: HypothesisRegister, id: Hypoth
     updateRationale: h.updateRationale,
     observableFilters: h.observableFilters,
     painScoring: h.painScoring,
-    jobs: h.jobsAddressed,
-    vpClauses: h.vpClauseValidation,
     phaseEconomics: h.twoPhaseEconomics,
     scenarioAnalysis: h.scenarioAnalysis,
     costStructure: h.costStructure,
+    channelStrategy: h.channelStrategy,
     modeThresholds: h.modeThresholds,
   };
 }

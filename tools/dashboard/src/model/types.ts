@@ -5,7 +5,6 @@ export interface HypothesisRegister {
   hypotheses: {
     problem: Hypothesis;
     segment: Hypothesis;
-    valueProposition: Hypothesis;
     unitEconomics: Hypothesis;
   };
   solutionDesign?: SolutionDesign;
@@ -50,15 +49,14 @@ export interface Hypothesis {
   // Hypothesis-specific extensions
   observableFilters?: string[];
   painScoring?: PainScoreEntry[];
-  jobsAddressed?: JobsAddressed;
-  vpClauseValidation?: VPClause[];
   twoPhaseEconomics?: PhaseEconomics[];
   scenarioAnalysis?: ScenarioAnalysis;
   costStructure?: CostEntry[];
+  channelStrategy?: ChannelStrategy;
   modeThresholds?: ModeThreshold[];
 }
 
-export type HypothesisId = 'problem' | 'segment' | 'valueProposition' | 'unitEconomics';
+export type HypothesisId = 'problem' | 'segment' | 'unitEconomics';
 export type ConfidenceState = 'UNVALIDATED' | 'RESEARCHED' | 'SUPPORTED' | 'BROKEN';
 
 // === Possibility Space ===
@@ -136,19 +134,6 @@ export interface PainScoreEntry {
   composite: number;
 }
 
-export interface JobsAddressed {
-  functional?: string;
-  emotional?: string;
-  social?: string;
-}
-
-export interface VPClause {
-  clause: string;
-  status: string;
-  tier?: EpistemicTier;
-  evidence?: string;
-}
-
 export interface PhaseEconomics {
   phase: string;
   description: string;
@@ -183,9 +168,27 @@ export interface EconomicScenario {
 
 export interface CostEntry {
   category: string;
+  items: string;
   type: 'Fixed' | 'Variable';
   monthly: string;
   tier?: EpistemicTier;
+  source?: string;
+}
+
+export interface ChannelEntry {
+  channel: string;
+  segmentReach: string;
+  cacEstimate: string;
+  investmentSplit: string;
+  tier?: EpistemicTier;
+  source?: string;
+}
+
+export interface ChannelStrategy {
+  channels: ChannelEntry[];
+  coherence?: string;
+  acvConstraint?: string;
+  sequencingRationale?: string;
 }
 
 export interface ModeThreshold {
@@ -197,9 +200,16 @@ export interface ModeThreshold {
 
 // === Solution Design ===
 
+export interface Positioning {
+  statement?: string;
+  category?: string;
+  categoryRationale?: string;
+}
+
 export interface SolutionDesign {
   growthArchitecture?: string;
   architectureRationale?: string;
+  positioning?: Positioning;
   phases?: SolutionPhase[];
   featureMap: FeatureMapEntry[];
   mvpScope?: MVPScope;
@@ -418,6 +428,7 @@ export interface DestructionView {
 export interface SolutionView {
   hasSolutionDesign: boolean;
   growthArchitecture?: string;
+  positioning?: Positioning;
   phases: SolutionPhase[];
 
   featuresByPriority: {
@@ -456,11 +467,10 @@ export interface HypothesisDetailView {
 
   observableFilters?: string[];
   painScoring?: PainScoreEntry[];
-  jobs?: JobsAddressed;
-  vpClauses?: VPClause[];
   phaseEconomics?: PhaseEconomics[];
   scenarioAnalysis?: ScenarioAnalysis;
   costStructure?: CostEntry[];
+  channelStrategy?: ChannelStrategy;
   modeThresholds?: ModeThreshold[];
 }
 

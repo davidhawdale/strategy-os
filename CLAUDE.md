@@ -49,8 +49,8 @@ One agent. Escalation queue for governor decisions.
 
 Single file: `strategy/hypotheses.md`
 
-Four hypotheses: Problem, Segment, Value Proposition, Unit Economics.
-One derived design artifact: Solution Design (constrained by the four
+Three hypotheses: Problem, Segment, Unit Economics.
+One derived design artifact: Solution Design (constrained by the three
 hypotheses, not independently falsifiable).
 
 Each hypothesis has: claim, evidence (tier-labeled), confidence state,
@@ -58,8 +58,9 @@ assumptions (with blast radius), kill condition, research sources,
 possibility space (what was considered and eliminated).
 
 The Solution Design section contains: growth architecture selection,
+positioning (assembled from hypothesis claims and competitive analysis),
 feature-to-problem mapping with JTBD dimensions, MVP scope with aha
-moment, growth loops, constraints from all four hypotheses, and
+moment, growth loops, constraints from all three hypotheses, and
 adequacy criteria.
 
 ### Confidence States
@@ -129,7 +130,7 @@ at stake.
 
 ```
 strategy/
-  hypotheses.md              The hypothesis register (4 hypotheses + solution design)
+  hypotheses.md              The hypothesis register (3 hypotheses + solution design)
 
 execution/
   queue/                     Escalations awaiting governor response
@@ -153,7 +154,7 @@ execution/
 ## Sell & Grow Interface
 
 The Sell & Grow chain reads strategy/hypotheses.md directly.
-It proceeds when all four hypotheses are SUPPORTED (not RESEARCHED).
+It proceeds when all three hypotheses are SUPPORTED (not RESEARCHED).
 
 RESEARCHED status tells Sell & Grow: "System did research, but no
 customer validation yet. You can prepare positioning hypotheses from
@@ -163,7 +164,7 @@ this data but cannot commit to them."
 |------------|------------------|
 | Validated problem | Problem hypothesis (claim + evidence + research sources) |
 | Target segment | Segment hypothesis (claim + evidence + possibility space) |
-| Value proposition | VP hypothesis (claim + jobs + clause validation table) |
+| Value proposition / positioning | Solution Design (positioning subsection -- assembled from hypothesis claims + competitive analysis) |
 | Unit economics | Unit Economics hypothesis (claim + mode thresholds + scenario analysis) |
 | Growth architecture | Solution Design (architecture + rationale) |
 | Feature set + MVP scope | Solution Design (feature map + MVP scope + aha moment) |

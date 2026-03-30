@@ -1,6 +1,6 @@
 import type { HypothesisRegister, HypothesisId, RiskMapView } from '../model/types';
 
-const IDS: HypothesisId[] = ['problem', 'segment', 'valueProposition', 'unitEconomics'];
+const IDS: HypothesisId[] = ['problem', 'segment', 'unitEconomics'];
 
 export function computeRiskMap(register: HypothesisRegister): RiskMapView {
   const assumptions = IDS.flatMap(id => {

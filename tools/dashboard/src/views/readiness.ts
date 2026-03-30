@@ -3,7 +3,6 @@ import type { HypothesisRegister, HypothesisId, ReadinessView } from '../model/t
 const LABELS: Record<HypothesisId, string> = {
   problem: 'Problem',
   segment: 'Segment',
-  valueProposition: 'Value Proposition',
   unitEconomics: 'Unit Economics',
 };
 
@@ -11,7 +10,7 @@ export function computeReadiness(register: HypothesisRegister): ReadinessView {
   const blockers: string[] = [];
   const warnings: string[] = [];
 
-  const hypothesisSummary = (['problem', 'segment', 'valueProposition', 'unitEconomics'] as HypothesisId[]).map(id => {
+  const hypothesisSummary = (['problem', 'segment', 'unitEconomics'] as HypothesisId[]).map(id => {
     const h = register.hypotheses[id];
 
     const t1Count = h.evidence.filter(e => e.tier === 'T1').length;
@@ -60,7 +59,7 @@ export function computeReadiness(register: HypothesisRegister): ReadinessView {
   }
 
   const totalAssumptions = hypothesisSummary.reduce((sum, s) => sum + s.assumptionCount, 0);
-  const highBlastT3 = (['problem', 'segment', 'valueProposition', 'unitEconomics'] as HypothesisId[])
+  const highBlastT3 = (['problem', 'segment', 'unitEconomics'] as HypothesisId[])
     .flatMap(id => register.hypotheses[id].assumptions)
     .filter(a => a.blastRadius === 'HIGH' && a.tier === 'T3')
     .length;
