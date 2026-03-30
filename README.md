@@ -24,7 +24,7 @@ The output is a hypothesis register — four validated hypotheses plus a solutio
 
 ## See It Running
 
-[Watch the demo](https://youtu.be/CPCu2l_9GXM) — one command, regulation in, business model out.
+...coming soon
 
 ---
 
