@@ -1,30 +1,34 @@
 import type {
-  SolutionDesign,
-  Positioning,
-  SolutionPhase,
+  SolutionDesignProposal,
+  SupportState,
   GrowthLoop,
   HypothesisConstraint,
   MVPScope,
+  ExclusionEntry,
   ParseWarning,
 } from '../model/types';
 import type { Section } from './sections';
 import { extractTablesFromNodes, tableToRows, findTableNearHeading } from './sections';
-import { extractField } from './fields';
-import { parseFeatureMapTable } from './tables';
+import { extractField, extractBlockAfterLabel } from './fields';
+import { parseFeatureMapTable, parseConstraintsTable } from './tables';
 
-export function parseSolutionDesign(section: Section): { solution: SolutionDesign; warnings: ParseWarning[] } {
+const SUPPORT_STATES: Set<string> = new Set(['PROPOSED', 'VALIDATED', 'BLOCKED']);
+
+export function parseSolutionDesign(section: Section): { solution: SolutionDesignProposal; warnings: ParseWarning[] } {
   const warnings: ParseWarning[] = [];
   const text = section.rawText;
 
-  const growthArchitecture = extractField(text, 'Growth Architecture');
-  const architectureRationale = extractField(text, 'Architecture Rationale');
+  const supportStateRaw = extractField(text, 'Support State');
+  const supportState = supportStateRaw && SUPPORT_STATES.has(supportStateRaw.toUpperCase())
+    ? (supportStateRaw.toUpperCase() as SupportState)
+    : undefined;
+
   const lastUpdated = extractField(text, 'Last Updated');
 
   // Positioning
-  const positioning = parsePositioning(text);
-
-  // Phases
-  const phases = parsePhases(text);
+  const positioningStatement = extractField(text, 'Positioning Statement');
+  const categoryFraming = extractField(text, 'Category Framing');
+  const categoryRationale = extractField(text, 'Category Rationale');
 
   // Feature map table
   const featureTable = findTableNearHeading(section.nodes, /Feature Map/i);
@@ -57,10 +61,10 @@ export function parseSolutionDesign(section: Section): { solution: SolutionDesig
 
   return {
     solution: {
-      growthArchitecture,
-      architectureRationale,
-      positioning,
-      phases,
+      supportState,
+      positioningStatement,
+      categoryFraming,
+      categoryRationale,
       featureMap,
       mvpScope,
       growthLoops,
@@ -72,101 +76,52 @@ export function parseSolutionDesign(section: Section): { solution: SolutionDesig
   };
 }
 
-function parsePositioning(text: string): Positioning | undefined {
-  const block = text.match(/\*\*Positioning:\*\*\s*\n([\s\S]*?)(?=\*\*Feature Map|\*\*Phase|---|\n##)/i);
-  if (!block) return undefined;
-
-  const content = block[1];
-
-  // Extract positioning statement
-  const statementMatch = content.match(/Positioning statement:\s*(.+(?:\n(?!\s*-).+)*)/i);
-  const statement = statementMatch ? statementMatch[1].trim() : undefined;
-
-  // Extract category framing
-  const categoryMatch = content.match(/-\s*Category framing:\s*(.+)/i);
-  const category = categoryMatch ? categoryMatch[1].trim() : undefined;
-
-  // Extract category rationale
-  const rationaleMatch = content.match(/-\s*Category rationale:\s*(.+)/i);
-  const categoryRationale = rationaleMatch ? rationaleMatch[1].trim() : undefined;
-
-  if (!statement && !category) return undefined;
-
-  return { statement, category, categoryRationale };
-}
-
-function parsePhases(text: string): SolutionPhase[] {
-  const phases: SolutionPhase[] = [];
-
-  // Match ### Phase A/B blocks
-  const phasePattern = /###\s*Phase\s+([AB]):\s*(.+?)(?:\n)([\s\S]*?)(?=###\s*Phase|###\s*\w|\*\*Feature Map|$)/gi;
-  let match;
-
-  while ((match = phasePattern.exec(text)) !== null) {
-    const [, letter, title, body] = match;
-    const details: string[] = [];
-
-    for (const line of body.split('\n')) {
-      const trimmed = line.trim();
-      if (trimmed.startsWith('-')) {
-        details.push(trimmed.replace(/^-\s*/, ''));
-      }
-    }
-
-    phases.push({
-      name: `Phase ${letter}`,
-      timeline: letter === 'A' ? 'Months 0-9' : 'Month 9+',
-      description: title.trim(),
-      details,
-    });
-  }
-
-  return phases;
-}
-
 function parseMVPScope(text: string): MVPScope | undefined {
-  const mvpBlock = text.match(/\*\*MVP Scope[^*]*\*\*:?\s*\n([\s\S]*?)(?=\*\*Growth Loops|\*\*Constraints|---|\n##)/i);
+  const mvpBlock = extractBlockAfterLabel(text, 'MVP Scope');
   if (!mvpBlock) return undefined;
 
-  const block = mvpBlock[1];
   const included: string[] = [];
-  const excluded: string[] = [];
+  const excluded: ExclusionEntry[] = [];
+  let ahaMoment: string | undefined;
+  let timeToValueTarget: string | undefined;
 
   let mode: 'included' | 'excluded' | null = null;
 
-  for (const line of block.split('\n')) {
+  for (const line of mvpBlock.split('\n')) {
     const trimmed = line.trim();
 
-    if (/^-\s*Included:/i.test(trimmed)) {
-      mode = 'included';
-      continue;
-    }
-    if (/^-\s*Excluded/i.test(trimmed)) {
-      mode = 'excluded';
-      continue;
-    }
+    if (/^-\s*Included:/i.test(trimmed)) { mode = 'included'; continue; }
+    if (/^-\s*Excluded:/i.test(trimmed)) { mode = 'excluded'; continue; }
     if (/^-\s*Aha moment:/i.test(trimmed)) {
-      // Captured separately below via regex
+      ahaMoment = trimmed.replace(/^-\s*Aha moment:\s*/i, '').trim();
       continue;
     }
-    if (/^-\s*Time-to-value/i.test(trimmed)) {
+    if (/^-\s*Time-to-value target:/i.test(trimmed)) {
+      timeToValueTarget = trimmed.replace(/^-\s*Time-to-value target:\s*/i, '').trim();
       continue;
     }
 
     if (trimmed.startsWith('-') && mode) {
       const item = trimmed.replace(/^-\s*/, '');
-      if (mode === 'included') included.push(item);
-      else excluded.push(item);
+      if (!item || item.startsWith('{')) continue;
+
+      if (mode === 'included') {
+        included.push(item);
+      } else {
+        // Try to parse "feature -- why -- when"
+        const parts = item.split(/\s+--\s+/);
+        if (parts.length >= 2) {
+          excluded.push({
+            feature: parts[0].trim(),
+            whyExcluded: parts[1].trim(),
+            whenToAdd: parts[2]?.trim() || '',
+          });
+        } else {
+          excluded.push({ feature: item, whyExcluded: '', whenToAdd: '' });
+        }
+      }
     }
   }
-
-  // Aha moment
-  const ahaMatch = block.match(/Aha moment:\s*(.+(?:\n(?!\s*-).+)*)/i);
-  const ahaMoment = ahaMatch ? ahaMatch[1].trim() : undefined;
-
-  // Time to value
-  const ttvMatch = block.match(/Time-to-value target:\s*(.+)/i);
-  const timeToValueTarget = ttvMatch ? ttvMatch[1].trim() : undefined;
 
   if (included.length === 0 && excluded.length === 0) return undefined;
 
@@ -176,69 +131,66 @@ function parseMVPScope(text: string): MVPScope | undefined {
 function parseGrowthLoops(text: string): GrowthLoop[] {
   const loops: GrowthLoop[] = [];
 
-  const block = text.match(/\*\*Growth Loops:\*\*\s*\n([\s\S]*?)(?=\*\*Constraints|---|\n##)/i);
+  const block = extractBlockAfterLabel(text, 'Growth Loops');
   if (!block) return loops;
 
-  const lines = block[1].split('\n');
-
-  let currentLoop: Partial<GrowthLoop> | null = null;
+  const lines = block.split('\n');
 
   for (const line of lines) {
     const trimmed = line.trim();
+    // Match: "- name: mechanism (requires: ...) [T1/T2/T3]"
+    const loopMatch = trimmed.match(/^-\s*(.+?):\s*(.+?)(?:\(requires?:\s*(.+?)\))?\s*(?:\[([T][123])\])?\s*$/i);
+    if (loopMatch) {
+      const [, name, mechanism, reqStr, tierStr] = loopMatch;
+      loops.push({
+        name: name.trim(),
+        mechanism: mechanism.trim(),
+        requirements: reqStr ? reqStr.split(/[,;]/).map(s => s.trim()).filter(Boolean) : [],
+        tier: tierStr as any,
+      });
+      continue;
+    }
+
+    // Legacy numbered format
     const numMatch = trimmed.match(/^\d+\.\s*\*\*(.+?)\*\*:?\s*(.*)/);
-
     if (numMatch) {
-      if (currentLoop?.name) {
-        loops.push(currentLoop as GrowthLoop);
-      }
-
       const name = numMatch[1];
       const rest = numMatch[2];
+      const mechanism = rest.split('.')[0]?.trim() || '';
+      const tierMatch = rest.match(/\[([T][123])\]/);
 
-      // Extract mechanism (text before "Mechanism:" or "Requirements:")
-      const mechMatch = rest.match(/(?:^|\s)Mechanism:\s*(.+?)(?:\.\s*Requirements:|$)/i);
-      const mechanism = mechMatch ? mechMatch[1].trim() : rest.split('.')[0]?.trim() || '';
-
-      // Extract tier
-      const tierMatch = rest.match(/\[([T][123](?:-[T]?[123])?)\]/);
-
-      currentLoop = {
+      loops.push({
         name,
         mechanism,
         requirements: [],
-        tier: tierMatch ? (tierMatch[1].substring(0, 2) as any) : undefined,
-      };
+        tier: tierMatch ? (tierMatch[1] as any) : undefined,
+      });
     }
-  }
-
-  if (currentLoop?.name) {
-    loops.push(currentLoop as GrowthLoop);
   }
 
   return loops;
 }
 
-function parseConstraintsTable(table: any): HypothesisConstraint[] {
-  const rows = tableToRows(table);
-  if (rows.length < 2) return [];
-
-  return rows.slice(1).map(row => ({
-    fromHypothesis: row[0] || '',
-    constraint: row[1] || '',
-    ifChanges: row[2] || '',
-  }));
-}
-
 function parseAdequacyCriteria(text: string): string[] {
-  const block = text.match(/\*\*Adequacy Criteria:\*\*\s*\n([\s\S]*?)(?=\*\*Last Updated|---|\n##)/i);
+  const block = extractBlockAfterLabel(text, 'Adequacy Criteria');
   if (!block) return [];
 
   const criteria: string[] = [];
-  for (const line of block[1].split('\n')) {
+  for (const line of block.split('\n')) {
     const trimmed = line.trim();
     if (trimmed.startsWith('-')) {
-      criteria.push(trimmed.replace(/^-\s*/, ''));
+      const item = trimmed.replace(/^-\s*/, '');
+      if (item && !item.startsWith('{')) criteria.push(item);
     }
   }
   return criteria;
+}
+
+export function emptySolutionDesign(): SolutionDesignProposal {
+  return {
+    featureMap: [],
+    growthLoops: [],
+    constraintsFromHypotheses: [],
+    adequacyCriteria: [],
+  };
 }

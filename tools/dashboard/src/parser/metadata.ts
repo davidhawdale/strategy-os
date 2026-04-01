@@ -2,11 +2,11 @@ import type {
   RegisterMetadata,
   BusinessMode,
   BuildMethod,
-  GovernorDirective,
+  SystemMode,
   ParseWarning,
 } from '../model/types';
 
-export function parseMetadata(text: string): { metadata: RegisterMetadata; directives: GovernorDirective[]; warnings: ParseWarning[] } {
+export function parseMetadata(text: string): { metadata: RegisterMetadata; warnings: ParseWarning[] } {
   const warnings: ParseWarning[] = [];
 
   const created = extractSimple(text, /^Created:\s*(.+)/m);
@@ -15,58 +15,37 @@ export function parseMetadata(text: string): { metadata: RegisterMetadata; direc
   const businessModeRaw = extractSimple(text, /^Business Mode:\s*(\w+)/m);
   const businessMode = parseBusinessMode(businessModeRaw);
 
-  const buildMethodRaw = extractSimple(text, /^Build Method:\s*(\w+)/m);
+  const buildMethodRaw = extractSimple(text, /^Build Method:\s*(.+)/m);
   const buildMethod = parseBuildMethod(buildMethodRaw);
 
+  const systemModeRaw = extractSimple(text, /^System Mode:\s*(\w+)/m);
+  const systemMode = parseSystemMode(systemModeRaw);
+
+  const sellReadyRaw = extractSimple(text, /^Sell Ready:\s*(yes|no|true|false)/mi);
+  const sellReady = sellReadyRaw?.toLowerCase() === 'yes' || sellReadyRaw?.toLowerCase() === 'true';
+
+  const scaleReadyRaw = extractSimple(text, /^Scale Ready:\s*(yes|no|true|false)/mi);
+  const scaleReady = scaleReadyRaw?.toLowerCase() === 'yes' || scaleReadyRaw?.toLowerCase() === 'true';
+
+  const registerVersionRaw = extractSimple(text, /^Register Version:\s*(\d+)/m);
+  const registerVersion = registerVersionRaw ? parseInt(registerVersionRaw, 10) : undefined;
+
+  // Legacy field support
   const sellGrowReadyRaw = extractSimple(text, /^Sell & Grow Ready:\s*(yes|no)/mi);
-  const sellGrowReady = sellGrowReadyRaw?.toLowerCase() === 'yes';
+  const legacySellReady = sellGrowReadyRaw?.toLowerCase() === 'yes';
 
   const metadata: RegisterMetadata = {
     created,
     lastReviewed,
     businessMode,
     buildMethod,
-    sellGrowReady,
+    systemMode,
+    sellReady: sellReady || legacySellReady,
+    scaleReady,
+    registerVersion,
   };
 
-  // Parse governor directives
-  const directives = parseGovernorDirectives(text);
-
-  return { metadata, directives, warnings };
-}
-
-function parseGovernorDirectives(text: string): GovernorDirective[] {
-  const directives: GovernorDirective[] = [];
-
-  const pattern = /\*\*Governor Directives\s*\((.+?)\):\*\*/g;
-  let match;
-
-  while ((match = pattern.exec(text)) !== null) {
-    const date = match[1].trim();
-    const startIndex = match.index + match[0].length;
-    const rest = text.substring(startIndex);
-
-    // Collect lines starting with "- " until blank line or next section
-    const lines = rest.split('\n');
-    const items: string[] = [];
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (trimmed.startsWith('- ')) {
-        items.push(trimmed.substring(2));
-      } else if (trimmed === '' && items.length > 0) {
-        break;
-      } else if (trimmed.startsWith('**') || trimmed.startsWith('##') || trimmed === '---') {
-        break;
-      }
-    }
-
-    if (items.length > 0) {
-      directives.push({ date, directives: items });
-    }
-  }
-
-  return directives;
+  return { metadata, warnings };
 }
 
 function extractSimple(text: string, pattern: RegExp): string | undefined {
@@ -85,9 +64,18 @@ function parseBusinessMode(raw: string | undefined): BusinessMode | undefined {
 
 function parseBuildMethod(raw: string | undefined): BuildMethod | undefined {
   if (!raw) return undefined;
-  const upper = raw.toUpperCase();
+  const upper = raw.toUpperCase().replace(/\s+/g, '_');
   if (upper === 'AUTONOMOUS') return 'AUTONOMOUS';
   if (upper === 'GOVERNOR_AUTHORED') return 'GOVERNOR_AUTHORED';
   if (upper === 'MIXED') return 'MIXED';
+  return undefined;
+}
+
+function parseSystemMode(raw: string | undefined): SystemMode | undefined {
+  if (!raw) return undefined;
+  const upper = raw.toUpperCase();
+  if (upper === 'BUILD') return 'BUILD';
+  if (upper === 'CHALLENGE') return 'CHALLENGE';
+  if (upper === 'REVIEW') return 'REVIEW';
   return undefined;
 }

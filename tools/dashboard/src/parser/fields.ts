@@ -6,19 +6,24 @@ import type {
   Assumption,
   EpistemicTag,
   BlastRadius,
+  AssumptionStatus,
   ParseWarning,
+  DesiredState,
+  CurrentState,
+  PossibilitySpace,
+  EliminationEntry,
 } from '../model/types';
 
 const EVIDENCE_TYPES: Set<string> = new Set([
-  'CONVERSATION', 'OBSERVATION', 'DATA', 'FOUNDER_STATED', 'WEB_RESEARCH', 'COMPETITIVE_ANALYSIS',
+  'CONVERSATION', 'OBSERVATION', 'DATA', 'FOUNDER_STATED', 'WEB_RESEARCH', 'COMPETITIVE_ANALYSIS', 'EXPERIMENT_RESULT',
 ]);
 
 const TIERS: Set<string> = new Set(['T1', 'T2', 'T3']);
 const TAGS: Set<string> = new Set(['K', 'B', 'O']);
 const BLAST_RADII: Set<string> = new Set(['LOW', 'MEDIUM', 'HIGH']);
+const ASSUMPTION_STATUSES: Set<string> = new Set(['OPEN', 'TESTING', 'RESOLVED_TRUE', 'RESOLVED_FALSE', 'ESCALATED']);
 
 export function extractField(text: string, fieldName: string): string | undefined {
-  // Handles multi-line: captures from **Field:** to next **Field:** or end
   const escaped = fieldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pattern = new RegExp(
     `\\*\\*${escaped}:\\*\\*\\s*(.+(?:\\n(?!\\*\\*|---).+)*)`,
@@ -32,11 +37,78 @@ export function extractBoldField(text: string, fieldName: string): string | unde
   return extractField(text, fieldName);
 }
 
+export function extractDesiredState(text: string): DesiredState | undefined {
+  const block = extractBlockAfterLabel(text, 'Desired State');
+  if (!block) return undefined;
+
+  const supportedMeans: string[] = [];
+  const brokenMeans: string[] = [];
+  let mode: 'supported' | 'broken' | null = null;
+
+  for (const line of block.split('\n')) {
+    const trimmed = line.trim();
+
+    if (/^-\s*SUPPORTED means:/i.test(trimmed) || /SUPPORTED means:$/i.test(trimmed)) {
+      mode = 'supported';
+      continue;
+    }
+    if (/^-\s*BROKEN means:/i.test(trimmed) || /BROKEN means:$/i.test(trimmed)) {
+      mode = 'broken';
+      continue;
+    }
+
+    if (trimmed.startsWith('-') && mode) {
+      const item = trimmed.replace(/^-\s*/, '');
+      if (item && !item.startsWith('{')) {
+        if (mode === 'supported') supportedMeans.push(item);
+        else brokenMeans.push(item);
+      }
+    }
+  }
+
+  if (supportedMeans.length === 0 && brokenMeans.length === 0) return undefined;
+  return { supportedMeans, brokenMeans };
+}
+
+export function extractCurrentState(text: string): CurrentState | undefined {
+  const block = extractBlockAfterLabel(text, 'Current State');
+  if (!block) return undefined;
+
+  const met: string[] = [];
+  const partial: string[] = [];
+  const missing: string[] = [];
+  const contradicted: string[] = [];
+  let mode: 'met' | 'partial' | 'missing' | 'contradicted' | null = null;
+
+  for (const line of block.split('\n')) {
+    const trimmed = line.trim();
+
+    if (/^-\s*Met:/i.test(trimmed)) { mode = 'met'; continue; }
+    if (/^-\s*Partial:/i.test(trimmed)) { mode = 'partial'; continue; }
+    if (/^-\s*Missing:/i.test(trimmed)) { mode = 'missing'; continue; }
+    if (/^-\s*Contradicted:/i.test(trimmed)) { mode = 'contradicted'; continue; }
+
+    if (trimmed.startsWith('-') && mode) {
+      const item = trimmed.replace(/^-\s*/, '');
+      if (item && !item.startsWith('{')) {
+        switch (mode) {
+          case 'met': met.push(item); break;
+          case 'partial': partial.push(item); break;
+          case 'missing': missing.push(item); break;
+          case 'contradicted': contradicted.push(item); break;
+        }
+      }
+    }
+  }
+
+  if (met.length === 0 && partial.length === 0 && missing.length === 0 && contradicted.length === 0) return undefined;
+  return { met, partial, missing, contradicted };
+}
+
 export function extractEvidenceItems(text: string, sectionName: string): { items: EvidenceItem[]; warnings: ParseWarning[] } {
   const items: EvidenceItem[] = [];
   const warnings: ParseWarning[] = [];
 
-  // Find the evidence block: between **Evidence:** and the next **Field:** or ---
   const evidenceBlock = extractBlockAfterLabel(text, 'Evidence');
   if (!evidenceBlock) return { items, warnings };
 
@@ -48,7 +120,6 @@ export function extractEvidenceItems(text: string, sectionName: string): { items
 
     const raw = trimmed.replace(/^-\s*/, '');
 
-    // Try structured extraction: [TYPE] [TIER] DATE -- detail
     const structuredMatch = trimmed.match(
       /^-\s*\[(\w+(?:_\w+)*)\]\s*\[([T][123])\]\s*(\d{4}-\d{2}-\d{2})\s*--\s*(.+)/
     );
@@ -63,7 +134,6 @@ export function extractEvidenceItems(text: string, sectionName: string): { items
         detail: detail.trim(),
       });
     } else {
-      // Fallback: use raw as detail
       items.push({ raw, detail: raw });
       warnings.push({
         section: sectionName,
@@ -91,7 +161,6 @@ export function extractResearchSources(text: string, _sectionName: string): { it
 
     const raw = trimmed.replace(/^-\s*/, '');
 
-    // Try: [TIER] DATE -- URL: description  OR  [TIER] DATE -- description
     const match = trimmed.match(
       /^-\s*\[([T][123])\]\s*(\d{4}-\d{2}-\d{2})\s*--\s*(https?:\/\/\S+)?:?\s*(.*)/
     );
@@ -134,6 +203,7 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
         blastRadius: currentAssumption.blastRadius,
         falsification: currentAssumption.falsification,
         validation: currentAssumption.validation,
+        status: currentAssumption.status,
       });
     }
   }
@@ -141,16 +211,22 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
   for (const line of lines) {
     const trimmed = line.trim();
 
-    // Continuation lines for falsification/validation
+    // Continuation lines for falsification/validation/status
     if (trimmed.startsWith('->') || trimmed.startsWith('- >')) {
       if (currentAssumption) {
-        const contMatch = trimmed.match(/^-?>\s*(Falsification|Validation):\s*(.+)/i);
+        const contMatch = trimmed.match(/^-?>\s*(Falsification|Validation|Status):\s*(.+)/i);
         if (contMatch) {
           const [, fieldType, value] = contMatch;
-          if (fieldType.toLowerCase() === 'falsification') {
+          const fieldLower = fieldType.toLowerCase();
+          if (fieldLower === 'falsification') {
             currentAssumption.falsification = value.trim();
-          } else {
+          } else if (fieldLower === 'validation') {
             currentAssumption.validation = value.trim();
+          } else if (fieldLower === 'status') {
+            const statusUpper = value.trim().toUpperCase();
+            if (ASSUMPTION_STATUSES.has(statusUpper)) {
+              currentAssumption.status = statusUpper as AssumptionStatus;
+            }
           }
         }
       }
@@ -177,13 +253,11 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
         ? (blastMatch[1].toUpperCase() as BlastRadius)
         : undefined;
 
-      // Extract claim: everything before [LOAD-BEARING] or [BLAST:...]
       let claim = rest
         .replace(/\[LOAD-BEARING\]/gi, '')
         .replace(/\[BLAST:\w+\]/gi, '')
         .trim();
 
-      // Remove trailing period if any
       claim = claim.replace(/\.\s*$/, '').trim();
 
       currentAssumption = {
@@ -209,7 +283,7 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
   return { items, warnings };
 }
 
-function extractBlockAfterLabel(text: string, label: string): string | null {
+export function extractBlockAfterLabel(text: string, label: string): string | null {
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pattern = new RegExp(`\\*\\*${escaped}:\\*\\*`, 'im');
   const match = text.match(pattern);
@@ -218,39 +292,28 @@ function extractBlockAfterLabel(text: string, label: string): string | null {
   const startIndex = match.index + match[0].length;
   const rest = text.substring(startIndex);
 
-  // Find the end: next **Label:** or --- or ## heading
   const endMatch = rest.match(/\n\*\*[A-Z][^*]+:\*\*|\n---|\n##\s/);
   const endIndex = endMatch?.index ?? rest.length;
 
   return rest.substring(0, endIndex);
 }
 
-export function extractPossibilitySpace(text: string): {
-  considered: { description: string; status: 'PRIMARY' | 'ELIMINATED' | 'CARRIED' }[];
-  eliminated: { candidate: string; reason: string }[];
-  alternativesCarried: string[];
-} | undefined {
+export function extractPossibilitySpace(text: string): PossibilitySpace | undefined {
   const block = extractBlockAfterLabel(text, 'Possibility Space');
   if (!block) return undefined;
 
-  const considered: { description: string; status: 'PRIMARY' | 'ELIMINATED' | 'CARRIED' }[] = [];
-  const eliminated: { candidate: string; reason: string }[] = [];
+  const considered: string[] = [];
+  const eliminated: EliminationEntry[] = [];
   const alternativesCarried: string[] = [];
 
   // Parse Considered items
   const consideredBlock = extractSubBlock(block, 'Considered');
   if (consideredBlock) {
-    const lines = consideredBlock.split('\n');
-    for (const line of lines) {
+    for (const line of consideredBlock.split('\n')) {
       const trimmed = line.trim();
-      const itemMatch = trimmed.match(/^\d+\.\s*(.+)/);
-      if (itemMatch) {
-        const desc = itemMatch[1];
-        let status: 'PRIMARY' | 'ELIMINATED' | 'CARRIED' = 'CARRIED';
-        if (/\(PRIMARY/i.test(desc)) status = 'PRIMARY';
-        else if (/\(eliminated\)/i.test(desc)) status = 'ELIMINATED';
-        else if (/\(carried/i.test(desc)) status = 'CARRIED';
-        considered.push({ description: desc.replace(/\s*\((?:PRIMARY|eliminated|carried)[^)]*\)/gi, '').trim(), status });
+      if (trimmed.startsWith('-')) {
+        const item = trimmed.replace(/^-\s*/, '');
+        if (item && !item.startsWith('{')) considered.push(item);
       }
     }
   }
@@ -258,28 +321,20 @@ export function extractPossibilitySpace(text: string): {
   // Parse Eliminated items
   const eliminatedBlock = extractSubBlock(block, 'Eliminated');
   if (eliminatedBlock) {
-    const lines = eliminatedBlock.split('\n');
-    for (const line of lines) {
+    for (const line of eliminatedBlock.split('\n')) {
       const trimmed = line.trim();
       if (trimmed.startsWith('-')) {
-        const text = trimmed.replace(/^-\s*/, '');
-        const dashIndex = text.indexOf(' -- ');
-        if (dashIndex > 0) {
+        const itemText = trimmed.replace(/^-\s*/, '');
+        // Try splitting on " -- "
+        const parts = itemText.split(/\s+--\s+/);
+        if (parts.length >= 2) {
           eliminated.push({
-            candidate: text.substring(0, dashIndex).trim(),
-            reason: text.substring(dashIndex + 4).trim(),
+            candidate: parts[0].trim(),
+            reason: parts[1].trim(),
+            evidence: parts[2]?.trim(),
           });
         } else {
-          // Try splitting on first semicolon or period for reason
-          const sepIndex = text.indexOf(';');
-          if (sepIndex > 0) {
-            eliminated.push({
-              candidate: text.substring(0, sepIndex).trim(),
-              reason: text.substring(sepIndex + 1).trim(),
-            });
-          } else {
-            eliminated.push({ candidate: text, reason: '' });
-          }
+          eliminated.push({ candidate: itemText, reason: '' });
         }
       }
     }
@@ -288,13 +343,11 @@ export function extractPossibilitySpace(text: string): {
   // Parse Alternatives carried
   const altBlock = extractSubBlock(block, 'Alternatives carried');
   if (altBlock) {
-    const lines = altBlock.split('\n');
-    for (const line of lines) {
+    for (const line of altBlock.split('\n')) {
       const trimmed = line.trim();
       if (trimmed.startsWith('-')) {
-        alternativesCarried.push(trimmed.replace(/^-\s*/, ''));
-      } else if (trimmed.length > 0 && !trimmed.startsWith('*')) {
-        alternativesCarried.push(trimmed);
+        const item = trimmed.replace(/^-\s*/, '');
+        if (item && !item.startsWith('{')) alternativesCarried.push(item);
       }
     }
   }
@@ -314,21 +367,42 @@ function extractSubBlock(text: string, label: string): string | null {
   const start = match.index + match[0].length;
   const rest = text.substring(start);
 
-  // End at next "- Label:" at same indentation or end
   const endMatch = rest.match(/\n\s*-\s*(Considered|Eliminated|Alternatives carried):?\s*\n/i);
   const endIndex = endMatch?.index ?? rest.length;
 
   return rest.substring(0, endIndex);
 }
 
+export function extractListItems(text: string, label: string): string[] {
+  const block = extractBlockAfterLabel(text, label);
+  if (!block) return [];
+
+  const items: string[] = [];
+  for (const line of block.split('\n')) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('-')) {
+      const item = trimmed.replace(/^-\s*/, '');
+      if (item && !item.startsWith('{')) items.push(item);
+    }
+  }
+  return items;
+}
+
 export function extractObservableFilters(text: string): string[] {
-  const block = extractBlockAfterLabel(text, 'Observable Filters');
+  // Try Observable Characteristics first (new name), fallback to Observable Filters
+  let block = extractBlockAfterLabel(text, 'Observable Characteristics');
+  if (!block) block = extractBlockAfterLabel(text, 'Observable Filters');
   if (!block) return [];
 
   const filters: string[] = [];
   for (const line of block.split('\n')) {
-    const match = line.trim().match(/^\d+\.\s*(.+)/);
-    if (match) filters.push(match[1].trim());
+    const trimmed = line.trim();
+    if (trimmed.startsWith('-')) {
+      const item = trimmed.replace(/^-\s*/, '');
+      if (item && !item.startsWith('{')) filters.push(item);
+    }
+    const numMatch = trimmed.match(/^\d+\.\s*(.+)/);
+    if (numMatch) filters.push(numMatch[1].trim());
   }
   return filters;
 }
