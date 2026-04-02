@@ -45,7 +45,7 @@ Output: validated strategy + targeting intelligence
 Each hypothesis includes: - Claim - Evidence (tiered) - Assumptions -
 Kill conditions - Confidence state
 
-#### 2. Gap Register (New)
+#### 2. Gap Register
 
 StrategistOS produces **targeting intelligence**:
 
