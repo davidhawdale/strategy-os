@@ -1,6 +1,6 @@
 # StrategistOS
 
-Autonomous strategy and gap intelligence system.\
+Autonomous strategy and gap intelligence system.
 Part of **LeanOS** → **The Missing Team** product portfolio.
 
 ------------------------------------------------------------------------
@@ -26,7 +26,7 @@ It does not execute. It defines **what should be executed and why**.
 
 ## What It Does
 
-Input: problem space\
+Input: problem space
 Output: validated strategy + targeting intelligence
 
     Problem → Research → Hypotheses → Destruction → Gap Identification → Decision State
