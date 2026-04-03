@@ -35,12 +35,17 @@ Output: validated strategy + targeting intelligence
 
 #### 1. Hypothesis Register
 
+Sections 1–7 (Strategist), 8–9 (Gap Definer):
+
 -   Problem
 -   Segment
 -   Unit Economics
 -   Value Proposition
--   Solution Design
--   GTM Plan
+-   Growth Architecture (proposed)
+-   Solution Design (proposed)
+-   GTM Plan (proposed)
+-   Destruction Log
+-   Gap Ledger
 
 Each hypothesis includes: - Claim - Evidence (tiered) - Assumptions -
 Kill conditions - Confidence state
@@ -125,7 +130,6 @@ Builds the strongest possible version of the truth.
   ----------- ---------------------------
   BUILD       Create full register
   CHALLENGE   Re-test with new research
-  REVIEW      Evaluate readiness
 
 ------------------------------------------------------------------------
 

@@ -2,14 +2,21 @@ import type {
   HypothesisRegister,
   Hypothesis,
   HypothesisId,
+  ValueProposition,
   ParseResult,
   ParseWarning,
+  CombinedParseResult,
+  GapAnalysisParseResult,
 } from '../model/types';
 import { splitSections, type SectionId } from './sections';
 import { parseMetadata } from './metadata';
 import { parseHypothesis, emptyHypothesis } from './hypothesis';
 import { parseSolutionDesign } from './solution';
 import { parseDestructionLog } from './destruction';
+import { parseGapAnalysis } from './gap-analysis';
+import { emptySolutionDesign } from './solution';
+
+export { parseGapAnalysis } from './gap-analysis';
 
 const HYPOTHESIS_SECTIONS: { sectionId: SectionId; hypothesisId: HypothesisId }[] = [
   { sectionId: 'problem', hypothesisId: 'problem' },
@@ -36,7 +43,7 @@ export function parse(markdown: string): ParseResult {
   // Step 2: Parse metadata from root section
   const rootSection = sections.get('root');
   const rootText = rootSection?.rawText ?? markdown.split(/\n##\s/)[0] ?? '';
-  const { metadata, directives, warnings: metadataWarnings } = parseMetadata(rootText);
+  const { metadata, warnings: metadataWarnings } = parseMetadata(rootText);
   warnings.push(...metadataWarnings);
 
   // Track completeness for metadata
@@ -45,13 +52,19 @@ export function parse(markdown: string): ParseResult {
   if (metadata.lastReviewed) fieldsExtracted++;
   if (metadata.businessMode) fieldsExtracted++;
   if (metadata.buildMethod) fieldsExtracted++;
-  fieldsExtracted++; // sellGrowReady always has a value (defaults false)
+  fieldsExtracted++; // sellReady always has a value (defaults false)
 
   // Step 3: Parse hypotheses
-  const hypotheses: Record<HypothesisId, Hypothesis> = {
+  const hypotheses: {
+    problem: Hypothesis;
+    segment: Hypothesis;
+    unitEconomics: Hypothesis;
+    valueProposition: ValueProposition;
+  } = {
     problem: emptyHypothesis('problem'),
     segment: emptyHypothesis('segment'),
     unitEconomics: emptyHypothesis('unitEconomics'),
+    valueProposition: emptyValueProposition(),
   };
 
   for (const { sectionId, hypothesisId } of HYPOTHESIS_SECTIONS) {
@@ -81,16 +94,15 @@ export function parse(markdown: string): ParseResult {
   }
 
   // Step 4: Parse solution design
-  let solutionDesign;
+  let solutionDesignProposal;
   const solutionSection = sections.get('solutionDesign');
-  fieldsAttempted += 4; // growthArchitecture, featureMap, mvpScope, growthLoops
+  fieldsAttempted += 3; // featureMap, mvpScope, growthLoops
 
   if (solutionSection) {
     const { solution, warnings: sWarnings } = parseSolutionDesign(solutionSection);
-    solutionDesign = solution;
+    solutionDesignProposal = solution;
     warnings.push(...sWarnings);
 
-    if (solution.growthArchitecture) fieldsExtracted++;
     if (solution.featureMap.length > 0) fieldsExtracted++;
     if (solution.mvpScope) fieldsExtracted++;
     if (solution.growthLoops.length > 0) fieldsExtracted++;
@@ -113,11 +125,11 @@ export function parse(markdown: string): ParseResult {
     destructionLog = log;
     warnings.push(...dWarnings);
 
-    if (log.assumptionExtraction.length > 0) fieldsExtracted++;
     if (log.preMortem) fieldsExtracted++;
-    if (log.redTeam) fieldsExtracted++;
+    if (log.redTeamResponse) fieldsExtracted++;
     if (log.constraintInversions.length > 0) fieldsExtracted++;
-    if (log.evidenceConcentration.length > 0) fieldsExtracted++;
+    if (log.evidenceConcentrationRisk.length > 0) fieldsExtracted++;
+    // killSignalAudit is on the gap analysis side; count evidenceConcentrationRisk twice
   } else {
     warnings.push({
       section: 'destructionLog',
@@ -131,9 +143,12 @@ export function parse(markdown: string): ParseResult {
   const register: HypothesisRegister = {
     metadata,
     hypotheses,
-    solutionDesign,
+    proposals: {
+      growthArchitecture: emptyGrowthArchitecture(),
+      solutionDesign: solutionDesignProposal ?? emptySolutionDesign(),
+      gtmPlan: emptyGtmPlan(),
+    },
     destructionLog,
-    governorDirectives: directives.length > 0 ? directives : undefined,
   };
 
   const parseCompleteness = fieldsAttempted > 0 ? fieldsExtracted / fieldsAttempted : 0;
@@ -141,13 +156,78 @@ export function parse(markdown: string): ParseResult {
   return { register, warnings, parseCompleteness };
 }
 
+/**
+ * Parse both hypothesis register and gap analysis markdown, assembling a CombinedParseResult.
+ * Gap analysis is optional — if gapAnalysisMd is undefined/empty, gapAnalysis is omitted.
+ */
+export function parseCombined(
+  hypothesesMd: string,
+  gapAnalysisMd?: string
+): { result: CombinedParseResult; warnings: ParseWarning[] } {
+  const registerResult = parse(hypothesesMd);
+  const allWarnings: ParseWarning[] = [...registerResult.warnings];
+
+  let gapAnalysisResult: GapAnalysisParseResult | undefined;
+  if (gapAnalysisMd && gapAnalysisMd.trim().length > 0) {
+    gapAnalysisResult = parseGapAnalysis(gapAnalysisMd);
+    allWarnings.push(...gapAnalysisResult.warnings);
+  }
+
+  const result: CombinedParseResult = {
+    register: registerResult.register,
+    gapAnalysis: gapAnalysisResult?.gapAnalysis,
+    registerWarnings: registerResult.warnings,
+    gapAnalysisWarnings: gapAnalysisResult?.warnings ?? [],
+    registerParseCompleteness: registerResult.parseCompleteness,
+    gapAnalysisParseCompleteness: gapAnalysisResult?.parseCompleteness ?? 0,
+  };
+
+  return { result, warnings: allWarnings };
+}
+
 function emptyRegister(): HypothesisRegister {
   return {
-    metadata: { sellGrowReady: false },
+    metadata: { sellReady: false, scaleReady: false },
     hypotheses: {
       problem: emptyHypothesis('problem'),
       segment: emptyHypothesis('segment'),
       unitEconomics: emptyHypothesis('unitEconomics'),
+      valueProposition: emptyValueProposition(),
     },
+    proposals: {
+      growthArchitecture: emptyGrowthArchitecture(),
+      solutionDesign: emptySolutionDesign(),
+      gtmPlan: emptyGtmPlan(),
+    },
+  };
+}
+
+function emptyValueProposition(): ValueProposition {
+  return {
+    clauseValidation: [],
+    evidence: [],
+    assumptions: [],
+  };
+}
+
+function emptyGrowthArchitecture() {
+  return { requiredConditions: [], assumptions: [] };
+}
+
+function emptySolutionDesign() {
+  return {
+    featureMap: [],
+    growthLoops: [],
+    constraintsFromHypotheses: [],
+    adequacyCriteria: [],
+  };
+}
+
+function emptyGtmPlan() {
+  return {
+    channelSequence: [],
+    operationalConstraints: [],
+    successCriteria: [],
+    killCriteria: [],
   };
 }

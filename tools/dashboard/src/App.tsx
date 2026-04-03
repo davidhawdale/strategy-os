@@ -1,21 +1,27 @@
 import { useReducer, useEffect, useCallback } from 'react';
 import { designTokensCSS } from './tokens/design-tokens';
-import type { AppState, AppEvent, ParseResult, HypothesisId, PanelId } from './model/types';
+import type { AppState, AppEvent, CombinedParseResult, HypothesisId, PanelId } from './model/types';
 import { transition } from './model/types';
-import { loadRegister } from './loader/index';
+import { loadCombined } from './loader/index';
 import { Header } from './components/Header';
 import { ReadinessPanel } from './components/panels/ReadinessPanel';
 import { EvidencePanel } from './components/panels/EvidencePanel';
 import { RiskPanel } from './components/panels/RiskPanel';
 import { DestructionPanel } from './components/panels/DestructionPanel';
-import { SolutionPanel } from './components/panels/SolutionPanel';
+import { ProposalsPanel } from './components/panels/ProposalsPanel';
 import { HypothesisDetailPanel } from './components/panels/HypothesisDetailPanel';
+import { GapLedgerPanel } from './components/panels/GapLedgerPanel';
+import { EscalationsPanel } from './components/panels/EscalationsPanel';
+import { DeadlinesPanel } from './components/panels/DeadlinesPanel';
 import { computeReadiness } from './views/readiness';
 import { computeEvidenceQuality } from './views/evidence-quality';
 import { computeRiskMap } from './views/risk-map';
 import { computeDestructionView } from './views/destruction';
-import { computeSolutionView } from './views/solution';
+import { computeProposalsView } from './views/proposals';
 import { computeHypothesisDetail } from './views/hypothesis-detail';
+import { computeGapLedgerView } from './views/gap-ledger';
+import { computeGovernorEscalationsView } from './views/escalations';
+import { computeDecisionDeadlinesView } from './views/deadlines';
 import './App.css';
 
 function reducer(state: AppState, event: AppEvent): AppState {
@@ -30,19 +36,23 @@ function App() {
   const fetchData = useCallback(async () => {
     dispatch({ _tag: 'FetchStart' });
 
-    // Try register.json first, fall back to hypotheses.md
-    const jsonResult = await loadRegister('/register.json');
+    // Try pre-computed JSON first, fall back to markdown files
+    const jsonResult = await loadCombined('/register.json', '/gap-analysis.json');
     if (jsonResult._tag === 'Ok') {
       dispatch({ _tag: 'FetchSuccess', data: jsonResult.data });
       return;
     }
 
-    const mdResult = await loadRegister('/hypotheses.md');
+    // Fall back to markdown
+    const mdResult = await loadCombined('/hypotheses.md', '/gap-analysis.md');
     if (mdResult._tag === 'Ok') {
       dispatch({ _tag: 'FetchSuccess', data: mdResult.data });
     } else {
       const err = mdResult.error;
-      dispatch({ _tag: 'FetchError', message: `${err._tag}: ${err.path}${'reason' in err ? ` — ${err.reason}` : ''}` });
+      dispatch({
+        _tag: 'FetchError',
+        message: `${err._tag}: ${err.path}${'reason' in err ? ` — ${err.reason}` : ''}`,
+      });
     }
   }, []);
 
@@ -81,7 +91,7 @@ function App() {
       <div className="app">
         <div className="app__loading" role="status" aria-live="polite">
           <div className="loading-spinner" />
-          <p className="loading-text">Loading hypothesis register...</p>
+          <p className="loading-text">Loading strategy register...</p>
         </div>
       </div>
     );
@@ -101,11 +111,24 @@ function App() {
   }
 
   // Loaded or Stale
-  const data: ParseResult = state.data;
+  const data: CombinedParseResult = state.data;
   const activePanel: PanelId = state.activePanel;
   const selectedHypothesis: HypothesisId | undefined = state.selectedHypothesis;
 
   const register = data.register;
+  const gapAnalysis = data.gapAnalysis;
+
+  // Parse completeness: average of both (gap analysis may be 0 if not present)
+  const parseCompleteness = gapAnalysis
+    ? (data.registerParseCompleteness + data.gapAnalysisParseCompleteness) / 2
+    : data.registerParseCompleteness;
+
+  const warningCount = data.registerWarnings.length + data.gapAnalysisWarnings.length;
+
+  // Open escalations count — drives badge
+  const openEscalationsCount = gapAnalysis
+    ? gapAnalysis.governorEscalations.filter(e => e.status === 'OPEN').length
+    : 0;
 
   return (
     <div className="app">
@@ -117,17 +140,19 @@ function App() {
 
       <Header
         metadata={register.metadata}
-        parseCompleteness={data.parseCompleteness}
-        warningCount={data.warnings.length}
+        parseCompleteness={parseCompleteness}
+        warningCount={warningCount}
         activePanel={activePanel}
         onSelectPanel={handleSelectPanel}
         onRefresh={handleRefresh}
+        openEscalationsCount={openEscalationsCount}
+        hasGapAnalysis={!!gapAnalysis}
       />
 
       <main className="app__main">
         {activePanel === 'readiness' && (
           <ReadinessPanel
-            view={computeReadiness(register)}
+            view={computeReadiness(register, gapAnalysis)}
             onSelectHypothesis={handleSelectHypothesis}
           />
         )}
@@ -141,16 +166,28 @@ function App() {
         )}
 
         {activePanel === 'destruction' && (
-          <DestructionPanel view={computeDestructionView(register)} />
+          <DestructionPanel view={computeDestructionView(register, gapAnalysis)} />
         )}
 
-        {activePanel === 'solution' && (
-          <SolutionPanel view={computeSolutionView(register)} />
+        {activePanel === 'proposals' && (
+          <ProposalsPanel view={computeProposalsView(register, gapAnalysis)} />
+        )}
+
+        {activePanel === 'gapLedger' && (
+          <GapLedgerPanel view={computeGapLedgerView(register, gapAnalysis)} />
+        )}
+
+        {activePanel === 'escalations' && (
+          <EscalationsPanel view={computeGovernorEscalationsView(gapAnalysis)} />
+        )}
+
+        {activePanel === 'deadlines' && (
+          <DeadlinesPanel view={computeDecisionDeadlinesView(register, gapAnalysis)} />
         )}
 
         {activePanel === 'detail' && selectedHypothesis && (
           <HypothesisDetailPanel
-            view={computeHypothesisDetail(register, selectedHypothesis)}
+            view={computeHypothesisDetail(register, selectedHypothesis, gapAnalysis)}
             onBack={handleBack}
           />
         )}
