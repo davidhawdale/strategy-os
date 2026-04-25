@@ -501,6 +501,8 @@ function parseGovernorEscalations(text: string): Escalation[] {
     if (!titleMatch) continue;
 
     const title = titleMatch[1].trim();
+    const gapIdMatch = title.match(/\(G-(\d+)\)/i);
+    const gapId = gapIdMatch ? `G-${gapIdMatch[1].padStart(2, '0')}` : undefined;
 
     const decisionTypeRaw = extractDashField(block, 'Decision Type');
     let decisionType: Escalation['decisionType'];
@@ -544,6 +546,7 @@ function parseGovernorEscalations(text: string): Escalation[] {
 
     escalations.push({
       title,
+      gapId,
       decisionType,
       blastRadius,
       decisionNeeded,

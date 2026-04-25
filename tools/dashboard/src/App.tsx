@@ -80,6 +80,10 @@ function App() {
     dispatch({ _tag: 'Back' });
   }, []);
 
+  const handleSelectGap = useCallback((gapId: string) => {
+    dispatch({ _tag: 'SelectGap', gapId });
+  }, []);
+
   const handleRefresh = useCallback(() => {
     dispatch({ _tag: 'Refresh' });
     fetchData();
@@ -114,6 +118,7 @@ function App() {
   const data: CombinedParseResult = state.data;
   const activePanel: PanelId = state.activePanel;
   const selectedHypothesis: HypothesisId | undefined = state.selectedHypothesis;
+  const selectedGapId: string | undefined = state.selectedGapId;
 
   const register = data.register;
   const gapAnalysis = data.gapAnalysis;
@@ -174,11 +179,11 @@ function App() {
         )}
 
         {activePanel === 'gapLedger' && (
-          <GapLedgerPanel view={computeGapLedgerView(register, gapAnalysis)} />
+          <GapLedgerPanel view={computeGapLedgerView(register, gapAnalysis)} selectedGapId={selectedGapId} />
         )}
 
         {activePanel === 'escalations' && (
-          <EscalationsPanel view={computeGovernorEscalationsView(gapAnalysis)} />
+          <EscalationsPanel view={computeGovernorEscalationsView(gapAnalysis)} onSelectGap={handleSelectGap} />
         )}
 
         {activePanel === 'deadlines' && (

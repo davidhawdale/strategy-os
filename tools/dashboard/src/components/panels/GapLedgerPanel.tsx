@@ -1,9 +1,10 @@
+import { useEffect } from 'react';
 import type { GapLedgerView, GapRecord } from '../../model/types';
-import { BlastRadiusBadge } from '../shared/BlastRadiusBadge';
 import { GapStatusBadge } from '../shared/GapStatusBadge';
 
 interface Props {
   view: GapLedgerView;
+  selectedGapId?: string;
 }
 
 function GateDecisionBadge({ decision }: { decision?: 'GO' | 'NO_GO' | 'CONDITIONAL_GO' }) {
@@ -27,7 +28,13 @@ function ScoreCell({ score }: { score?: number }) {
   return <td className="data-table__cell"><span className={cls}>{score}</span></td>;
 }
 
-export function GapLedgerPanel({ view }: Props) {
+export function GapLedgerPanel({ view, selectedGapId }: Props) {
+  useEffect(() => {
+    if (selectedGapId) {
+      document.getElementById(selectedGapId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [selectedGapId]);
+
   return (
     <section
       id="panel-gapLedger"
@@ -167,7 +174,7 @@ export function GapLedgerPanel({ view }: Props) {
 
 function FullGapRecord({ gap }: { gap: GapRecord }) {
   return (
-    <article className="gap-record" aria-label={`Gap record: ${gap.id ?? gap.target}`}>
+    <article id={gap.id} className="gap-record" aria-label={`Gap record: ${gap.id ?? gap.target}`}>
       <div className="gap-record__header">
         <h4 className="gap-record__title">{gap.id ?? gap.target}</h4>
         <GapStatusBadge status={gap.status} />
