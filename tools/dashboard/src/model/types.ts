@@ -965,6 +965,8 @@ export function transition(state: AppState, event: AppEvent): AppState {
           return { ...state, activePanel: event.panel, selectedHypothesis: undefined };
         case 'SelectHypothesis':
           return { ...state, activePanel: 'detail', selectedHypothesis: event.id };
+        case 'Back':
+          return { ...state, activePanel: 'readiness', selectedHypothesis: undefined };
         case 'Refresh':
           return { _tag: 'Loading' };
         case 'FetchError':

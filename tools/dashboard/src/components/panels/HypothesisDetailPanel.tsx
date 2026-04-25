@@ -50,17 +50,17 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
             <span className="possibility-count">{view.possibilitySpace.eliminatedCount} eliminated</span>
             <span className="possibility-count">{view.possibilitySpace.carriedCount} carried</span>
           </div>
-          {view.possibilitySpace.entries.length > 0 && (
+          {(view.possibilitySpace.entries?.length ?? 0) > 0 && (
             <ul className="possibility-list">
               {view.possibilitySpace.entries.map((e, i) => (
-                <li key={i} className={`possibility-item possibility-item--${e.status.toLowerCase()}`}>
+                <li key={i} className={`possibility-item possibility-item--${(e.status ?? '').toLowerCase()}`}>
                   <span className="possibility-item__status">{e.status}</span>
                   <span className="possibility-item__desc">{e.description}</span>
                 </li>
               ))}
             </ul>
           )}
-          {view.possibilitySpace.eliminations.length > 0 && (
+          {(view.possibilitySpace.eliminations?.length ?? 0) > 0 && (
             <details className="elimination-details">
               <summary>Elimination reasoning</summary>
               <ul className="elimination-list">
@@ -76,11 +76,11 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
       )}
 
       {/* Evidence */}
-      {view.evidence.length > 0 && (
+      {(view.evidence?.length ?? 0) > 0 && (
         <div className="detail-section">
           <h3 className="section-heading">
             Evidence
-            <span className="section-heading__count">{view.evidence.length}</span>
+            <span className="section-heading__count">{view.evidence?.length}</span>
           </h3>
           <ul className="evidence-list">
             {view.evidence.map((e, i) => (
@@ -98,7 +98,7 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
       )}
 
       {/* Research sources */}
-      {view.researchSources.length > 0 && (
+      {(view.researchSources?.length ?? 0) > 0 && (
         <div className="detail-section">
           <h3 className="section-heading">Research Sources</h3>
           <ul className="source-list">
@@ -119,11 +119,11 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
       )}
 
       {/* Assumptions */}
-      {view.assumptions.length > 0 && (
+      {(view.assumptions?.length ?? 0) > 0 && (
         <div className="detail-section">
           <h3 className="section-heading">
             Assumptions
-            <span className="section-heading__count">{view.assumptions.length}</span>
+            <span className="section-heading__count">{view.assumptions?.length}</span>
           </h3>
           <ul className="assumption-list">
             {view.assumptions.map((a, i) => (
@@ -249,7 +249,7 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
       )}
 
       {/* Economics: Channel Strategy */}
-      {view.channelStrategy && view.channelStrategy.channels.length > 0 && (
+      {view.channelStrategy && (view.channelStrategy.channels?.length ?? 0) > 0 && (
         <div className="detail-section">
           <h3 className="section-heading">Channel Strategy</h3>
           <DataTable

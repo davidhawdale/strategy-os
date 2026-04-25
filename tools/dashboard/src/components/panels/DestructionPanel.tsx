@@ -67,11 +67,11 @@ export function DestructionPanel({ view }: Props) {
         <div className="destruction-section">
           <h3 className="section-heading">Pre-Mortem</h3>
           <div className="pre-mortem-narrative">
-            {view.preMortem.narrative.split('\n\n').map((para, i) => (
+            {(view.preMortem.narrative ?? '').split('\n\n').map((para, i) => (
               <p key={i}>{para}</p>
             ))}
           </div>
-          {view.preMortem.keyFindings.length > 0 && (
+          {(view.preMortem.keyFindings?.length ?? 0) > 0 && (
             <div className="pre-mortem-findings">
               <h4 className="subsection-heading">Key Findings</h4>
               <ul className="findings-list">
@@ -89,7 +89,7 @@ export function DestructionPanel({ view }: Props) {
         <div className="destruction-section">
           <h3 className="section-heading">Red Team Response</h3>
           <p className="red-team-scenario">{view.redTeam.scenario}</p>
-          {view.redTeam.responses.length > 0 && (
+          {(view.redTeam.responses?.length ?? 0) > 0 && (
             <div className="red-team-timeline">
               {view.redTeam.responses.map((r, i) => (
                 <div key={i} className="timeline-item">
@@ -99,7 +99,7 @@ export function DestructionPanel({ view }: Props) {
               ))}
             </div>
           )}
-          {view.redTeam.survivalDependsOn.length > 0 && (
+          {(view.redTeam.survivalDependsOn?.length ?? 0) > 0 && (
             <div className="survival-depends">
               <h4 className="subsection-heading">Strategy Survival Depends On</h4>
               <ul className="survival-list">

@@ -214,14 +214,6 @@ function emptyGrowthArchitecture() {
   return { requiredConditions: [], assumptions: [] };
 }
 
-function emptySolutionDesign() {
-  return {
-    featureMap: [],
-    growthLoops: [],
-    constraintsFromHypotheses: [],
-    adequacyCriteria: [],
-  };
-}
 
 function emptyGtmPlan() {
   return {
