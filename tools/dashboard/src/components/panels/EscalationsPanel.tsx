@@ -1,9 +1,8 @@
-import type { GovernorEscalationsView, Escalation } from '../../model/types';
+import type { GovernorEscalationsView, Escalation, BlastRadius } from '../../model/types';
 import { BlastRadiusBadge } from '../shared/BlastRadiusBadge';
 
 interface Props {
   view: GovernorEscalationsView;
-  onSelectGap?: (gapId: string) => void;
 }
 
 function DecisionTypeBadge({ type }: { type?: Escalation['decisionType'] }) {
@@ -11,7 +10,7 @@ function DecisionTypeBadge({ type }: { type?: Escalation['decisionType'] }) {
   return <span className={`decision-type decision-type--${type.toLowerCase()}`}>{type}</span>;
 }
 
-function EscalationCard({ escalation, onSelectGap }: { escalation: Escalation; onSelectGap?: (gapId: string) => void }) {
+function EscalationCard({ escalation }: { escalation: Escalation }) {
   return (
     <article
       className={`escalation-card escalation-card--${escalation.status.toLowerCase()}`}
@@ -19,11 +18,7 @@ function EscalationCard({ escalation, onSelectGap }: { escalation: Escalation; o
     >
       <div className="escalation-card__header">
         <div className="escalation-card__title-row">
-          <h3 className="escalation-card__title">
-            {escalation.gapId && onSelectGap
-              ? <button className="escalation-card__title-link" onClick={() => onSelectGap(escalation.gapId!)}>{escalation.title}</button>
-              : escalation.title}
-          </h3>
+          <h3 className="escalation-card__title">{escalation.title}</h3>
           <span className={`escalation-status escalation-status--${escalation.status.toLowerCase()}`}>
             {escalation.status}
           </span>
@@ -86,7 +81,7 @@ function EscalationCard({ escalation, onSelectGap }: { escalation: Escalation; o
   );
 }
 
-export function EscalationsPanel({ view, onSelectGap }: Props) {
+export function EscalationsPanel({ view }: Props) {
   return (
     <section
       id="panel-escalations"
@@ -126,7 +121,7 @@ export function EscalationsPanel({ view, onSelectGap }: Props) {
           <div className="escalations-list" role="list">
             {view.openEscalations.map((e, i) => (
               <div key={i} role="listitem">
-                <EscalationCard escalation={e} onSelectGap={onSelectGap} />
+                <EscalationCard escalation={e} />
               </div>
             ))}
           </div>
@@ -142,7 +137,7 @@ export function EscalationsPanel({ view, onSelectGap }: Props) {
           <div className="escalations-list" role="list">
             {view.resolvedEscalations.map((e, i) => (
               <div key={i} role="listitem">
-                <EscalationCard escalation={e} onSelectGap={onSelectGap} />
+                <EscalationCard escalation={e} />
               </div>
             ))}
           </div>

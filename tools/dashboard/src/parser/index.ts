@@ -214,7 +214,6 @@ function emptyGrowthArchitecture() {
   return { requiredConditions: [], assumptions: [] };
 }
 
-
 function emptyGtmPlan() {
   return {
     channelSequence: [],

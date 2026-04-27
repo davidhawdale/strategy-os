@@ -616,7 +616,6 @@ export interface ReadinessHandoff {
 
 export interface Escalation {
   title: string;
-  gapId?: string;
   decisionType?: 'VALUES' | 'GROUND_TRUTH' | 'JUDGMENT';
   blastRadius?: BlastRadius;
   decisionNeeded: string;
@@ -935,9 +934,9 @@ export type PanelId =
 
 export type AppState =
   | { _tag: 'Loading' }
-  | { _tag: 'Loaded'; data: CombinedParseResult; activePanel: PanelId; selectedHypothesis?: HypothesisId; selectedGapId?: string }
+  | { _tag: 'Loaded'; data: CombinedParseResult; activePanel: PanelId; selectedHypothesis?: HypothesisId }
   | { _tag: 'Error'; message: string }
-  | { _tag: 'Stale'; data: CombinedParseResult; activePanel: PanelId; selectedHypothesis?: HypothesisId; selectedGapId?: string; error: string };
+  | { _tag: 'Stale'; data: CombinedParseResult; activePanel: PanelId; selectedHypothesis?: HypothesisId; error: string };
 
 export type AppEvent =
   | { _tag: 'FetchStart' }
@@ -945,7 +944,6 @@ export type AppEvent =
   | { _tag: 'FetchError'; message: string }
   | { _tag: 'SelectPanel'; panel: PanelId }
   | { _tag: 'SelectHypothesis'; id: HypothesisId }
-  | { _tag: 'SelectGap'; gapId: string }
   | { _tag: 'Back' }
   | { _tag: 'Refresh' };
 
@@ -964,13 +962,9 @@ export function transition(state: AppState, event: AppEvent): AppState {
     case 'Loaded':
       switch (event._tag) {
         case 'SelectPanel':
-          return { ...state, activePanel: event.panel, selectedHypothesis: undefined, selectedGapId: undefined };
+          return { ...state, activePanel: event.panel, selectedHypothesis: undefined };
         case 'SelectHypothesis':
           return { ...state, activePanel: 'detail', selectedHypothesis: event.id };
-        case 'SelectGap':
-          return { ...state, activePanel: 'gapLedger', selectedGapId: event.gapId, selectedHypothesis: undefined };
-        case 'Back':
-          return { ...state, activePanel: 'readiness', selectedHypothesis: undefined };
         case 'Refresh':
           return { _tag: 'Loading' };
         case 'FetchError':
@@ -996,11 +990,9 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'FetchSuccess':
           return { _tag: 'Loaded', data: event.data, activePanel: state.activePanel, selectedHypothesis: state.selectedHypothesis };
         case 'SelectPanel':
-          return { ...state, activePanel: event.panel, selectedHypothesis: undefined, selectedGapId: undefined };
+          return { ...state, activePanel: event.panel, selectedHypothesis: undefined };
         case 'SelectHypothesis':
           return { ...state, activePanel: 'detail', selectedHypothesis: event.id };
-        case 'SelectGap':
-          return { ...state, activePanel: 'gapLedger', selectedGapId: event.gapId, selectedHypothesis: undefined };
         case 'Back':
           return { ...state, activePanel: 'readiness', selectedHypothesis: undefined };
         default:
