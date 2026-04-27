@@ -11,10 +11,10 @@ import type {
 import { splitSections, type SectionId } from './sections';
 import { parseMetadata } from './metadata';
 import { parseHypothesis, emptyHypothesis } from './hypothesis';
-import { parseSolutionDesign } from './solution';
+import { parseSolutionDesign, emptySolutionDesign } from './solution';
 import { parseDestructionLog } from './destruction';
 import { parseGapAnalysis } from './gap-analysis';
-import { emptySolutionDesign } from './solution';
+import { parseValueProposition } from './value-proposition';
 
 export { parseGapAnalysis } from './gap-analysis';
 
@@ -91,6 +91,28 @@ export function parse(markdown: string): ParseResult {
     if (hypothesis.assumptions.length > 0) fieldsExtracted++;
     if (hypothesis.killCondition) fieldsExtracted++;
     if (hypothesis.lastUpdated) fieldsExtracted++;
+  }
+
+  // Step 3b: Parse Value Proposition
+  const vpSection = sections.get('valueProposition');
+  if (vpSection) {
+    const { valueProposition: vp, warnings: vpWarnings } = parseValueProposition(vpSection);
+    hypotheses.valueProposition = vp;
+    warnings.push(...vpWarnings);
+    fieldsAttempted += 6;
+    if (vp.claim) fieldsExtracted++;
+    if (vp.confidence) fieldsExtracted++;
+    if (vp.evidence.length > 0) fieldsExtracted++;
+    if (vp.assumptions.length > 0) fieldsExtracted++;
+    if (vp.clauseValidation.length > 0) fieldsExtracted++;
+    if (vp.lastUpdated) fieldsExtracted++;
+  } else {
+    warnings.push({
+      section: 'valueProposition',
+      field: 'section',
+      message: 'Value Proposition section not found',
+      severity: 'info',
+    });
   }
 
   // Step 4: Parse solution design

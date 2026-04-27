@@ -876,7 +876,7 @@ export interface HypothesisDetailView {
     consideredCount: number;
     eliminatedCount: number;
     carriedCount: number;
-    entries: string[];
+    entries: { status: string; description: string }[];
     eliminations: EliminationEntry[];
     carried: string[];
   };
@@ -898,7 +898,7 @@ export interface HypothesisDetailView {
   triggerEvent?: string;
   budgetOwner?: string;
   currentSpend?: string;
-  observableCharacteristics?: string[];
+  observableFilters?: string[];
   accessPaths?: string[];
 
   // Unit Economics specific
@@ -965,6 +965,8 @@ export function transition(state: AppState, event: AppEvent): AppState {
           return { ...state, activePanel: event.panel, selectedHypothesis: undefined };
         case 'SelectHypothesis':
           return { ...state, activePanel: 'detail', selectedHypothesis: event.id };
+        case 'Back':
+          return { ...state, activePanel: 'readiness', selectedHypothesis: undefined };
         case 'Refresh':
           return { _tag: 'Loading' };
         case 'FetchError':

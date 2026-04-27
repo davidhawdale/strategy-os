@@ -1,27 +1,8 @@
 # Dev Fixes
 
-## 1. Duplicate `emptySolutionDesign` declaration - [REPORTED](https://github.com/BellaBe/strategy-os/issues/4) 
+## 1. `require('fs')` in ESM Vite config + missing `gap-analysis.md` middleware
 
-**File:** `tools/dashboard/src/parser/index.ts`
-
-A local `emptySolutionDesign()` function was defined at the bottom of `index.ts` while the same function was already imported from `./solution` at line 17. The duplicate caused a JS runtime error ("Identifier 'emptySolutionDesign' has already been declared") and a blank page.
-
-**Removed this block** (was around line 217):
-
-```ts
-function emptySolutionDesign() {
-  return {
-    featureMap: [],
-    growthLoops: [],
-    constraintsFromHypotheses: [],
-    adequacyCriteria: [],
-  };
-}
-```
-
----
-
-## 2. `require('fs')` in ESM Vite config + missing `gap-analysis.md` middleware
+## *REPORTED // LOCALLY APPLIED*
 
 **File:** `tools/dashboard/vite.config.ts`
 
@@ -103,31 +84,9 @@ export default defineConfig({
 
 ---
 
-## 3. Destruction page crash — undefined properties on `preMortem` and `redTeam`
+## 2. Hypothesis detail pages crash — undefined arrays and `status` on incomplete hypotheses — undefined arrays and `status` on incomplete hypotheses
 
-**File:** `tools/dashboard/src/components/panels/DestructionPanel.tsx`
-
-The Destruction panel crashed with a blank page because it accessed `.split()` and `.length` directly on properties of `view.preMortem` and `view.redTeam` without guarding against those properties being `undefined`. The parent objects existed, but their inner fields did not — so the guards like `{view.preMortem && (` were not enough.
-
-**Four lines changed:**
-
-```tsx
-// Before
-{view.preMortem.narrative.split('\n\n').map(...)
-{view.preMortem.keyFindings.length > 0 && (
-{view.redTeam.responses.length > 0 && (
-{view.redTeam.survivalDependsOn.length > 0 && (
-
-// After
-{(view.preMortem.narrative ?? '').split('\n\n').map(...)}
-{(view.preMortem.keyFindings?.length ?? 0) > 0 && (
-{(view.redTeam.responses?.length ?? 0) > 0 && (
-{(view.redTeam.survivalDependsOn?.length ?? 0) > 0 && (
-```
-
----
-
-## 4. Hypothesis detail pages crash — undefined arrays and `status` on incomplete hypotheses
+### *REPORTED // LOCALLY APPLIED*
 
 **File:** `tools/dashboard/src/components/panels/HypothesisDetailPanel.tsx`
 
@@ -161,7 +120,9 @@ Problem, Segment, Unit Economics, and Value Proposition detail pages all crashed
 
 ---
 
-## 5. Back button on hypothesis detail pages does nothing
+## 3. Back button on hypothesis detail pages does nothing
+
+### *REPORTED // LOCALLY APPLIED*
 
 **File:** `tools/dashboard/src/model/types.ts`
 
@@ -197,30 +158,55 @@ case 'Loaded':
 
 ---
 
-## 6. Escalation headings should link to their gap records
+## 4. Observable Filters missing from Segment detail page
 
-**Files changed:**
+### REPORTED // LOCALLY APPLIED
 
-- `tools/dashboard/src/parser/gap-analysis.ts`
-- `tools/dashboard/src/model/types.ts`
-- `tools/dashboard/src/components/panels/EscalationsPanel.tsx`
-- `tools/dashboard/src/App.tsx`
-- `tools/dashboard/src/components/panels/GapLedgerPanel.tsx`
+**User impact:** The Observable Filters section never appeared on the Segment detail page, even when data had been written into `hypotheses.md`. The panel guarded with `{view.observableFilters && view.observableFilters.length > 0 && (` so it silently skipped the section.
 
-Escalation titles like "Marginal cost of platform extension (G-02)" contain gap record cross-references in their `(G-XX)` suffix, but clicking them did nothing — the linking infrastructure was completely absent.
+**Cause — two issues working together:**
 
-**What was added:**
+1. The parser (`src/parser/hypothesis.ts` line 156) already extracted this data and stored it as `observableCharacteristics` on the `Segment` model. The data existed.
+2. The view builder (`src/views/hypothesis-detail.ts`) never mapped `observableCharacteristics` into the returned view object, so it was dropped before reaching the panel.
+3. The panel read `view.observableFilters`, but `HypothesisDetailView` in `types.ts` had the field as `observableCharacteristics` — a name mismatch.
 
-1. **Parser** — extract `gapId` from the title suffix:
+**Fix 1** — `tools/dashboard/src/model/types.ts`
+
+Renamed `observableCharacteristics` to `observableFilters` in `HypothesisDetailView`. Also fixed `possibilitySpace.entries` from `string[]` to `{ status: string; description: string }[]` (the panel already treated entries as objects).
+
+**Fix 2** — `tools/dashboard/src/views/hypothesis-detail.ts`
+
+Added to the return statement of `computeHypothesisDetail`:
 
 ```ts
-const gapIdMatch = title.match(/\(G-(\d+)\)/i);
-const gapId = gapIdMatch ? `G-${gapIdMatch[1].padStart(2, '0')}` : undefined;
+observableFilters: (h as any).observableCharacteristics,
 ```
 
-2. **`Escalation` type** — new optional field `gapId?: string`
-3. **`AppState` / `AppEvent`** — added `selectedGapId?: string` to `Loaded` and `Stale` states; added `SelectGap` event; wired handler in `transition` to navigate to `gapLedger` panel
-4. **`EscalationsPanel`** — accepts `onSelectGap?` callback; renders title as a `<button>` when `gapId` is present, plain text otherwise
-5. **`GapLedgerPanel`** — accepts `selectedGapId?`; scrolls to the matching gap record article on mount via `useEffect`; gap record `<article>` elements now have `id={gap.id}`
+---
 
-Escalations with `(G-XX)` references are now clickable and navigate to the Gap Ledger, scrolling to the specific record. Escalations without a gap reference remain plain text.
+## 5. Value Proposition panel shows no content
+
+### REPORTED // LOCALLY APPLIED
+
+**User impact:** Clicking the Value Proposition card showed UNKNOWN confidence, no evidence, no assumptions, and no content — even though `strategy/hypotheses.md` had a fully written Value Proposition section.
+
+**Bug 1 — `parser/index.ts` never called `parseValueProposition`**
+
+The parser function existed and worked correctly but was never imported or called. The VP was always initialised to `emptyValueProposition()` and the markdown was never read.
+
+**Fix** — `tools/dashboard/src/parser/index.ts`:
+
+- Added `import { parseValueProposition } from './value-proposition'`
+- Also merged the duplicate `./solution` imports into one line
+- Added VP parsing block after the Problem/Segment/Unit Economics `for` loop
+
+**Bug 2 — `views/hypothesis-detail.ts` didn't pass VP-specific fields to the panel**
+
+`computeHypothesisDetail` never included `jobs` or `clauseValidation` in its return object.
+
+**Fix** — `tools/dashboard/src/views/hypothesis-detail.ts`:
+
+- Added `const vp = id === 'valueProposition' ? (h as ValueProposition) : undefined`
+- Added `jobs: vp?.jobs` and `clauseValidation: vp?.clauseValidation` to the return statement
+
+**Result:** Claim, Confidence (RESEARCHED), Evidence (4 items), and Assumptions (3 items) now appear on the Value Proposition detail page. Jobs Addressed and Clause Validation are wired through to the view but the panel has no rendering sections for them — noted separately in dev-fixes-not-reported-or-applied.md.
