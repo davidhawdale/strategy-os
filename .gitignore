@@ -23,4 +23,7 @@ knowledge/
 # OS
 .DS_Store
 
+# Playwright MCP
+.playwright-mcp/
+
 .wwebjs_cache/
