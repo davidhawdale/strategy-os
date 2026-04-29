@@ -1,8 +1,14 @@
 # 26-04-24 My Notes
 
-I kinda dont see an option for digi and print ... maybe there is - take a good look
-
 Geography now flagged up
+
+Assumption - one 'borders journal' single edition NOT an Aberdeen style journal and local editions across the (diverse) towns
+
+* 'town tagged content streams' - is this what aberdeen does? needs research
+
+Must able to revise and iterate (or version)
+
+
 
 What about different population makeups?
 
