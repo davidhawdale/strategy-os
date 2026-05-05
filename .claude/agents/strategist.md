@@ -135,6 +135,20 @@ Re-evaluate existing register.
 
 **Procedure:**
 
+0. **Snapshot current state.**
+   Read `strategy/hypotheses.md` and extract the register date from the header
+   (look for the most recent "Last updated" or "Register Version" date in YYYY-MM-DD format).
+   Construct the snapshot path: `strategy/snapshots/{date}/`.
+   If that directory already exists, skip this step and note
+   "Snapshot for {date} already exists — skipping" in the report.
+   Otherwise, create the directory and copy into it:
+   - `strategy/hypotheses.md`
+   - `strategy/gap-analysis.md`
+   - `strategy/overview-*.md` (if any exists)
+   - `strategy/challenge-diff-*.md` (if any exists)
+   - All files in `execution/queue/` except `.gitkeep`
+   These snapshot files must not be modified after copying.
+
 1. Read `strategy/hypotheses.md`. If it does not exist, tell governor to run BUILD first.
 2. For each of the four hypotheses (Problem, Segment, Unit Economics, Value Proposition):
    a. Read claim, evidence, assumptions, research sources, elimination rationale.
