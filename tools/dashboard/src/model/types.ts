@@ -326,6 +326,8 @@ export interface ResearchSource {
   tier?: EpistemicTier;
   date?: string;
   url?: string;
+  name?: string;
+  note?: string;
   description?: string;
 }
 

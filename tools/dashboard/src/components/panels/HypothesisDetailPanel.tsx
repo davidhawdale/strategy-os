@@ -1,4 +1,4 @@
-import type { HypothesisDetailView } from '../../model/types';
+import type { HypothesisDetailView, ScenarioEntry } from '../../model/types';
 import { ConfidenceBadge } from '../shared/ConfidenceBadge';
 import { TierBadge } from '../shared/TierBadge';
 import { BlastRadiusBadge } from '../shared/BlastRadiusBadge';
@@ -106,27 +106,6 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
         </div>
       )}
 
-      {/* Research sources */}
-      {(view.researchSources?.length ?? 0) > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">Research Sources</h3>
-          <ul className="source-list">
-            {view.researchSources.map((s, i) => (
-              <li key={i} className="source-item">
-                <TierBadge tier={s.tier} />
-                {s.url ? (
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="source-item__link">
-                    {s.description || s.url}
-                  </a>
-                ) : (
-                  <span>{s.description || s.raw}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {/* Assumptions */}
       {(view.assumptions?.length ?? 0) > 0 && (
         <div className="detail-section">
@@ -178,68 +157,27 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
         </div>
       )}
 
-      {/* Segment: Pain Scoring */}
-      {view.painScoring && view.painScoring.length > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">Pain Scoring</h3>
-          <DataTable
-            caption="Segment pain scoring"
-            columns={[
-              { key: 'segment', header: 'Segment', render: r => r.segment },
-              { key: 'freq', header: 'Freq', render: r => r.frequency, align: 'center' },
-              { key: 'sev', header: 'Sev', render: r => r.severity, align: 'center' },
-              { key: 'breadth', header: 'Breadth', render: r => r.breadth, align: 'center' },
-              { key: 'alt', header: 'Alt Inad.', render: r => r.alternativesInadequacy, align: 'center' },
-              { key: 'comp', header: 'Composite', render: r => <strong>{r.composite}/625</strong>, align: 'center' },
-            ]}
-            data={view.painScoring}
-          />
-        </div>
-      )}
-
-      {/* Economics: Phase Economics */}
-      {view.phaseEconomics && view.phaseEconomics.length > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">Phase Economics</h3>
-          {view.phaseEconomics.map((pe, i) => (
-            <div key={i} className="phase-economics">
-              <h4 className="subsection-heading">{pe.phase}: {pe.description}</h4>
-              <DataTable
-                caption={`${pe.phase} economic inputs`}
-                columns={[
-                  { key: 'name', header: 'Input', render: r => r.name },
-                  { key: 'value', header: 'Value', render: r => r.value },
-                  { key: 'tier', header: 'Tier', render: r => <TierBadge tier={r.tier} /> },
-                  { key: 'source', header: 'Source', render: r => r.source || '' },
-                ]}
-                data={pe.inputs}
-                compact
-              />
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Economics: Scenario Analysis */}
       {view.scenarioAnalysis && (
         <div className="detail-section">
           <h3 className="section-heading">Scenario Analysis</h3>
           <div className="scenario-grid">
-            {view.scenarioAnalysis.base && <ScenarioCard scenario={view.scenarioAnalysis.base} />}
-            {view.scenarioAnalysis.optimistic && <ScenarioCard scenario={view.scenarioAnalysis.optimistic} />}
-            {view.scenarioAnalysis.pessimistic && <ScenarioCard scenario={view.scenarioAnalysis.pessimistic} />}
+            {view.scenarioAnalysis.base && <ScenarioCard label="Base" scenario={view.scenarioAnalysis.base} />}
+            {view.scenarioAnalysis.optimistic && <ScenarioCard label="Optimistic" scenario={view.scenarioAnalysis.optimistic} />}
+            {view.scenarioAnalysis.pessimistic && <ScenarioCard label="Pessimistic" scenario={view.scenarioAnalysis.pessimistic} />}
           </div>
-          {view.scenarioAnalysis.killScenario && (
+          {view.scenarioAnalysis.kill && (
             <div className="kill-scenario">
               <h4 className="subsection-heading">Kill Scenario</h4>
-              <p>{view.scenarioAnalysis.killScenario}</p>
+              <p>{view.scenarioAnalysis.kill}</p>
             </div>
           )}
         </div>
       )}
 
       {/* Economics: Cost Structure */}
-      {view.costStructure && view.costStructure.length > 0 && (
+      {(view.costStructure?.entries?.length ?? 0) > 0 && (
         <div className="detail-section">
           <h3 className="section-heading">Cost Structure</h3>
           <DataTable
@@ -247,11 +185,11 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
             columns={[
               { key: 'category', header: 'Category', render: r => r.category },
               { key: 'items', header: 'Items', render: r => r.items || '' },
-              { key: 'monthly', header: 'Monthly', render: r => r.monthly },
+              { key: 'monthly', header: 'Monthly', render: r => r.monthlyCostRange },
               { key: 'tier', header: 'Tier', render: r => <TierBadge tier={r.tier} /> },
               { key: 'source', header: 'Source', render: r => r.source || '' },
             ]}
-            data={view.costStructure}
+            data={view.costStructure!.entries}
             compact
           />
         </div>
@@ -295,12 +233,7 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
               { key: 'metric', header: 'Metric', render: r => r.metric },
               { key: 'required', header: 'Required', render: r => r.required },
               { key: 'estimate', header: 'Estimate', render: r => r.estimate },
-              {
-                key: 'status', header: 'Status', render: r => {
-                  const cls = r.status === 'PASSES' ? 'text-passes' : r.status === 'WARNING' ? 'text-warning' : 'text-fails';
-                  return <span className={cls}>{r.status}</span>;
-                }
-              },
+              { key: 'tier', header: 'Tier', render: r => <TierBadge tier={r.tier} /> },
             ]}
             data={view.modeThresholds}
           />
@@ -310,31 +243,30 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
   );
 }
 
-function ScenarioCard({ scenario }: { scenario: { label: string; ltvCacRatio?: number; paybackMonths?: number; status?: string } }) {
-  const statusCls = scenario.status === 'PASSES' ? 'scenario-card--passes'
-    : scenario.status === 'CRITICAL_FAILURE' ? 'scenario-card--fails'
-    : scenario.status === 'WARNING' ? 'scenario-card--warning'
-    : '';
-
+function ScenarioCard({ label, scenario }: { label: string; scenario: ScenarioEntry }) {
   return (
-    <div className={`scenario-card ${statusCls}`}>
-      <h4 className="scenario-card__label">{scenario.label}</h4>
-      {scenario.ltvCacRatio !== undefined && (
+    <div className="scenario-card">
+      <h4 className="scenario-card__label">{label}</h4>
+      {scenario.ltvCacRange && (
         <div className="scenario-card__metric">
-          <span className="scenario-card__value">{scenario.ltvCacRatio}:1</span>
+          <span className="scenario-card__value">{scenario.ltvCacRange}</span>
           <span className="scenario-card__name">LTV:CAC</span>
         </div>
       )}
-      {scenario.paybackMonths !== undefined && (
+      {scenario.paybackMonthsRange && (
         <div className="scenario-card__metric">
-          <span className="scenario-card__value">{scenario.paybackMonths}mo</span>
+          <span className="scenario-card__value">{scenario.paybackMonthsRange}</span>
           <span className="scenario-card__name">Payback</span>
         </div>
       )}
-      {scenario.status && (
-        <span className={`scenario-card__status scenario-card__status--${scenario.status?.toLowerCase().replace('_', '-')}`}>
-          {scenario.status.replace('_', ' ')}
-        </span>
+      {scenario.grossMarginRange && (
+        <div className="scenario-card__metric">
+          <span className="scenario-card__value">{scenario.grossMarginRange}</span>
+          <span className="scenario-card__name">Gross Margin</span>
+        </div>
+      )}
+      {scenario.narrative && (
+        <p className="scenario-card__narrative">{scenario.narrative}</p>
       )}
     </div>
   );

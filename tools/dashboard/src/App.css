@@ -1685,6 +1685,11 @@
   color: var(--color-on-surface);
 }
 
+.source-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
 .source-item__link {
   color: var(--color-confidence-researched);
   text-decoration: none;
@@ -1692,6 +1697,10 @@
 
 .source-item__link:hover {
   text-decoration: underline;
+}
+
+.source-item__note {
+  color: var(--color-text-secondary);
 }
 
 /* Assumption list */

@@ -188,12 +188,15 @@ export function extractResearchSources(text: string, _sectionName: string): { it
       let url: string | undefined;
       let description: string;
 
-      const mdLinkMatch = rest.match(/^\[([^\]]+)\]\((https?:\/\/(?:[^)(]|\([^)]*\))*)\)(?:\s*--\s*|\s*:\s*)?(.*)/s);
+      let name: string | undefined;
+      let note: string | undefined;
+
+      const mdLinkMatch = rest.match(/^\[([^\]]+)\]\((https?:\/\/(?:[^)(]|\([^)]*\))*)\)(?:\s*(?:--|—)\s*|\s*:\s*)?(.*)/s);
       if (mdLinkMatch) {
-        const linkText = mdLinkMatch[1];
+        name = mdLinkMatch[1];
         url = mdLinkMatch[2];
-        const note = mdLinkMatch[3]?.trim();
-        description = note ? `${linkText} — ${note}` : linkText;
+        note = mdLinkMatch[3]?.trim() || undefined;
+        description = note ? `${name} — ${note}` : name;
       } else {
         const bareUrlMatch = rest.match(/^(https?:\/\/\S+):?\s*(.*)/);
         if (bareUrlMatch) {
@@ -209,6 +212,8 @@ export function extractResearchSources(text: string, _sectionName: string): { it
         tier: TIERS.has(tierStr) ? (tierStr as EpistemicTier) : undefined,
         date,
         url,
+        name,
+        note,
         description: description.trim() || raw,
       });
     } else {

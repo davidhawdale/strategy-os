@@ -118,6 +118,7 @@ Produce: competitor response profiles. Label T2 (inferred from public signals).
 - Minimum 3 direct competitors identified (or documented that fewer exist with evidence)
 - All 5 indirect competitor types evaluated (even if "not applicable" for some)
 - Every competitor claim cites a specific source with URL in `[Name](URL)` format — never plain text
+- Competitor pricing claims must link to the specific pricing or subscribe page in the evidence entry — the subscribe page URL belongs in the evidence entry itself, not only in Research Sources
 - Evidence entries follow register format: `[TYPE] [TIER] DATE -- [Name](URL): one-sentence finding.`
 - Positioning matrix identifies at least 1 gap (or documents "no gaps found -- market is saturated" as a finding)
 - Competitor response profiles include resource level, product velocity, and strategic focus
