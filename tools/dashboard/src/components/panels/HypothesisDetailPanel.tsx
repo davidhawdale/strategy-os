@@ -11,7 +11,7 @@ interface Props {
 }
 
 function renderUpdateText(text: string) {
-  const lines = text.split('\n');
+  const lines = (text.charAt(0).toUpperCase() + text.slice(1)).split('\n');
   const segments: Array<{ type: 'text' | 'list'; lines: string[] }> = [];
   let current: { type: 'text' | 'list'; lines: string[] } | null = null;
   for (const line of lines) {
@@ -52,6 +52,52 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
         <div className="detail-section">
           <h3 className="section-heading">Claim</h3>
           <blockquote className="claim-block">{view.claim}</blockquote>
+        </div>
+      )}
+
+      {/* Segment: Budget Owner */}
+      {view.budgetOwner && (
+        <div className="detail-section">
+          <h3 className="section-heading">Budget Owner</h3>
+          <p className="segment-field">{view.budgetOwner}</p>
+        </div>
+      )}
+
+      {/* Segment: Current Spend */}
+      {view.currentSpend && (
+        <div className="detail-section">
+          <h3 className="section-heading">Current Spend</h3>
+          <p className="segment-field">{view.currentSpend}</p>
+        </div>
+      )}
+
+      {/* Segment: Observable Characteristics */}
+      {view.observableCharacteristics && view.observableCharacteristics.length > 0 && (
+        <div className="detail-section">
+          <h3 className="section-heading">Observable Characteristics</h3>
+          <ol className="observable-characteristics">
+            {view.observableCharacteristics.map((f, i) => <li key={i}>{f}</li>)}
+          </ol>
+        </div>
+      )}
+
+      {/* Segment: Access Paths */}
+      {view.accessPaths && view.accessPaths.length > 0 && (
+        <div className="detail-section">
+          <h3 className="section-heading">Access Paths</h3>
+          <ul className="access-path-list">
+            {view.accessPaths.map((p, i) => <li key={i}>{p}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {/* Segment: Possible Trigger Events */}
+      {view.triggerEvent && (
+        <div className="detail-section">
+          <h3 className="section-heading">Possible Trigger Events</h3>
+          <ul className="access-path-list">
+            {view.triggerEvent.split(/;\s*/).filter(Boolean).map((t, i) => <li key={i}>{t.charAt(0).toUpperCase() + t.slice(1)}</li>)}
+          </ul>
         </div>
       )}
 
@@ -179,7 +225,7 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
             {/* Zone 1: Primary */}
             {primaryLabel && (
               <div className="possibility-primary">
-                <span className="possibility-primary__label">Primary Problem</span>
+                <span className="possibility-primary__label">Primary {view.label}</span>
                 <p className="possibility-primary__text">{primaryLabel}</p>
               </div>
             )}
@@ -190,7 +236,7 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
                 <h4 className="subsection-heading">Carried into design</h4>
                 <ul className="possibility-carried-list">
                   {view.possibilitySpace!.carried.map((c, i) => {
-                    const codeMatch = c.match(/^\(P\d+\)\s*/);
+                    const codeMatch = c.match(/^\([A-Z]\d+\)\s*/);
                     const code = codeMatch ? codeMatch[0].trim() : '';
                     const carriedBody = codeMatch ? c.slice(codeMatch[0].length) : c;
                     const entry = view.possibilitySpace!.entries.find(e => e.startsWith(code));
@@ -211,7 +257,10 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
                 <h4 className="subsection-heading">Eliminated</h4>
                 <ul className="possibility-eliminated-list">
                   {view.possibilitySpace!.eliminations.map((e, i) => {
-                    const entry = view.possibilitySpace!.entries.find(en => en.startsWith(e.candidate));
+                    const codeFromCandidate = e.candidate.match(/^\([A-Z]\d+\)/)?.[0] ?? '';
+                    const entry = codeFromCandidate
+                      ? view.possibilitySpace!.entries.find(en => en.startsWith(codeFromCandidate))
+                      : undefined;
                     const detail = e.reason === 'Eliminated'
                       ? e.evidence
                       : [e.reason, e.evidence].filter(Boolean).join(' — ');
@@ -312,10 +361,19 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
             {view.assumptions.map((a, i) => (
               <li key={i} className="assumption-item">
                 <div className="assumption-item__header">
-                  {a.tag && <span className="assumption-item__tag">{a.tag}</span>}
-                  <TierBadge tier={a.tier} />
+                  {a.status && (
+                    <span className={`badge assumption-status assumption-status--${a.status.toLowerCase()}`}>
+                      {a.status.replace(/_/g, ' ')}
+                    </span>
+                  )}
+                  {a.tag && (
+                    <span className="assumption-item__tag">
+                      {a.tag === 'B' ? 'Belief' : a.tag === 'K' ? 'Knowledge' : 'Observation'}
+                    </span>
+                  )}
                   <BlastRadiusBadge radius={a.blastRadius} />
                   {a.loadBearing && <span className="badge badge--load-bearing">Load-Bearing</span>}
+                  <TierBadge tier={a.tier} />
                 </div>
                 <p className="assumption-item__claim">{a.claim}</p>
                 {a.falsification && (
@@ -324,6 +382,11 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
                 {a.validation && (
                   <p className="assumption-item__detail"><strong>Validation:</strong> {a.validation}</p>
                 )}
+                {a.challenges && a.challenges.map((c, j) => (
+                  <p key={j} className="assumption-item__detail assumption-item__challenge">
+                    <strong>Challenge {c.date}:</strong> {c.text}
+                  </p>
+                ))}
               </li>
             ))}
           </ul>
@@ -369,18 +432,6 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
       )}
 
       {/* === Hypothesis-specific sections === */}
-
-      {/* Segment: Observable Filters */}
-      {view.observableFilters && view.observableFilters.length > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">Observable Filters</h3>
-          <ol className="observable-filters">
-            {view.observableFilters.map((f, i) => (
-              <li key={i}>{f}</li>
-            ))}
-          </ol>
-        </div>
-      )}
 
 
       {/* Economics: Scenario Analysis */}

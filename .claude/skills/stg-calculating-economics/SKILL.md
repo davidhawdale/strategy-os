@@ -161,9 +161,21 @@ Write complete unit economics hypothesis in register format:
 - **Evidence:** All calculations with sources and tier labels.
 - **Mode Thresholds:** Table with required vs estimated for each metric.
 - **Scenario Analysis:** Optimistic, base, pessimistic, kill -- with specific numbers.
-- **Assumptions:** Every input that is T2 or T3 is an assumption (with tier, load-bearing flag, blast radius).
+- **Assumptions:** Every input that is T2 or T3 is an assumption. Full format (renderer-critical):
+  ```
+  - [TAG] [TIER] Claim [LOAD-BEARING] [BLAST:LEVEL]
+    -> Falsification: Observable condition that would disprove this
+    -> Validation: How to test or resolve it
+    -> Status: OPEN
+  ```
+  Tags: `[B]` Belief | `[K]` Knowledge | `[O]` Observation. Status values: `OPEN` | `TESTING` | `RESOLVED_TRUE` | `RESOLVED_FALSE` | `ESCALATED`. CHALLENGE passes append `-> CHALLENGE YYYY-MM-DD: [one-line note]` after Status — do not remove prior CHALLENGE lines.
 - **Kill Condition:** At what LTV:CAC ratio or payback period does this stop working? State specific numbers.
 - **Possibility Space:** All revenue models considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
+
+  **Possibility Space format rules (renderer-critical):**
+  - Code prefix for this hypothesis type: **E** (E1, E2, E3…). Every entry in Considered, Alternatives carried, and Eliminated must begin with its code in parentheses.
+  - Mark the primary Considered entry with `[PRIMARY]` at the end: e.g. `(E1) [description] [PRIMARY]`
+  - Eliminated entries must begin with the same code as their Considered counterpart, followed by ` -- ` and the elimination rationale: e.g. `(E3) Eliminated -- [reason]`. Do NOT put a description before the code.
 
 Produce: complete unit economics hypothesis in register format.
 

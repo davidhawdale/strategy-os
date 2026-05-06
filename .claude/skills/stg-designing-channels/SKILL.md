@@ -180,6 +180,7 @@ Also produce structured outputs for stg-calculating-economics:
 - Blended CAC checked against LTV:CAC requirement
 - Sequencing distinguishes bootstrap/early from scale phase
 - Possibility space documented: considered channels, alternatives carried (with rationale), then eliminated (with rationale) — order must be: Considered → Alternatives carried → Eliminated
+- **Possibility Space format rules (renderer-critical):** Code prefix for this hypothesis type: **C** (C1, C2, C3…). Every entry in Considered, Alternatives carried, and Eliminated must begin with its code in parentheses. Mark the primary Considered entry with `[PRIMARY]` at the end: e.g. `(C1) [description] [PRIMARY]`. Eliminated entries must begin with the same code as their Considered counterpart, followed by ` -- ` and the elimination rationale: e.g. `(C3) Eliminated -- [reason]`. Do NOT put a description before the code.
 - All CAC benchmarks cite sources
 
 ## Failure Modes

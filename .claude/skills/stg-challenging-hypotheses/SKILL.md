@@ -43,6 +43,11 @@ For each challenged section, test new evidence against:
 - Load-bearing assumptions — does any assumption flip from open to resolved?
 - Kill condition — is any kill threshold crossed?
 
+**Updating individual assumptions during a CHALLENGE pass:**
+- If an assumption's status changes, update the `-> Status:` line in place (e.g. `OPEN` → `TESTING` or `RESOLVED_TRUE`).
+- Append a `-> CHALLENGE YYYY-MM-DD: [one-line note]` line after the Status line to record what changed. Do not remove prior CHALLENGE lines — each pass accumulates them.
+- Do not rewrite or remove the original assumption claim, Falsification, or Validation lines unless they are factually wrong.
+
 Determine confidence state transition:
 - No change if evidence is additive but claim holds
 - UNVALIDATED → RESEARCHED if T1/T2 evidence now supports the claim

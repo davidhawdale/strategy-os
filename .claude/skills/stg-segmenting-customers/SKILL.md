@@ -120,12 +120,31 @@ Produce: segment hypothesis with possibility space (primary, alternatives, elimi
 
 ### Step 7: Write Hypothesis [S]
 
-Write complete segment hypothesis in register format:
+Write complete segment hypothesis in register format. Fields must appear in this order:
 
 - **Claim:** One paragraph -- who has this problem acutely, observable characteristics. Use behavioral language, not demographic generalization.
-- **Evidence:** Tier-labeled evidence items from scoring.
+- **Budget Owner:** Who controls the purchase decision, and at what ACV level does it become a formal decision vs. a consumption choice?
+- **Current Spend:** What do they currently spend on substitutes or adjacent products? Cite observable proxies (print subscription costs, comparable digital subs).
+- **Observable Characteristics:** Numbered list. Each item must be a concrete, searchable filter — no psychographics. Example: "Members of named Facebook community groups for [towns]."
+- **Access Paths:** Bulleted list of acquisition channels that reach this segment specifically, with rationale for why each path is viable.
+- **Trigger Event:** Semicolon-separated list of specific events or changes that move this person from non-buyer to active buyer. Example: "Cancellation of print delivery; arrival of fibre broadband; house purchase in the area." Rendered in the dashboard as bullet points.
+- **Desired State:** Conditions that would confirm this segment is correctly identified and reachable.
+- **Current State:** Current fulfilment status of each desired condition (MET / PARTIAL / MISSING / CONTRADICTED).
 - **Possibility Space:** Candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
-- **Assumptions:** What must be true about this segment (each with tier label, load-bearing flag, blast radius).
+
+  **Possibility Space format rules (renderer-critical):**
+  - Code prefix for this hypothesis type: **S** (S1, S2, S3…). Every entry in Considered, Alternatives carried, and Eliminated must begin with its code in parentheses.
+  - Mark the primary Considered entry with `[PRIMARY]` at the end: e.g. `(S1) [description] [PRIMARY]`
+  - Eliminated entries must begin with the same code as their Considered counterpart, followed by ` -- ` and the elimination rationale: e.g. `(S4) Eliminated -- [reason]`. Do NOT put a description before the code.
+- **Evidence:** Tier-labeled evidence items from scoring.
+- **Assumptions:** What must be true about this segment. Full format (renderer-critical):
+  ```
+  - [TAG] [TIER] Claim [LOAD-BEARING] [BLAST:LEVEL]
+    -> Falsification: Observable condition that would disprove this
+    -> Validation: How to test or resolve it
+    -> Status: OPEN
+  ```
+  Tags: `[B]` Belief | `[K]` Knowledge | `[O]` Observation. Status values: `OPEN` | `TESTING` | `RESOLVED_TRUE` | `RESOLVED_FALSE` | `ESCALATED`. CHALLENGE passes append `-> CHALLENGE YYYY-MM-DD: [one-line note]` after Status — do not remove prior CHALLENGE lines.
 - **Kill Condition:** What would prove this is the wrong segment. Must be specific and observable (not "segment doesn't work"). Example: "Interviews with 5 [segment] companies reveal <2/5 experience this problem weekly."
 
 Produce: complete segment hypothesis in register format.

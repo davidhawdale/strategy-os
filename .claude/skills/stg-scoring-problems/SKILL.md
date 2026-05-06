@@ -113,7 +113,19 @@ Primary = highest composite score. Write in register format:
 - **Claim:** State the problem independent of any solution. "Customers struggle with X" not "customers need a tool that does Y." One paragraph.
 - **Evidence:** Tier-labeled evidence items from scoring (per-property evidence).
 - **Possibility Space:** All candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
-- **Assumptions:** What must be true for this problem to be worth solving (each with tier, load-bearing flag, blast radius).
+
+  **Possibility Space format rules (renderer-critical):**
+  - Code prefix for this hypothesis type: **P** (P1, P2, P3…). Every entry in Considered, Alternatives carried, and Eliminated must begin with its code in parentheses.
+  - Mark the primary Considered entry with `[PRIMARY]` at the end: e.g. `(P1) [description] [PRIMARY]`
+  - Eliminated entries must begin with the same code as their Considered counterpart, followed by ` -- ` and the elimination rationale: e.g. `(P5) Eliminated -- [reason]`. Do NOT put a description before the code.
+- **Assumptions:** What must be true for this problem to be worth solving. Full format (renderer-critical):
+  ```
+  - [TAG] [TIER] Claim [LOAD-BEARING] [BLAST:LEVEL]
+    -> Falsification: Observable condition that would disprove this
+    -> Validation: How to test or resolve it
+    -> Status: OPEN
+  ```
+  Tags: `[B]` Belief | `[K]` Knowledge | `[O]` Observation. Status values: `OPEN` | `TESTING` | `RESOLVED_TRUE` | `RESOLVED_FALSE` | `ESCALATED`. CHALLENGE passes append `-> CHALLENGE YYYY-MM-DD: [one-line note]` after Status — do not remove prior CHALLENGE lines.
 - **Kill Condition:** What would prove this problem is not worth solving. Must reference specific observable thresholds. Example: "Interviews reveal <2/5 people in the segment experience this problem weekly" or "existing alternative achieves >80% satisfaction."
 
 Produce: complete problem hypothesis in register format.

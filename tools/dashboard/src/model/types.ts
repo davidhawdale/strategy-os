@@ -356,6 +356,7 @@ export interface Assumption {
   falsification?: string;
   validation?: string;
   status?: AssumptionStatus;
+  challenges?: Array<{ date: string; text: string }>;
 }
 
 // ============================================================
@@ -914,7 +915,7 @@ export interface HypothesisDetailView {
   triggerEvent?: string;
   budgetOwner?: string;
   currentSpend?: string;
-  observableFilters?: string[];
+  observableCharacteristics?: string[];
   accessPaths?: string[];
 
   // Unit Economics specific

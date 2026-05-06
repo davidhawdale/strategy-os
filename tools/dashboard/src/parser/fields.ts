@@ -257,6 +257,7 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
         falsification: currentAssumption.falsification,
         validation: currentAssumption.validation,
         status: currentAssumption.status,
+        challenges: currentAssumption.challenges,
       });
     }
   }
@@ -280,6 +281,12 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
             if (ASSUMPTION_STATUSES.has(statusUpper)) {
               currentAssumption.status = statusUpper as AssumptionStatus;
             }
+          }
+        } else {
+          const challengeMatch = trimmed.match(/^-?>\s*CHALLENGE\s+(\d{4}-\d{2}-\d{2})\s*:\s*(.+)/i);
+          if (challengeMatch) {
+            if (!currentAssumption.challenges) currentAssumption.challenges = [];
+            currentAssumption.challenges.push({ date: challengeMatch[1], text: challengeMatch[2].trim() });
           }
         }
       }
