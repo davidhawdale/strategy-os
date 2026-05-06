@@ -243,7 +243,7 @@ Run gap-enforcing-decisions skill:
 4. Set sell_ready / scale_ready.
 
 ### PASS 5: Issue Queue
-1. Write top-3 actions to execution queue.
+1. Write top-3 actions to `execution/queue/gap-definer-actions.md` (overwrite; no date in filename).
 2. Write only gap-reduction tasks and escalations.
 3. Update `strategy/gap-analysis.md` with full detail.
 4. Update hypothesis register summary sections (8: Destruction Log,

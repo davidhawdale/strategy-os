@@ -8,7 +8,7 @@ After PASS 5 (Issue Queue) completes. Only runs during CHALLENGE mode — not BU
 
 ## Procedure
 
-1. Check `strategy/` for any existing `challenge-diff-*.md` file (from a prior pass).
+1. Check `strategy/` for any existing `challenge-diff.md` file (from a prior pass).
    If one exists, confirm it is already present in the snapshot directory
    (`strategy/snapshots/{prior-date}/`). Then delete it from `strategy/` — the snapshot
    is the archive; `strategy/` holds only the current diff.
@@ -25,8 +25,7 @@ After PASS 5 (Issue Queue) completes. Only runs during CHALLENGE mode — not BU
    - `strategy/hypotheses.md`
    - `strategy/gap-analysis.md`
 
-5. Write `strategy/challenge-diff-{today}.md` with the following sections.
-   Use today's date in YYYY-MM-DD format for the filename.
+5. Write `strategy/challenge-diff.md` with the following sections.
 
 ---
 

@@ -12,7 +12,9 @@ reads:
   - execution/queue/
 writes:
   - strategy/hypotheses.md
+  - strategy/snapshots/
   - execution/queue/
+  - execution/queue/snapshots/
 escalates-to: governor (via execution/queue/)
 tools:
   - Read
@@ -25,6 +27,7 @@ tools:
 memory: project
 maxTurns: 50
 skills:
+  - stg-snapshot
   - stg-sizing-markets
   - stg-segmenting-customers
   - stg-scoring-problems
@@ -125,7 +128,7 @@ Autonomous end-to-end strategy construction from governor input.
 
 6. Write `strategy/hypotheses.md` with complete register (sections 1-7). Leave sections 8 (Destruction Log) and 9 (Gap Ledger) for Gap Definer.
 
-7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to `execution/queue/` per the governor protocol in CLAUDE.md.
+7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to `execution/queue/strategist-escalations.md` (overwrite; no date in filename).
 
 8. Report to governor: what was researched, what survived, what was eliminated and why, what the governor needs to do next, and that Gap Definer should run next to validate.
 
@@ -135,19 +138,7 @@ Re-evaluate existing register.
 
 **Procedure:**
 
-0. **Snapshot current state.**
-   Read `strategy/hypotheses.md` and extract the register date from the header
-   (look for the most recent "Last updated" or "Register Version" date in YYYY-MM-DD format).
-   Construct the snapshot path: `strategy/snapshots/{date}/`.
-   If that directory already exists, skip this step and note
-   "Snapshot for {date} already exists — skipping" in the report.
-   Otherwise, create the directory and copy into it:
-   - `strategy/hypotheses.md`
-   - `strategy/gap-analysis.md`
-   - `strategy/overview-*.md` (if any exists)
-   - `strategy/challenge-diff-*.md` (if any exists)
-   - All files in `execution/queue/` except `.gitkeep`
-   These snapshot files must not be modified after copying.
+0. **Snapshot current state.** Run stg-snapshot skill.
 
 1. Read `strategy/hypotheses.md`. If it does not exist, tell governor to run BUILD first.
 2. For each of the four hypotheses (Problem, Segment, Unit Economics, Value Proposition):

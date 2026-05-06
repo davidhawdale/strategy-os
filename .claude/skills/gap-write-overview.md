@@ -14,15 +14,14 @@ One page maximum.
 
 ## Procedure
 
-1. Check `strategy/` for any existing `overview-*.md` file (the previous pass overview).
+1. Check `strategy/` for any existing `overview.md` file (the previous pass overview).
    If one exists, confirm it is already present in the snapshot directory
    (`strategy/snapshots/{prior-date}/`). Then delete it from `strategy/` — the snapshot
    is the archive; `strategy/` holds only the current overview.
 2. Read `strategy/hypotheses.md` (header and key sections) for current decision state.
 3. Read the action queue from `execution/queue/` (most recent gap-definer-actions file).
 4. Read the challenge-diff written by gap-write-diff for the "what changed" table.
-5. Write `strategy/overview-{today}.md` using the structure below.
-   Use today's date in YYYY-MM-DD format for the filename.
+5. Write `strategy/overview.md` using the structure below.
 
 ---
 
@@ -71,8 +70,8 @@ Maximum 5 items. These are the things the governor must act on now.}
 |------|----------|
 | `strategy/hypotheses.md` | ... |
 | `strategy/gap-analysis.md` | ... |
-| `strategy/challenge-diff-{today}.md` | ... |
-| `execution/queue/{today}-gap-definer-actions.md` | ... |
+| `strategy/challenge-diff.md` | ... |
+| `execution/queue/gap-definer-actions.md` | ... |
 | `strategy/snapshots/{prior-date}/` | ... |
 
 {List all current artifacts with a one-line description of each.}
