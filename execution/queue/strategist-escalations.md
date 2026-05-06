@@ -1,9 +1,23 @@
 # Strategist Escalations to Governor
 
 **From:** strategist
-**Date:** 2026-05-05
-**Mode:** CHALLENGE (post-incorporation of P&J product briefing)
-**Re:** DC Thomson Scottish Borders extension hypothesis register, Pass 2
+**Date:** 2026-05-06 (updated; original 2026-05-05)
+**Mode:** CHALLENGE (Pass 2, post fresh competitive intelligence)
+**Re:** DC Thomson Scottish Borders extension hypothesis register, Register Version 3
+
+## 2026-05-06 status update (top of file)
+
+The 2026-05-06 CHALLENGE pass surfaced material new T1 competitive intelligence (Newsquest Scotland 51,153 subs Dec 2025; Newsquest All Access Scotland bundle £8.99/mo June 2025 driving two-thirds of new sign-ups; DCT regionals >50k Jan 2026; GoFibre Borders rollout expanded to 20k premises). **No new governor escalation is raised by this new evidence.** The new evidence does, however, sharpen existing Escalation 3 (brand architecture):
+
+- **Sharpens the case for option (B) — section within existing P&J/Courier brand**: under (B), DCT can present an existing P&J or Courier subscription as a multi-title bundle answer to Newsquest's £8.99 All Access Scotland bundle, *neutralising* the price-parity competitive threat. Under (A) — separate Borders brand — DCT is positioning a single-title Borders Web Pack at £7.99-£8.99 against a multi-title bundle at the same price, which is a structurally weaker competitive position.
+- **Does not change the values content of Escalation 3**: the choice between (A), (B) and (C) is still a values/strategic decision about brand portfolio. The new evidence shifts the *evidence-based weight* on the configurations but does not resolve the values question.
+- **Does not require re-escalation**: per error-handling rule, do not re-escalate same decision while it is open. Governor still owes a response on Escalations 1, 2, 3.
+
+The original 2026-05-05 escalation text (Escalation 3 + status update on Escalations 1 and 2) is preserved below unchanged.
+
+---
+
+## Original 2026-05-05 escalation text
 
 The CHALLENGE pass against the new T1 evidence (research/press-and-journal/pj-product-briefing-2026-05-05.md) surfaces one new escalation. The earlier two escalations (E-01 platform marginal cost, E-02 overhead allocation) remain open and partially relevant, with E-01 split into two distinguishable assumptions (see Section 3 of the register).
 
