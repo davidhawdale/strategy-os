@@ -125,13 +125,31 @@ export function extractEvidenceItems(text: string, sectionName: string): { items
     );
 
     if (structuredMatch) {
-      const [, typeStr, tierStr, date, detail] = structuredMatch;
+      const [, typeStr, tierStr, date, rawDetail] = structuredMatch;
+
+      // URL pattern allowing one level of nested parens (e.g. Wikipedia URLs like /Southern_Reporter_(newspaper))
+      const URL_PAT = String.raw`https?:\/\/(?:[^)(]|\([^)]*\))*`;
+      // Extract [Name](URL): detail if link leads; otherwise scan for first [Name](URL) anywhere in detail
+      const leadingLinkMatch = rawDetail.match(new RegExp(String.raw`^\[([^\]]+)\]\((${URL_PAT})\):\s*(.*)`, 's'));
+      const inlineLinkMatch = !leadingLinkMatch
+        ? rawDetail.match(new RegExp(String.raw`\[([^\]]+)\]\((${URL_PAT})\)`))
+        : null;
+      const source = leadingLinkMatch ? leadingLinkMatch[1] : (inlineLinkMatch ? inlineLinkMatch[1] : undefined);
+      const url = leadingLinkMatch ? leadingLinkMatch[2] : (inlineLinkMatch ? inlineLinkMatch[2] : undefined);
+      const detail = leadingLinkMatch
+        ? leadingLinkMatch[3].trim()
+        : inlineLinkMatch
+          ? rawDetail.replace(new RegExp(String.raw`[Ss]ources?:\s*\[[^\]]+\]\(${URL_PAT}\)(\s+and\s+\[[^\]]+\]\(${URL_PAT}\))*\.?`, 'g'), '').trim().replace(/\.$/, '').trim()
+          : rawDetail.trim();
+
       items.push({
         raw,
         type: EVIDENCE_TYPES.has(typeStr) ? (typeStr as EvidenceType) : undefined,
         tier: TIERS.has(tierStr) ? (tierStr as EpistemicTier) : undefined,
         date,
-        detail: detail.trim(),
+        source,
+        url,
+        detail,
       });
     } else {
       items.push({ raw, detail: raw });
@@ -162,17 +180,36 @@ export function extractResearchSources(text: string, _sectionName: string): { it
     const raw = trimmed.replace(/^-\s*/, '');
 
     const match = trimmed.match(
-      /^-\s*\[([T][123])\]\s*(\d{4}-\d{2}-\d{2})\s*--\s*(https?:\/\/\S+)?:?\s*(.*)/
+      /^-\s*\[([T][123])\]\s*(\d{4}-\d{2}-\d{2})\s*--\s*(.*)/
     );
 
     if (match) {
-      const [, tierStr, date, url, description] = match;
+      const [, tierStr, date, rest] = match;
+      let url: string | undefined;
+      let description: string;
+
+      const mdLinkMatch = rest.match(/^\[([^\]]+)\]\((https?:\/\/(?:[^)(]|\([^)]*\))*)\)(?:\s*--\s*|\s*:\s*)?(.*)/s);
+      if (mdLinkMatch) {
+        const linkText = mdLinkMatch[1];
+        url = mdLinkMatch[2];
+        const note = mdLinkMatch[3]?.trim();
+        description = note ? `${linkText} — ${note}` : linkText;
+      } else {
+        const bareUrlMatch = rest.match(/^(https?:\/\/\S+):?\s*(.*)/);
+        if (bareUrlMatch) {
+          url = bareUrlMatch[1];
+          description = bareUrlMatch[2]?.trim() || url;
+        } else {
+          description = rest;
+        }
+      }
+
       items.push({
         raw,
         tier: TIERS.has(tierStr) ? (tierStr as EpistemicTier) : undefined,
         date,
-        url: url || undefined,
-        description: description?.trim() || url || raw,
+        url,
+        description: description.trim() || raw,
       });
     } else {
       items.push({ raw, description: raw });

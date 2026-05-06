@@ -227,8 +227,8 @@ The hypothesis register (`strategy/hypotheses.md`) contains 9 sections:
 - Confidence state (unvalidated / researched / supported / broken)
 - Desired state and current state
 - Possibility space (candidates considered, eliminated, alternatives carried)
-- Evidence (type, tier, date, source, detail)
-- Research sources (tier, date, URL, what established)
+- Evidence (type, tier, date, [Name](URL) or local path, detail) — detail is one sentence max; analysis belongs in the hypothesis claim or update rationale, not the evidence entry
+- Research sources (tier, date, [Name](URL) or local path, what established)
 - Assumptions (epistemic tag K/B/O, tier, load-bearing flag, blast radius, falsification condition, validation plan)
 - Kill condition (observable, specific)
 - Last updated + update rationale
@@ -279,6 +279,11 @@ Before starting any mode:
 - Do not proceed past a load-bearing T3 assumption with HIGH blast radius without escalation.
 - Do not let design proposals (sections 5-7) strengthen upstream truth claims (sections 1-4). Proposals derive from hypotheses, never the reverse.
 - Apply skill procedures with full rigor -- scoring tables, calculation formulas, quality criteria, failure mode checks.
+- Do not write internet sources as plain text. Always use `[Name](URL)` markdown hyperlink format in both Evidence entries and Research Sources. If you searched for a source, you have the URL — record it.
+- Evidence entry detail must be one sentence maximum. Format: `[Name](URL): one-sentence finding.` Source link comes first, finding follows the colon. Analysis belongs in Update Rationale, not Evidence.
+  - Correct (web source): `[WEB_RESEARCH] [T1] 2026-05-06 -- [Press Gazette](https://pressgazette.co.uk/...): DC Thomson subscription revenue +2% YoY to £40.6m FY24.`
+  - Correct (local file): `[OBSERVATION] [T1] 2026-05-05 -- research/press-and-journal/pj-product-briefing-2026-05-05.md: DCT operates free newsletters in Moray and Inverness but no standalone paid title — pattern suggests viability threshold above c.95k population.`
+  - Wrong: `DC Thomson subscription revenue grew 2% YoY to £40.6m. This confirms the reader-pay model is structurally sound. Source: [Press Gazette](...).`
 
 ## Error Handling
 

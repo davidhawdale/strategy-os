@@ -301,6 +301,7 @@ Before starting:
   condition in the gate predicate.
 - Do not allow execution to proceed past a blocking contradiction.
 - Do not soften a BROKEN finding to avoid an uncomfortable conclusion.
+- Do not write internet sources as plain text. Always use `[Name](URL)` markdown hyperlink format.
 
 ## Error Handling
 

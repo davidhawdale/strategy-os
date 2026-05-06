@@ -139,7 +139,8 @@ Produce: complete segment hypothesis in register format.
 - Minimum 3 candidate segments considered (possibility space recorded)
 - At least 1 alternative carried (not just the winner)
 - Every segment defined by observable, searchable filters (no psychographics)
-- Pain scores backed by cited evidence with tier labels
+- Pain scores backed by cited evidence with tier labels; sources in `[Name](URL)` format — never plain text
+- Evidence entries follow register format: `[TYPE] [TIER] DATE -- [Name](URL): one-sentence finding.`
 - Elimination rationale documented for every eliminated candidate
 - Kill condition is specific and observable (not "segment doesn't work")
 - Claim uses behavioral language, not demographic generalization

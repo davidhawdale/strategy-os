@@ -90,7 +90,16 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
                   <TierBadge tier={e.tier} />
                   {e.date && <span className="evidence-item__date">{e.date}</span>}
                 </div>
-                <p className="evidence-item__detail">{e.detail}</p>
+                <p className="evidence-item__detail">
+                  {e.url ? (
+                    <>
+                      <a href={e.url} target="_blank" rel="noopener noreferrer" className="evidence-item__source-link">{e.source}</a>
+                      {e.detail && <>: {e.detail}</>}
+                    </>
+                  ) : (
+                    e.detail
+                  )}
+                </p>
               </li>
             ))}
           </ul>

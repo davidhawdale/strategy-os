@@ -316,6 +316,8 @@ export interface EvidenceItem {
   type?: EvidenceType;
   tier?: EpistemicTier;
   date?: string;
+  source?: string;
+  url?: string;
   detail: string;
 }
 

@@ -1658,6 +1658,15 @@
   line-height: var(--leading-relaxed);
 }
 
+.evidence-item__source-link {
+  color: var(--color-confidence-researched);
+  text-decoration: none;
+}
+
+.evidence-item__source-link:hover {
+  text-decoration: underline;
+}
+
 /* Source list */
 .source-list {
   list-style: none;
