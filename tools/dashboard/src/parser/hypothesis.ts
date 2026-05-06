@@ -17,6 +17,7 @@ import type { Section } from './sections';
 import { extractTablesFromNodes, tableToRows, findTableNearHeading } from './sections';
 import {
   extractField,
+  extractPriorUpdates,
   extractEvidenceItems,
   extractResearchSources,
   extractAssumptions,
@@ -55,6 +56,7 @@ export function parseHypothesis(
   const killCondition = extractField(text, 'Kill Condition');
   const lastUpdated = extractField(text, 'Last Updated');
   const updateRationale = extractField(text, 'Update Rationale');
+  const priorUpdates = extractPriorUpdates(text);
 
   // Desired/Current State
   const desiredState = extractDesiredState(text);
@@ -81,6 +83,7 @@ export function parseHypothesis(
     killCondition,
     lastUpdated,
     updateRationale,
+    priorUpdates: priorUpdates.length > 0 ? priorUpdates : undefined,
   };
 
   // Problem-specific extensions

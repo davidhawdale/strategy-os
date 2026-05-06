@@ -27,7 +27,7 @@ Previous Version: 2 (snapshotted at strategy/snapshots/2026-05-05/; full registe
 **Confidence:** RESEARCHED
 
 **Pain Intensity:** moderate
-**Frequency:** daily (for engaged readers); weekly (for the median resident as currently served)
+**Frequency:** DAILY
 
 **Why Now:**
 
@@ -80,13 +80,13 @@ Previous Version: 2 (snapshotted at strategy/snapshots/2026-05-05/; full registe
   - (P4) Borders advertisers lack a credible local-reach vehicle (problem owner = SMEs, not residents)
   - (P5) Borders residents lack national/regional news access (already solved by free national outlets)
   - (P6) Borders residents lack hyperlocal town-level news (Galashiels-only, Hawick-only) below the regional tier
+- Alternatives carried:
+  - (P2) Civic accountability framing -- carried because Newsquest's data shows court reports drive 21% of subscriber conversions; this is a strong adjacent framing of the same underlying need
+  - (P3) Community/identity framing -- carried because DC Thomson's own community-vertical operating model (Local, Companionship, Genealogy, etc.) suggests this is how the product would be positioned in execution
 - Eliminated:
   - (P5) -- Eliminated -- BBC, Sky, free national press already saturate this; no pain signal
   - (P4) -- Carried as adjacent revenue lever, not core problem -- DCT business model is reader-revenue first; advertiser pain is real but is an addressable revenue line, not the strategic problem to be solved
   - (P6) -- Eliminated as primary -- Town-level granularity below regional is sub-scale at Borders population; sub-areas contain 5-15k people each, below the floor for a subscription unit. Re-examine if regional fails.
-- Alternatives carried:
-  - (P2) Civic accountability framing -- carried because Newsquest's data shows court reports drive 21% of subscriber conversions; this is a strong adjacent framing of the same underlying need
-  - (P3) Community/identity framing -- carried because DC Thomson's own community-vertical operating model (Local, Companionship, Genealogy, etc.) suggests this is how the product would be positioned in execution
 
 **Evidence:**
 
@@ -144,9 +144,15 @@ Previous Version: 2 (snapshotted at strategy/snapshots/2026-05-05/; full registe
 **Kill Condition (extended 2026-05-05):** Additionally — if interview probing reveals that the *form* of resolution residents prefer is a free DCT-branded Borders newsletter (consistent with the Elgin / Inverness / Oban pattern) rather than a paid daily product, the paid-product hypothesis breaks even where the underlying problem holds. In that case the strategy shifts to "extend P&J or Courier coverage into Borders with a free Borders newsletter and possibly a Borders section/topic on the existing app", not "stand up a new paid Borders title". The problem hypothesis can survive that pivot; the unit-economics hypothesis cannot without re-derivation.
 
 **Last Updated:** 2026-05-06
-**Update Rationale (2026-05-06 CHALLENGE Pass 2):** Added four T1 evidence items from fresh competitive intelligence: Newsquest Scotland 51,153 subs (Dec 2025) with Border Telegraph in a 5-title 7,500-sub bucket; Newsquest All Access Scotland £8.99 bundle driving two-thirds of new sign-ups; DCT regionals >50,000 (Jan 2026) with revenue £41.1m; GoFibre Borders rollout expanded to 20,000-premise target. The structural Problem claim (no daily-cadence local product in Borders) is unchanged, but the workaround landscape has *materially shifted* in the 6-12 months before this pass: Newsquest's All Access bundle is a stronger workaround than weekly print alone, at the same price point as the modelled Borders Web Pack. This neither falsifies the problem nor breaks the kill condition, but it raises the bar the paid Borders product must clear. Confidence state held at RESEARCHED. Ground-truth gap G-01 (resident interviews) still binds — the interviews must now also probe whether residents perceive Newsquest's bundle as adequate substitution.
+**Update Rationale:** 2026-05-06 CHALLENGE Pass 2 — Added four T1 evidence items from fresh competitive intelligence:
+- Newsquest Scotland 51,153 subs (Dec 2025) with Border Telegraph in a 5-title 7,500-sub bucket
+- Newsquest All Access Scotland £8.99 bundle driving two-thirds of new sign-ups
+- DCT regionals >50,000 (Jan 2026) with revenue £41.1m
+- GoFibre Borders rollout expanded to 20,000-premise target
 
-**Prior Update (2026-05-05):** CHALLENGE pass — added T1 evidence on DCT's observed newsletter-geography pattern (Elgin, Inverness, Oban). Refined load-bearing assumption on cadence and extended kill condition to distinguish "problem real but resolved by newsletter" from "problem real and requires paid daily product".
+The structural Problem claim (no daily-cadence local product in Borders) is unchanged, but the workaround landscape has *materially shifted* in the 6-12 months before this pass: Newsquest's All Access bundle is a stronger workaround than weekly print alone, at the same price point as the modelled Borders Web Pack. This neither falsifies the problem nor breaks the kill condition, but it raises the bar the paid Borders product must clear. Confidence state held at RESEARCHED. Ground-truth gap G-01 (resident interviews) still binds — the interviews must now also probe whether residents perceive Newsquest's bundle as adequate substitution.
+
+**Prior Update (2026-05-05):** CHALLENGE pass — Added T1 evidence on DCT's observed newsletter-geography pattern (Elgin, Inverness, Oban). Refined load-bearing assumption on cadence and extended kill condition to distinguish "problem real but resolved by newsletter" from "problem real and requires paid daily product".
 
 ---
 
@@ -213,14 +219,14 @@ Previous Version: 2 (snapshotted at strategy/snapshots/2026-05-05/; full registe
   - (S5) Borders professional commuters (35-50, work in Edinburgh, live in northern Borders) -- observable via Edinburgh travel-to-work data
   - (S6) Borders rural-only (farms, hill communities, no town affiliation) -- observable via rural postcode density
   - (S7) Borders families with school-age children -- observable via primary/secondary catchment data
+- Alternatives carried:
+  - (S2) Borders diaspora -- carried as expansion segment. Critical because it removes the geographic constraint and may be a meaningful TAM uplift. Test in Phase 2 of GTM.
+  - (S3) Newcomers -- carried as high-conversion segment. Trigger event (house move) is acute and well-known to drive subscription decisions in adjacent categories.
 - Eliminated:
   - (S4) Eliminated as primary (carried as adjacent revenue) -- Different revenue model entirely (ad sales, not subscription); should be a parallel revenue line, not the segment that justifies the extension
   - (S5) Eliminated -- Commuters get news from Edinburgh sources; structural pull is to Edinburgh products, not a new Borders product. Pain insufficient.
   - (S6) Eliminated -- Pain present but segment too small (c.5-10k people across the rural-only cohort); cannot support a unit on its own
   - (S7) Eliminated as primary (carried as content vertical) -- The school-age-children parent has the pain but is least likely to pay for a new news subscription in a tight household budget. Better served as a content category within S1.
-- Alternatives carried:
-  - (S2) Borders diaspora -- carried as expansion segment. Critical because it removes the geographic constraint and may be a meaningful TAM uplift. Test in Phase 2 of GTM.
-  - (S3) Newcomers -- carried as high-conversion segment. Trigger event (house move) is acute and well-known to drive subscription decisions in adjacent categories.
 
 **Evidence:**
 
@@ -385,13 +391,13 @@ Previous Version: 2 (snapshotted at strategy/snapshots/2026-05-05/; full registe
   - (E4) Free, ad-supported (no subscription)
   - (E5) Membership / community model (annual flat fee, not metered)
   - (E6) Non-profit / patronage model (e.g. The Mill in Manchester pattern)
+- Alternatives carried:
+  - (E2) Pure digital -- carried as fallback. If print distribution economics in the dispersed rural geography prove worse than modelled, drop to digital-only and accept smaller initial market.
+  - (E5) Membership -- carried as upgrade path. After base subscription is proven, a higher-tier "Borders Friend" / membership product (events access, bylined patronage, premium events coverage) is a viable ARPU lever for the most engaged cohort.
 - Eliminated:
   - (E3) Eliminated -- Demographic is digital-capable (broadband rolling out); print-only ignores the trajectory and concedes the future
   - (E4) Eliminated -- DCT entire strategic position is reader-revenue; ad-only contradicts the proven operating model and would compete with a market (regional advertising) that is structurally declining
   - (E6) Eliminated -- DCT is a commercial publisher; non-profit pivot would be a strategic identity change, not a market extension
-- Alternatives carried:
-  - (E2) Pure digital -- carried as fallback. If print distribution economics in the dispersed rural geography prove worse than modelled, drop to digital-only and accept smaller initial market.
-  - (E5) Membership -- carried as upgrade path. After base subscription is proven, a higher-tier "Borders Friend" / membership product (events access, bylined patronage, premium events coverage) is a viable ARPU lever for the most engaged cohort.
 
 **Evidence:**
 

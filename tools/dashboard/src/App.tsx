@@ -189,6 +189,7 @@ function App() {
           <HypothesisDetailPanel
             view={computeHypothesisDetail(register, selectedHypothesis, gapAnalysis)}
             onBack={handleBack}
+            onSelectPanel={handleSelectPanel}
           />
         )}
       </main>

@@ -163,7 +163,7 @@ Write complete unit economics hypothesis in register format:
 - **Scenario Analysis:** Optimistic, base, pessimistic, kill -- with specific numbers.
 - **Assumptions:** Every input that is T2 or T3 is an assumption (with tier, load-bearing flag, blast radius).
 - **Kill Condition:** At what LTV:CAC ratio or payback period does this stop working? State specific numbers.
-- **Possibility Space:** What alternative revenue models were considered and why eliminated.
+- **Possibility Space:** All revenue models considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
 
 Produce: complete unit economics hypothesis in register format.
 

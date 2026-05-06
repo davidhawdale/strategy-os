@@ -36,6 +36,8 @@ function parseGapStatus(s: string): GapStatus {
   if (upper === 'IN_PROGRESS') return 'IN_PROGRESS';
   if (upper === 'RESOLVED') return 'RESOLVED';
   if (upper === 'BLOCKED') return 'BLOCKED';
+  if (upper === 'DEFERRED') return 'DEFERRED';
+  if (upper === 'ESCALATED') return 'ESCALATED';
   return 'OPEN';
 }
 

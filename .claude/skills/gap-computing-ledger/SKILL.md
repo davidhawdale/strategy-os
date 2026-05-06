@@ -165,6 +165,33 @@ Produce:
 3. Deferred gaps list (if any, with reason for deferral).
 4. Any blockers detected (sections with no desired state, contradictions).
 
+**Target field values (must match exactly — used by the dashboard to link gaps to hypothesis panels):**
+
+| Hypothesis section    | Target value       |
+|-----------------------|--------------------|
+| Problem               | PROBLEM            |
+| Segment               | SEGMENT            |
+| Unit Economics        | UNIT_ECONOMICS     |
+| Value Proposition     | VALUE_PROPOSITION  |
+| Growth Architecture   | GROWTH_ARCHITECTURE|
+| Solution Design       | SOLUTION_DESIGN    |
+| GTM Plan              | GTM_PLAN           |
+
+A gap that spans multiple sections uses the primary section as target. Multi-section gaps may add secondary targets separated by ` / ` (e.g. `"SOLUTION_DESIGN / GTM_PLAN"`) — the dashboard matches on substring so both will resolve.
+
+**Status field values (must be one of the following — used by the dashboard to render gap status badges):**
+
+| Status       | When to use |
+|--------------|-------------|
+| OPEN         | Gap is active and unresolved |
+| IN_PROGRESS  | An action is currently underway |
+| RESOLVED     | Gap has been closed with evidence |
+| BLOCKED      | Cannot progress — dependency or constraint |
+| DEFERRED     | Below the active focus cap (Focus Rule: max 3 active); re-evaluate next pass |
+| ESCALATED    | Requires governor decision; waiting for response |
+
+Any other value will be rendered as OPEN by the dashboard parser.
+
 ---
 
 ## Edge Cases

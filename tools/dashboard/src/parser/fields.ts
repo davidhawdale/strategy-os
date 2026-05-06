@@ -12,6 +12,7 @@ import type {
   CurrentState,
   PossibilitySpace,
   EliminationEntry,
+  UpdateEntry,
 } from '../model/types';
 
 const EVIDENCE_TYPES: Set<string> = new Set([
@@ -26,7 +27,7 @@ const ASSUMPTION_STATUSES: Set<string> = new Set(['OPEN', 'TESTING', 'RESOLVED_T
 export function extractField(text: string, fieldName: string): string | undefined {
   const escaped = fieldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pattern = new RegExp(
-    `\\*\\*${escaped}:\\*\\*\\s*(.+(?:\\n(?!\\*\\*|---).+)*)`,
+    `\\*\\*${escaped}:\\*\\*\\s*(.+(?:\\n(?!\\*\\*|---).*)*)`,
     'm'
   );
   const match = text.match(pattern);
@@ -35,6 +36,16 @@ export function extractField(text: string, fieldName: string): string | undefine
 
 export function extractBoldField(text: string, fieldName: string): string | undefined {
   return extractField(text, fieldName);
+}
+
+export function extractPriorUpdates(text: string): UpdateEntry[] {
+  const pattern = /\*\*Prior Update(?:\s*\(([^)]+)\))?:\*\*\s*(.+(?:\n(?!\*\*|---).+)*)/gm;
+  const results: UpdateEntry[] = [];
+  let match;
+  while ((match = pattern.exec(text)) !== null) {
+    results.push({ date: match[1]?.trim(), text: match[2].trim() });
+  }
+  return results;
 }
 
 export function extractDesiredState(text: string): DesiredState | undefined {

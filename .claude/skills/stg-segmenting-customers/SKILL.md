@@ -124,7 +124,7 @@ Write complete segment hypothesis in register format:
 
 - **Claim:** One paragraph -- who has this problem acutely, observable characteristics. Use behavioral language, not demographic generalization.
 - **Evidence:** Tier-labeled evidence items from scoring.
-- **Possibility Space:** Candidates considered, eliminated (with rationale), alternatives carried.
+- **Possibility Space:** Candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
 - **Assumptions:** What must be true about this segment (each with tier label, load-bearing flag, blast radius).
 - **Kill Condition:** What would prove this is the wrong segment. Must be specific and observable (not "segment doesn't work"). Example: "Interviews with 5 [segment] companies reveal <2/5 experience this problem weekly."
 

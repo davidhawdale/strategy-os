@@ -1,4 +1,4 @@
-import type { HypothesisDetailView, ScenarioEntry } from '../../model/types';
+import type { HypothesisDetailView, ScenarioEntry, PanelId } from '../../model/types';
 import { ConfidenceBadge } from '../shared/ConfidenceBadge';
 import { TierBadge } from '../shared/TierBadge';
 import { BlastRadiusBadge } from '../shared/BlastRadiusBadge';
@@ -7,9 +7,31 @@ import { DataTable } from '../shared/DataTable';
 interface Props {
   view: HypothesisDetailView;
   onBack: () => void;
+  onSelectPanel: (panel: PanelId) => void;
 }
 
-export function HypothesisDetailPanel({ view, onBack }: Props) {
+function renderUpdateText(text: string) {
+  const lines = text.split('\n');
+  const segments: Array<{ type: 'text' | 'list'; lines: string[] }> = [];
+  let current: { type: 'text' | 'list'; lines: string[] } | null = null;
+  for (const line of lines) {
+    const trimmed = line.trimStart();
+    if (trimmed.startsWith('- ')) {
+      if (current?.type !== 'list') { current = { type: 'list', lines: [] }; segments.push(current); }
+      current.lines.push(trimmed.slice(2));
+    } else if (trimmed) {
+      if (current?.type !== 'text') { current = { type: 'text', lines: [] }; segments.push(current); }
+      current.lines.push(trimmed);
+    }
+  }
+  return segments.map((seg, i) =>
+    seg.type === 'list'
+      ? <ul key={i} className="update-entry__list">{seg.lines.map((item, j) => <li key={j}>{item}</li>)}</ul>
+      : <p key={i} className="update-entry__text">{seg.lines.join(' ')}</p>
+  );
+}
+
+export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
   return (
     <section id="panel-detail" role="tabpanel" aria-label={`${view.label} Hypothesis Detail`} className="panel">
       <div className="panel__header">
@@ -33,45 +55,218 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
         </div>
       )}
 
-      {/* Update rationale */}
-      {view.updateRationale && (
+      {/* Problem: Pain Intensity + Frequency */}
+      {(view.painIntensity || view.frequency) && (
         <div className="detail-section">
-          <h3 className="section-heading">Update Rationale</h3>
-          <p className="rationale-text">{view.updateRationale}</p>
+          <h3 className="section-heading">Pain Profile</h3>
+          <div className="pain-profile">
+            {view.painIntensity && (
+              <span className="pain-profile__item"><strong>Intensity:</strong> {view.painIntensity}</span>
+            )}
+            {view.frequency && (
+              <span className="pain-profile__item"><strong>Frequency:</strong> {view.frequency}</span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Problem: Why Now */}
+      {view.whyNow && (
+        <div className="detail-section">
+          <h3 className="section-heading">Why Now</h3>
+          {view.whyNow.enablers.length > 0 && (
+            <>
+              <h4 className="subsection-heading">Enablers</h4>
+              <ul className="why-now-list">
+                {view.whyNow.enablers.map((e, i) => <li key={i}>{e}</li>)}
+              </ul>
+            </>
+          )}
+          {view.whyNow.changesLast36Months.length > 0 && (
+            <>
+              <h4 className="subsection-heading">Changes in last 36 months</h4>
+              <ul className="why-now-list">
+                {view.whyNow.changesLast36Months.map((e, i) => <li key={i}>{e}</li>)}
+              </ul>
+            </>
+          )}
+          {view.whyNow.whyNot5YearsAgo && (
+            <p className="why-now-why5"><strong>Why not 5 years ago:</strong> {view.whyNow.whyNot5YearsAgo}</p>
+          )}
+        </div>
+      )}
+
+      {/* Problem: Workarounds */}
+      {view.workarounds && view.workarounds.length > 0 && (
+        <div className="detail-section">
+          <h3 className="section-heading">Workarounds</h3>
+          <ul className="workaround-list">
+            {view.workarounds.map((w, i) => <li key={i}>{w}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {/* Desired State */}
+      {view.desiredState && (
+        <div className="detail-section">
+          <h3 className="section-heading">Desired State</h3>
+          {view.desiredState.supportedMeans.length > 0 && (
+            <div className="validation-zone">
+              <h4 className="subsection-heading">SUPPORTED means</h4>
+              <ul className="validation-list">
+                {view.desiredState.supportedMeans.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+          )}
+          {view.desiredState.brokenMeans.length > 0 && (
+            <div className="validation-zone">
+              <h4 className="subsection-heading">BROKEN means</h4>
+              <ul className="validation-list">
+                {view.desiredState.brokenMeans.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Current State */}
+      {view.currentState && (
+        <div className="detail-section">
+          <h3 className="section-heading">Current State</h3>
+          {view.currentState.met.length > 0 && (
+            <div className="validation-zone">
+              <h4 className="subsection-heading validation-met">Met</h4>
+              <ul className="validation-list">
+                {view.currentState.met.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+          )}
+          {view.currentState.partial.length > 0 && (
+            <div className="validation-zone">
+              <h4 className="subsection-heading validation-partial">Partial</h4>
+              <ul className="validation-list">
+                {view.currentState.partial.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+          )}
+          {view.currentState.missing.length > 0 && (
+            <div className="validation-zone">
+              <h4 className="subsection-heading validation-missing">Missing</h4>
+              <ul className="validation-list">
+                {view.currentState.missing.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+          )}
+          {view.currentState.contradicted.length > 0 && (
+            <div className="validation-zone">
+              <h4 className="subsection-heading validation-contradicted">Contradicted</h4>
+              <ul className="validation-list">
+                {view.currentState.contradicted.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+          )}
         </div>
       )}
 
       {/* Possibility space */}
-      {view.possibilitySpace && (
-        <div className="detail-section">
-          <h3 className="section-heading">Possibility Space</h3>
-          <div className="possibility-counts">
-            <span className="possibility-count">{view.possibilitySpace.consideredCount} considered</span>
-            <span className="possibility-count">{view.possibilitySpace.eliminatedCount} eliminated</span>
-            <span className="possibility-count">{view.possibilitySpace.carriedCount} carried</span>
+      {view.possibilitySpace && (() => {
+        const primary = view.possibilitySpace!.entries.find(e => e.includes('[PRIMARY]'));
+        const primaryLabel = primary?.replace(/\s*\[PRIMARY\]/, '');
+        return (
+          <div className="detail-section">
+            <h3 className="section-heading">Possibility Space</h3>
+
+            {/* Zone 1: Primary */}
+            {primaryLabel && (
+              <div className="possibility-primary">
+                <span className="possibility-primary__label">Primary Problem</span>
+                <p className="possibility-primary__text">{primaryLabel}</p>
+              </div>
+            )}
+
+            {/* Zone 2: Carried into design */}
+            {(view.possibilitySpace!.carried?.length ?? 0) > 0 && (
+              <div className="possibility-zone">
+                <h4 className="subsection-heading">Carried into design</h4>
+                <ul className="possibility-carried-list">
+                  {view.possibilitySpace!.carried.map((c, i) => {
+                    const codeMatch = c.match(/^\(P\d+\)\s*/);
+                    const code = codeMatch ? codeMatch[0].trim() : '';
+                    const carriedBody = codeMatch ? c.slice(codeMatch[0].length) : c;
+                    const entry = view.possibilitySpace!.entries.find(e => e.startsWith(code));
+                    return (
+                      <li key={i} className="possibility-carried-item">
+                        <span className="possibility-carried-item__entry">{entry ?? code}</span>
+                        <span className="possibility-carried-item__reason">{carriedBody}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
+            {/* Zone 3: Eliminated */}
+            {(view.possibilitySpace!.eliminations?.length ?? 0) > 0 && (
+              <div className="possibility-zone">
+                <h4 className="subsection-heading">Eliminated</h4>
+                <ul className="possibility-eliminated-list">
+                  {view.possibilitySpace!.eliminations.map((e, i) => {
+                    const entry = view.possibilitySpace!.entries.find(en => en.startsWith(e.candidate));
+                    const detail = e.reason === 'Eliminated'
+                      ? e.evidence
+                      : [e.reason, e.evidence].filter(Boolean).join(' — ');
+                    return (
+                      <li key={i} className="possibility-eliminated-item">
+                        <span className="possibility-eliminated-item__entry">{entry ?? e.candidate}</span>
+                        {detail && <span className="possibility-eliminated-item__detail">{detail}</span>}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
           </div>
-          {(view.possibilitySpace.entries?.length ?? 0) > 0 && (
-            <ul className="possibility-list">
-              {view.possibilitySpace.entries.map((e, i) => (
-                <li key={i} className={`possibility-item possibility-item--${(e.status ?? '').toLowerCase()}`}>
-                  <span className="possibility-item__status">{e.status}</span>
-                  <span className="possibility-item__desc">{e.description}</span>
-                </li>
+        );
+      })()}
+
+      {/* Related Gaps */}
+      {view.relatedGaps && view.relatedGaps.length > 0 && (
+        <div className="detail-section">
+          <h3
+            className="section-heading section-heading--link"
+            onClick={() => onSelectPanel('gapLedger')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && onSelectPanel('gapLedger')}
+          >
+            {view.label} Related Gaps
+          </h3>
+          <table className="gap-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Dimension</th>
+                <th>Status</th>
+                <th>Desired Condition</th>
+                <th>Current Observation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {view.relatedGaps.map((g, i) => (
+                <tr key={i}>
+                  <td className="gap-table__id">{g.id ? g.id.replace(/\s*\(.*\)$/, '').trim() : '—'}</td>
+                  <td className="gap-table__dimension">{g.dimension.replace(/_/g, ' ')}</td>
+                  <td>
+                    <span className={`gap-tag__status gap-tag__status--${g.status.toLowerCase()}`}>
+                      {g.status}
+                    </span>
+                  </td>
+                  <td className="gap-table__text">{g.desiredCondition}</td>
+                  <td className="gap-table__text">{g.currentObservation}</td>
+                </tr>
               ))}
-            </ul>
-          )}
-          {(view.possibilitySpace.eliminations?.length ?? 0) > 0 && (
-            <details className="elimination-details">
-              <summary>Elimination reasoning</summary>
-              <ul className="elimination-list">
-                {view.possibilitySpace.eliminations.map((e, i) => (
-                  <li key={i}>
-                    <strong>{e.candidate}:</strong> {e.reason}
-                  </li>
-                ))}
-              </ul>
-            </details>
-          )}
+            </tbody>
+          </table>
         </div>
       )}
 
@@ -140,6 +335,36 @@ export function HypothesisDetailPanel({ view, onBack }: Props) {
         <div className="detail-section">
           <h3 className="section-heading">Kill Signal</h3>
           <div className="kill-condition-block">{view.killCondition}</div>
+        </div>
+      )}
+
+      {/* Update History */}
+      {(view.updateRationale || (view.priorUpdates && view.priorUpdates.length > 0)) && (
+        <div className="detail-section">
+          <h3 className="section-heading">Update History</h3>
+          {view.updateRationale && (() => {
+            const m = view.updateRationale!.match(/^(\d{4}-\d{2}-\d{2})\s+(CHALLENGE Pass \d+)\s*—\s*([\s\S]+)$/i);
+            const date = m?.[1];
+            const passLabel = m?.[2];
+            const body = m ? m[3] : view.updateRationale!;
+            return (
+              <div className="update-entry">
+                <span className="update-entry__date">{[date, passLabel].filter(Boolean).join('  —  ')}</span>
+                {renderUpdateText(body)}
+              </div>
+            );
+          })()}
+          {view.priorUpdates?.map((u, i) => {
+            const m = u.text.match(/^(CHALLENGE [Pp]ass[^—]*)\s*—\s*([\s\S]+)$/i);
+            const passLabel = m?.[1]?.trim();
+            const body = m ? m[2] : u.text;
+            return (
+              <div key={i} className="update-entry update-entry--prior">
+                <span className="update-entry__date">{[u.date, passLabel].filter(Boolean).join('  —  ')}</span>
+                {renderUpdateText(body)}
+              </div>
+            );
+          })}
         </div>
       )}
 

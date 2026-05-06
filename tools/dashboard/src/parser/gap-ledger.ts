@@ -5,6 +5,7 @@ import type {
   DecisionDeadline,
   BlastRadius,
   ParseWarning,
+  GapStatus,
 } from '../model/types';
 import type { Section } from './sections';
 import { extractTablesFromNodes, tableToRows } from './sections';
@@ -166,11 +167,13 @@ function extractListField(text: string, label: string): string | undefined {
   return match ? match[1].trim() : undefined;
 }
 
-function parseGapStatus(s: string): 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'BLOCKED' {
+function parseGapStatus(s: string): GapStatus {
   const upper = s.toUpperCase().replace(/\s+/g, '_');
   if (upper === 'IN_PROGRESS') return 'IN_PROGRESS';
   if (upper === 'RESOLVED') return 'RESOLVED';
   if (upper === 'BLOCKED') return 'BLOCKED';
+  if (upper === 'DEFERRED') return 'DEFERRED';
+  if (upper === 'ESCALATED') return 'ESCALATED';
   return 'OPEN';
 }
 

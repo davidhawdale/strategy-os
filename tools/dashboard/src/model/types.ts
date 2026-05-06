@@ -104,6 +104,7 @@ export interface Hypothesis {
   killCondition?: string;
   lastUpdated?: string;
   updateRationale?: string;
+  priorUpdates?: UpdateEntry[];
 
   // Problem-specific extensions
   painIntensity?: PainIntensity;
@@ -171,6 +172,7 @@ export interface ValueProposition {
   currentState?: CurrentState;
   lastUpdated?: string;
   updateRationale?: string;
+  priorUpdates?: UpdateEntry[];
 }
 
 export interface JobsToBeDone {
@@ -271,6 +273,15 @@ export interface MessagingFramework {
   supportingMessages: string[];
   derivedFromVP?: boolean;
   tier?: EpistemicTier;
+}
+
+// ============================================================
+// Update History
+// ============================================================
+
+export interface UpdateEntry {
+  date?: string;
+  text: string;
 }
 
 // ============================================================
@@ -508,7 +519,7 @@ export interface GapLedgerEntry {
   status: GapStatus;
 }
 
-export type GapStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'BLOCKED';
+export type GapStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'BLOCKED' | 'DEFERRED' | 'ESCALATED';
 
 export interface Blocker {
   target: string;
@@ -880,7 +891,7 @@ export interface HypothesisDetailView {
     consideredCount: number;
     eliminatedCount: number;
     carriedCount: number;
-    entries: { status: string; description: string }[];
+    entries: string[];
     eliminations: EliminationEntry[];
     carried: string[];
   };
@@ -891,6 +902,7 @@ export interface HypothesisDetailView {
   killCondition?: string;
   lastUpdated?: string;
   updateRationale?: string;
+  priorUpdates?: UpdateEntry[];
 
   // Problem-specific
   painIntensity?: PainIntensity;

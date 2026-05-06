@@ -112,7 +112,7 @@ Primary = highest composite score. Write in register format:
 
 - **Claim:** State the problem independent of any solution. "Customers struggle with X" not "customers need a tool that does Y." One paragraph.
 - **Evidence:** Tier-labeled evidence items from scoring (per-property evidence).
-- **Possibility Space:** All candidates considered, eliminated candidates with rationale, alternatives carried.
+- **Possibility Space:** All candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
 - **Assumptions:** What must be true for this problem to be worth solving (each with tier, load-bearing flag, blast radius).
 - **Kill Condition:** What would prove this problem is not worth solving. Must reference specific observable thresholds. Example: "Interviews reveal <2/5 people in the segment experience this problem weekly" or "existing alternative achieves >80% satisfaction."
 

@@ -7,6 +7,7 @@ import type { Section } from './sections';
 import { extractTablesFromNodes, tableToRows } from './sections';
 import {
   extractField,
+  extractPriorUpdates,
   extractEvidenceItems,
   extractAssumptions,
   extractDesiredState,
@@ -31,6 +32,7 @@ export function parseValueProposition(
 
   const lastUpdated = extractField(text, 'Last Updated');
   const updateRationale = extractField(text, 'Update Rationale');
+  const priorUpdates = extractPriorUpdates(text);
 
   // Jobs Addressed
   const jobsBlock = extractBlockAfterLabel(text, 'Jobs Addressed');
@@ -80,6 +82,7 @@ export function parseValueProposition(
       currentState,
       lastUpdated,
       updateRationale,
+      priorUpdates: priorUpdates.length > 0 ? priorUpdates : undefined,
     },
     warnings,
   };
