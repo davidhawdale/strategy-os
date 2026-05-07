@@ -122,29 +122,18 @@ Produce: segment hypothesis with possibility space (primary, alternatives, elimi
 
 Write complete segment hypothesis in register format. Fields must appear in this order:
 
-- **Claim:** One paragraph -- who has this problem acutely, observable characteristics. Use behavioral language, not demographic generalization.
+- **Claim:** 3 sentences maximum: (1) who they are in behavioural terms (not demographic generalisation), (2) what observable signal identifies them, (3) why they are the primary segment rather than an alternative. Observable filters, access paths, and evidence belong in their own sections — not the Claim.
 - **Budget Owner:** Who controls the purchase decision, and at what ACV level does it become a formal decision vs. a consumption choice?
 - **Current Spend:** What do they currently spend on substitutes or adjacent products? Cite observable proxies (print subscription costs, comparable digital subs).
-- **Observable Characteristics:** Numbered list. Each item must be a concrete, searchable filter — no psychographics. Example: "Members of named Facebook community groups for [towns]."
+- **Observable Filters:** Numbered list. Each item must be a concrete, searchable filter — no psychographics. Example: "Members of named Facebook community groups for [towns]."
 - **Access Paths:** Bulleted list of acquisition channels that reach this segment specifically, with rationale for why each path is viable.
 - **Trigger Event:** Semicolon-separated list of specific events or changes that move this person from non-buyer to active buyer. Example: "Cancellation of print delivery; arrival of fibre broadband; house purchase in the area." Rendered in the dashboard as bullet points.
 - **Desired State:** Conditions that would confirm this segment is correctly identified and reachable.
 - **Current State:** Current fulfilment status of each desired condition (MET / PARTIAL / MISSING / CONTRADICTED).
-- **Possibility Space:** Candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
-
-  **Possibility Space format rules (renderer-critical):**
-  - Code prefix for this hypothesis type: **S** (S1, S2, S3…). Every entry in Considered, Alternatives carried, and Eliminated must begin with its code in parentheses.
-  - Mark the primary Considered entry with `[PRIMARY]` at the end: e.g. `(S1) [description] [PRIMARY]`
-  - Eliminated entries must begin with the same code as their Considered counterpart, followed by ` -- ` and the elimination rationale: e.g. `(S4) Eliminated -- [reason]`. Do NOT put a description before the code.
+- **Possibility Space:** Candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated. Identify which candidate is primary.
+- **Pain Scoring:** Table summarising pain scores for the primary segment and any alternatives carried, with one row per scored segment. Place immediately before Evidence.
 - **Evidence:** Tier-labeled evidence items from scoring.
-- **Assumptions:** What must be true about this segment. Full format (renderer-critical):
-  ```
-  - [TAG] [TIER] Claim [LOAD-BEARING] [BLAST:LEVEL]
-    -> Falsification: Observable condition that would disprove this
-    -> Validation: How to test or resolve it
-    -> Status: OPEN
-  ```
-  Tags: `[B]` Belief | `[K]` Knowledge | `[O]` Observation. Status values: `OPEN` | `TESTING` | `RESOLVED_TRUE` | `RESOLVED_FALSE` | `ESCALATED`. CHALLENGE passes append `-> CHALLENGE YYYY-MM-DD: [one-line note]` after Status — do not remove prior CHALLENGE lines.
+- **Assumptions:** List what must be true about this segment. For each: classify as Belief / Knowledge / Observation, assign evidence tier, state the claim, mark load-bearing status, assign blast radius (High / Medium / Low), and provide a falsification condition, validation method, and current status.
 - **Kill Condition:** What would prove this is the wrong segment. Must be specific and observable (not "segment doesn't work"). Example: "Interviews with 5 [segment] companies reveal <2/5 experience this problem weekly."
 
 Produce: complete segment hypothesis in register format.
@@ -168,6 +157,7 @@ Produce: complete segment hypothesis in register format.
 
 | Mode | Signal | Recovery |
 |------|--------|----------|
+| Over-length claim | Claim embeds observable filter list, access paths, or evidence | Move filters to Observable Filters section. Rewrite claim as: who + observable signal + why primary. 3 sentences maximum. |
 | Single-player assumption | Primary segment matches governor's own profile exactly | Flag to governor: "You may be designing for yourself. Is this segment defined by your characteristics or by market evidence?" Carry an alternative that explicitly differs from governor profile |
 | Psychographic filters masquerading as observable | Filters include "tech-savvy", "growth-oriented", "innovative" | Replace with observable proxies: "tech-savvy" -> "uses [specific tools]"; "growth-oriented" -> "raised funding in last 12 months" or "headcount grew >20% YoY" |
 | Pain score without evidence | Score assigned but evidence field is empty or says "likely" / "probably" | WebSearch for specific signals. If no signals found, score = 1 (unaware) with note: "no public signal found -- T3 assumption" |

@@ -32,6 +32,7 @@ import {
   parseCostStructureTable,
   parseChannelStrategyTable,
   parseModeThresholdsTable,
+  parsePainScoringTable,
 } from './tables';
 
 const CONFIDENCE_VALUES: Set<string> = new Set(['UNVALIDATED', 'RESEARCHED', 'SUPPORTED', 'BROKEN']);
@@ -93,7 +94,7 @@ export function parseHypothesis(
 
   // Segment-specific extensions
   if (id === 'segment') {
-    parseSegmentExtensions(text, hypothesis);
+    parseSegmentExtensions(section, text, hypothesis);
   }
 
   // Unit Economics extensions
@@ -152,15 +153,27 @@ function parseProblemExtensions(text: string, hypothesis: Hypothesis): void {
   if (hypothesis.workarounds.length === 0) hypothesis.workarounds = undefined;
 }
 
-function parseSegmentExtensions(text: string, hypothesis: Hypothesis): void {
+function parseSegmentExtensions(section: Section, text: string, hypothesis: Hypothesis): void {
   hypothesis.triggerEvent = extractField(text, 'Trigger Event');
   hypothesis.budgetOwner = extractField(text, 'Budget Owner');
   hypothesis.currentSpend = extractField(text, 'Current Spend');
-  hypothesis.observableCharacteristics = extractObservableFilters(text);
-  if (hypothesis.observableCharacteristics.length === 0) hypothesis.observableCharacteristics = undefined;
+  hypothesis.observableFilters = extractObservableFilters(text);
+  if (hypothesis.observableFilters.length === 0) hypothesis.observableFilters = undefined;
 
   const accessPaths = extractListItems(text, 'Access Paths');
   hypothesis.accessPaths = accessPaths.length > 0 ? accessPaths : undefined;
+
+  // Pain scoring table
+  const tables = extractTablesFromNodes(section.nodes);
+  for (const table of tables) {
+    const rows = tableToRows(table);
+    if (rows.length < 2) continue;
+    const headers = rows[0];
+    if (headers.some(h => /Segment/i.test(h)) && headers.some(h => /Frequency/i.test(h))) {
+      const entries = parsePainScoringTable(table);
+      if (entries.length > 0) hypothesis.painScoring = entries;
+    }
+  }
 }
 
 function parseUnitEconomicsExtensions(
@@ -233,6 +246,7 @@ function parseUnitEconomicsExtensions(
     if (headers.some(h => /Metric/i.test(h)) && headers.some(h => /Required/i.test(h))) {
       hypothesis.modeThresholds = parseModeThresholdsTable(table);
     }
+
   }
 
   // Scenario analysis

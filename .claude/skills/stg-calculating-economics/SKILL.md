@@ -157,25 +157,13 @@ Produce: mode validation result.
 
 Write complete unit economics hypothesis in register format:
 
-- **Claim:** One paragraph stating revenue model, LTV:CAC range, payback range, gross margin trajectory.
+- **Claim:** 3 sentences maximum: (1) viability verdict with key metric ranges (LTV:CAC, payback, gross margin), (2) which scenario thresholds are met, (3) the single most important condition for viability. Scenario detail, sensitivity analysis, and individual input assumptions belong in Scenario Analysis and Assumptions — not the Claim.
 - **Evidence:** All calculations with sources and tier labels.
 - **Mode Thresholds:** Table with required vs estimated for each metric.
 - **Scenario Analysis:** Optimistic, base, pessimistic, kill -- with specific numbers.
-- **Assumptions:** Every input that is T2 or T3 is an assumption. Full format (renderer-critical):
-  ```
-  - [TAG] [TIER] Claim [LOAD-BEARING] [BLAST:LEVEL]
-    -> Falsification: Observable condition that would disprove this
-    -> Validation: How to test or resolve it
-    -> Status: OPEN
-  ```
-  Tags: `[B]` Belief | `[K]` Knowledge | `[O]` Observation. Status values: `OPEN` | `TESTING` | `RESOLVED_TRUE` | `RESOLVED_FALSE` | `ESCALATED`. CHALLENGE passes append `-> CHALLENGE YYYY-MM-DD: [one-line note]` after Status — do not remove prior CHALLENGE lines.
+- **Assumptions:** Every input that is T2 or T3 is an assumption. List what must be true. For each: classify as Belief / Knowledge / Observation, assign evidence tier, state the claim, mark load-bearing status, assign blast radius (High / Medium / Low), and provide a falsification condition, validation method, and current status.
 - **Kill Condition:** At what LTV:CAC ratio or payback period does this stop working? State specific numbers.
-- **Possibility Space:** All revenue models considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
-
-  **Possibility Space format rules (renderer-critical):**
-  - Code prefix for this hypothesis type: **E** (E1, E2, E3…). Every entry in Considered, Alternatives carried, and Eliminated must begin with its code in parentheses.
-  - Mark the primary Considered entry with `[PRIMARY]` at the end: e.g. `(E1) [description] [PRIMARY]`
-  - Eliminated entries must begin with the same code as their Considered counterpart, followed by ` -- ` and the elimination rationale: e.g. `(E3) Eliminated -- [reason]`. Do NOT put a description before the code.
+- **Possibility Space:** All revenue models considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated. Identify which model is primary.
 
 Produce: complete unit economics hypothesis in register format.
 
@@ -197,6 +185,7 @@ Produce: complete unit economics hypothesis in register format.
 
 | Mode | Signal | Recovery |
 |------|--------|----------|
+| Over-length claim | Claim contains multiple conditional clauses, scenario breakdowns, or sensitivity analysis | Move scenario detail to Scenario Analysis section. Rewrite as: verdict + key metric ranges + single most important condition. 3 sentences maximum. |
 | Premature precision | Specific CAC ($47.32) or LTV ($2,847) stated as if measured | These are pre-launch estimates. Present as ranges: CAC $30-$80. Cite the benchmark or assumption behind each bound |
 | Optimistic-only scenario | Only base case presented, or pessimistic case is barely different from base | Pessimistic must stress-test: 3x CAC, 40% smaller segment, 2x churn. If the strategy works only in the optimistic scenario, that is a finding |
 | Revenue without cost structure | LTV:CAC calculated but gross margin assumed at 80% without COGS analysis | Calculate actual COGS. AI inference costs can push margins below 60%. If COGS are genuinely low, document why |

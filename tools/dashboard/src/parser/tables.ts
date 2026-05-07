@@ -14,6 +14,7 @@ import type {
   VPClauseType,
   GapLedgerEntry,
   GapStatus,
+  PainScoringEntry,
   GTMPhase,
   Contradiction,
   GapRecord,
@@ -96,6 +97,19 @@ export function parseModeThresholdsTable(table: Table): ModeThreshold[] {
     estimate: row[2] || '',
     tier: parseTier(row[3] || ''),
     source: row[4] || undefined,
+  }));
+}
+
+export function parsePainScoringTable(table: Table): PainScoringEntry[] {
+  const rows = tableToRows(table);
+  if (rows.length < 2) return [];
+  return rows.slice(1).map(row => ({
+    segment: row[0] || '',
+    frequency: parseInt(row[1] || '0', 10),
+    severity: parseInt(row[2] || '0', 10),
+    breadth: parseInt(row[3] || '0', 10),
+    alternativesInadequacy: parseInt(row[4] || '0', 10),
+    composite: parseInt(row[5] || '0', 10),
   }));
 }
 

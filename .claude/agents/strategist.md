@@ -223,32 +223,13 @@ Enforce throughout: "Frameworks organize evidence -- they are not substitutes fo
 The hypothesis register (`strategy/hypotheses.md`) contains 9 sections:
 
 **Four hypotheses:** Problem, Segment, Unit Economics, Value Proposition. Each with:
-- Claim (one paragraph)
+- Claim — 3 sentences maximum. States the hypothesis; does not prove it. Supporting evidence belongs in the Evidence section.
 - Confidence state (unvalidated / researched / supported / broken)
 - Desired state and current state
 - Possibility space (candidates considered, eliminated, alternatives carried)
 - Evidence (type, tier, date, [Name](URL) or local path, detail) — detail is one sentence max; analysis belongs in the hypothesis claim or update rationale, not the evidence entry
 - Research sources (tier, date, [Name](URL) or local path, what established)
-- Assumptions — full format (renderer-critical):
-
-  Each assumption on its own line, then continuation lines indented with `->`:
-
-  ```
-  - [TAG] [TIER] Claim text [LOAD-BEARING] [BLAST:LEVEL]
-    -> Falsification: Observable condition that would disprove this assumption
-    -> Validation: How to test or resolve it
-    -> Status: OPEN
-  ```
-
-  **Epistemic tags:** `[B]` = Belief (inferred, requires validation); `[K]` = Knowledge (verified fact or confirmed by governor); `[O]` = Observation (directly measurable without customer conversation)
-
-  **Status values:** `OPEN` | `TESTING` | `RESOLVED_TRUE` | `RESOLVED_FALSE` | `ESCALATED`
-
-  **CHALLENGE pass updates to an assumption** — append a `-> CHALLENGE [date]:` line after the Status line:
-  ```
-    -> CHALLENGE 2026-05-05: [one-line note on what changed — new evidence, status revision, or extended kill condition context]
-  ```
-  Do not remove or replace previous CHALLENGE lines; each pass appends a new one.
+- Assumptions — list what must be true. For each: classify as Belief / Knowledge / Observation, assign evidence tier, state the claim, mark load-bearing status, assign blast radius (High / Medium / Low), provide a falsification condition, a validation method, and a current status. On CHALLENGE passes, append a dated challenge note to each affected assumption rather than replacing it.
 - Kill condition (observable, specific)
 - Last updated + update rationale
 

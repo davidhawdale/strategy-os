@@ -110,22 +110,10 @@ Produce: surviving problems + elimination log.
 
 Primary = highest composite score. Write in register format:
 
-- **Claim:** State the problem independent of any solution. "Customers struggle with X" not "customers need a tool that does Y." One paragraph.
+- **Claim:** State the problem independent of any solution. 3 sentences maximum: (1) who has the problem, (2) why existing alternatives fail structurally, (3) what the gap is. Supporting evidence and data belong in the Evidence section — the Claim states; the Evidence proves. "Customers struggle with X" not "customers need a tool that does Y."
 - **Evidence:** Tier-labeled evidence items from scoring (per-property evidence).
-- **Possibility Space:** All candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated.
-
-  **Possibility Space format rules (renderer-critical):**
-  - Code prefix for this hypothesis type: **P** (P1, P2, P3…). Every entry in Considered, Alternatives carried, and Eliminated must begin with its code in parentheses.
-  - Mark the primary Considered entry with `[PRIMARY]` at the end: e.g. `(P1) [description] [PRIMARY]`
-  - Eliminated entries must begin with the same code as their Considered counterpart, followed by ` -- ` and the elimination rationale: e.g. `(P5) Eliminated -- [reason]`. Do NOT put a description before the code.
-- **Assumptions:** What must be true for this problem to be worth solving. Full format (renderer-critical):
-  ```
-  - [TAG] [TIER] Claim [LOAD-BEARING] [BLAST:LEVEL]
-    -> Falsification: Observable condition that would disprove this
-    -> Validation: How to test or resolve it
-    -> Status: OPEN
-  ```
-  Tags: `[B]` Belief | `[K]` Knowledge | `[O]` Observation. Status values: `OPEN` | `TESTING` | `RESOLVED_TRUE` | `RESOLVED_FALSE` | `ESCALATED`. CHALLENGE passes append `-> CHALLENGE YYYY-MM-DD: [one-line note]` after Status — do not remove prior CHALLENGE lines.
+- **Possibility Space:** All candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated. Identify which candidate is primary.
+- **Assumptions:** List what must be true for this problem to be worth solving. For each: classify as Belief / Knowledge / Observation, assign evidence tier, state the claim, mark load-bearing status, assign blast radius (High / Medium / Low), and provide a falsification condition, validation method, and current status.
 - **Kill Condition:** What would prove this problem is not worth solving. Must reference specific observable thresholds. Example: "Interviews reveal <2/5 people in the segment experience this problem weekly" or "existing alternative achieves >80% satisfaction."
 
 Produce: complete problem hypothesis in register format.
@@ -148,6 +136,7 @@ Produce: complete problem hypothesis in register format.
 
 | Mode | Signal | Recovery |
 |------|--------|----------|
+| Over-length claim | Claim runs beyond 3 sentences or contains data (circulation figures, market statistics, pricing) | Move data to Evidence section. Rewrite as: who has the problem + why alternatives fail structurally + what the gap is. |
 | Solution-shaped problem | Problem statement includes solution language ("need a tool", "need a platform") | Rewrite as pain: "teams spend 40 hours building design systems" not "teams need an automated design system generator" |
 | Governor's problem auto-promoted | Governor's stated problem has highest score despite weak evidence | Explicitly compare evidence quality between governor's problem and alternatives. If governor's problem has weaker evidence but higher score, flag: "Your stated problem scored highest but evidence is thinner than alternative X. This may be confirmation bias." |
 | All problems score similarly | Top 3 problems within 20% of each other | This is useful information, not a failure. Carry all 3 as alternatives. Recommend governor input to distinguish |

@@ -61,14 +61,14 @@ export function computeHypothesisDetail(
     triggerEvent: (h as any).triggerEvent,
     budgetOwner: (h as any).budgetOwner,
     currentSpend: (h as any).currentSpend,
-    observableCharacteristics: (h as any).observableCharacteristics,
+    observableFilters: (h as any).observableFilters,
     accessPaths: (h as any).accessPaths,
+    painScoring: (h as any).painScoring,
     painIntensity: (h as any).painIntensity,
     frequency: (h as any).frequency,
     whyNow: (h as any).whyNow,
     workarounds: (h as any).workarounds,
     jobs: vp?.jobs,
-    clauseValidation: vp?.clauseValidation,
     relatedGaps: relatedGaps && relatedGaps.length > 0 ? relatedGaps : undefined,
   };
 }

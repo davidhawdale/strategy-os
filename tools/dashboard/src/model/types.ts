@@ -116,8 +116,9 @@ export interface Hypothesis {
   triggerEvent?: string;
   budgetOwner?: string;
   currentSpend?: string;
-  observableCharacteristics?: string[];
+  observableFilters?: string[];
   accessPaths?: string[];
+  painScoring?: PainScoringEntry[];
 
   // Unit Economics extensions
   revenueModel?: RevenueModel;
@@ -440,6 +441,15 @@ export interface ChannelStrategy {
   coherence?: string;
   acvConstraint?: string;
   sequencingRationale?: string;
+}
+
+export interface PainScoringEntry {
+  segment: string;
+  frequency: number;
+  severity: number;
+  breadth: number;
+  alternativesInadequacy: number;
+  composite: number;
 }
 
 export interface ModeThreshold {
@@ -915,8 +925,9 @@ export interface HypothesisDetailView {
   triggerEvent?: string;
   budgetOwner?: string;
   currentSpend?: string;
-  observableCharacteristics?: string[];
+  observableFilters?: string[];
   accessPaths?: string[];
+  painScoring?: PainScoringEntry[];
 
   // Unit Economics specific
   revenueModel?: RevenueModel;

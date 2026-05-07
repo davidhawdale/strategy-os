@@ -22,7 +22,7 @@ Previous Version: 2 (snapshotted at strategy/snapshots/2026-05-05/; full registe
 
 ## 1. Problem
 
-**Claim:** Scottish Borders residents lack a high-quality, daily-cadence, place-specific local news product. The two existing local titles -- the Border Telegraph (Newsquest, weekly, Galashiels-anchored) and The Southern Reporter (Iconic Media, weekly, Selkirk-anchored) -- are weekly, low-circulation (Southern Reporter paid print fell from c.12,500 in 2013 to c.3,352 in 2023, a 73% collapse), and operate on a thin-newsroom model where editorial investment per title has been progressively reduced under consolidating ownership. National titles cover Borders only incidentally, and BBC Scotland's Borders coverage is broadcast-cadence and lacks the granularity (school, court, council, club, community-event) that is the substantive promise of a local subscription. The latent problem for residents is the absence of a continuous, accountable, name-on-the-byline local news product; the latent problem for civic life is reduced scrutiny of council, planning, and court matters in a region of c.117,000 people across 11 main towns and a dispersed rural hinterland.
+**Claim:** Scottish Borders residents (c.117,000 across 11 towns and a dispersed rural hinterland) lack a daily-cadence, place-specific local news product. The two existing local titles are both weekly and operate on progressively thinned editorial models; national and broadcast alternatives cover the region only incidentally. The result is a gap in continuous, accountable local coverage at council, court, planning, and community level.
 
 **Confidence:** RESEARCHED
 
@@ -158,7 +158,7 @@ The structural Problem claim (no daily-cadence local product in Borders) is unch
 
 ## 2. Segment
 
-**Claim:** The primary addressable segment is *settled, civic-engaged Borders residents aged 50+ in households with broadband, who currently consume some combination of weekly local print, BBC Scotland online, and Facebook community groups, and who have a personal stake in at least one of the following: a Borders town's civic life (council, planning), a Borders sports club (rugby is structurally important here), a Borders school catchment, or extended family/genealogical roots in a specific Borders locality*. They are observable as: (a) print buyers of Border Telegraph or Southern Reporter, (b) members of named Facebook community groups for Galashiels/Hawick/Peebles/Kelso/Jedburgh/Selkirk/Melrose, (c) season-ticket holders or members of Borders rugby clubs, (d) attendees of Common Riding events, (e) residents of postcodes TD1-TD15 with broadband access. Geographic dispersion across the 11 main towns is load-bearing: this is not one segment served by one channel, but the same psychographic distributed across a dispersed-rural-with-market-towns geography that does not map onto Aberdeen/Dundee's single-city pattern.
+**Claim:** The primary segment is settled, civic-engaged Borders residents aged 50+ with broadband, who currently combine weekly local print, BBC Scotland online, and Facebook community groups to follow local civic, sport, and community life. They are observable as print buyers of Border Telegraph or Southern Reporter, members of named Borders Facebook community groups, or season-ticket holders at Borders rugby clubs. This segment is geographically dispersed across all 11 Borders market towns — a load-bearing characteristic that distinguishes it from the single-city patterns in Aberdeen and Dundee.
 
 **Confidence:** RESEARCHED
 
@@ -166,7 +166,7 @@ The structural Problem claim (no daily-cadence local product in Borders) is unch
 **Budget Owner:** The household decision-maker (typically the same individual; ACV is small enough that consumption decisions are not formal budget decisions)
 **Current Spend:** Border Telegraph or Southern Reporter print weekly (c.£1.50-£2 per issue, c.£75-£100/yr); some hold national subs (Times £200+/yr, Telegraph £150+/yr); typically one local + one national spend pattern observable in this demographic
 
-**Observable Characteristics:**
+**Observable Filters:**
 
 - Residence in postcode districts TD1-TD15 (Borders) -- searchable via address-list rentals and postcode targeting
 - Aged 50+ (the 45-64 cohort is over-indexed in Borders at 30.2% of population; over-65s are the 5th-highest in Scotland by council area)
@@ -228,6 +228,13 @@ The structural Problem claim (no daily-cadence local product in Borders) is unch
   - (S6) Eliminated -- Pain present but segment too small (c.5-10k people across the rural-only cohort); cannot support a unit on its own
   - (S7) Eliminated as primary (carried as content vertical) -- The school-age-children parent has the pain but is least likely to pay for a new news subscription in a tight household budget. Better served as a content category within S1.
 
+**Pain Scoring:**
+
+| Segment | Frequency | Severity | Breadth | Alt. Inadequacy | Composite |
+|---|---|---|---|---|---|
+| 50+ civic-engaged Borders residents | 4 | 4 | 3 | 4 | 192 |
+| General Borders residents (18–49) | 2 | 2 | 3 | 3 | 36 |
+
 **Evidence:**
 
 - [WEB_RESEARCH] [T1] 2026-04-24 -- [Scottish Borders Council](https://www.scotborders.gov.uk/strategies-plans-policies/research-data-scottish-borders-topic): 45-64 cohort = 30.2% (above Scottish average), 5th-highest % over 65 in Scotland.
@@ -281,7 +288,7 @@ The structural Problem claim (no daily-cadence local product in Borders) is unch
 
 ## 3. Unit Economics
 
-**Claim:** A Scottish Borders subscription extension can plausibly support an LTV:CAC of c.4-7x and payback of c.5-9 months at scale, IF (a) DCT achieves c.2,500-4,500 paying subscribers within 24 months, (b) blended ARPU sits in the £60-£100/yr range (revised upward from £55-£70 to reflect T1-confirmed P&J tier structure including a £8.99/mo Web Pack), (c) marginal newsroom cost can be held to c.£300-450k/yr (a 4-6 FTE editorial unit plus shared central overhead), and (d) blended CAC is held below c.£25-35 across foundation channels. The unit is viable but tight: the BOOTSTRAP threshold for payback (<6 months) is met in base-mid and optimistic (improved from CHALLENGE pass — higher Web Pack ARPU shortens payback); the LTV:CAC threshold (>5x) is met in base and optimistic. A pessimistic scenario (CAC 3x estimate, segment 40% smaller, churn 2x) still breaks the unit. The economics have a *modestly wider* margin than the v1 register estimated, primarily because the T1-confirmed P&J Web Pack price of £8.99/mo is above the v1 modelled £4.99-£5.99 floor — but the unit is still not over-determined.
+**Claim:** A Scottish Borders subscription extension can plausibly support LTV:CAC of c.4–7x and payback of c.5–9 months at scale, assuming c.2,500–4,500 subscribers within 24 months at a blended ARPU of £60–100/yr. The unit meets BOOTSTRAP thresholds in base and optimistic scenarios, with the T1-confirmed P&J Web Pack price of £8.99/mo providing the primary upward revision from v1. The critical dependency is holding marginal newsroom cost to c.£300–450k/yr and blended CAC below c.£25–35.
 
 **Confidence:** RESEARCHED
 
@@ -425,6 +432,9 @@ The structural Problem claim (no daily-cadence local product in Borders) is unch
 - [T1] 2026-05-06 -- [Newsquest Scotland hits 50,000 digital subscriber milestone — Border Telegraph](https://www.bordertelegraph.com/news/25665270.newsquest-scotland-hits-50-000-digital-subscriber-milestone/) — All Access Scotland £8.99 bundle and per-title local breakdown
 - [T1] 2026-05-06 -- [DC Thomson reports flat revenue but growing profit — Press Gazette](https://pressgazette.co.uk/media_business/dc-thomson-reports-flat-revenue-but-growing-profit/) — DCT FY25 financials; >50k regional subs
 - [T2] 2026-05-06 -- [Biggest subscription news websites 2026 — Press Gazette](https://pressgazette.co.uk/paywalls/biggest-subscription-news-websites-2026/) — UK regional digital subscription growth and ARPU trends
+
+**Assumptions:**
+
 - [K] [T1] DCT's existing Pugpig Bolt platform, payments stack, identity, and editorial CMS extend to a third regional brand at marginal cost (no rebuild) [LOAD-BEARING] [BLAST:HIGH]
   -> Falsification: Internal architecture review reveals platform extension requires £200k+ engineering build
   -> Validation: Governor / DCT internal CTO confirmation
@@ -470,7 +480,7 @@ The structural Problem claim (no daily-cadence local product in Borders) is unch
 
 ## 4. Value Proposition
 
-**Claim:** For settled, civic-engaged Borders residents who lack a daily-cadence, locally-accountable news product, the Scottish Borders edition (working title: *The Borders Journal*, or extension of an existing DCT brand) is a daily local news subscription -- digital and print -- that covers Borders council, court, planning, schools, sport (rugby), and community life with named, locally-resident reporters at a depth and cadence no current alternative provides. Unlike the Border Telegraph and Southern Reporter (weekly, thin newsroom, distant ownership), it provides daily reporting backed by an established Scottish newsroom operating model proven in Aberdeen and Dundee. Unlike BBC Scotland, it goes deep on the named town, the named council decision, the named court case, the named team. Unlike Facebook, it is accountable, accurate, and signed by name. The unique capability is the combination of (a) DCT's proven daily-newsroom operating model, (b) town-level granularity preserved within a regional unit, and (c) editorial scale (c.4-6 FTE) that the existing weekly competitors cannot afford to match.
+**Claim:** For civic-engaged Borders residents who lack daily-cadence, locally-accountable news, the Scottish Borders edition is a daily local news subscription — digital and print — covering council, court, planning, schools, sport, and community life with named, locally-resident reporters at a depth and cadence no current alternative provides. Unlike the existing weekly titles it operates at daily cadence with sustained editorial investment; unlike BBC Scotland it provides granular, named-reporter coverage of specific towns and decisions; unlike Facebook it is accountable, accurate, and signed by name. The unique capability is DC Thomson's proven daily-newsroom operating model, replicated at unit cost rather than rebuilt from scratch.
 
 **Confidence:** RESEARCHED
 
@@ -480,16 +490,6 @@ The structural Problem claim (no daily-cadence local product in Borders) is unch
 - Emotional: Belonging to my place; the satisfaction of being well-informed about the community I'm part of; trust that someone is watching council, court, and planning on my behalf
 - Social: Being the person in my circle who knows what is happening in the Borders; being the household that takes the local paper as a marker of civic membership
 
-**Clause Validation:**
-
-| Clause                                                                                                                    | Status                      | Tier | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Target customer: settled civic-engaged Borders residents 50+                                                              | untested                    | T2   | Demographic data supports concentration; segment claim built on observable filters; behavioural validation pending                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| Problem: lack of daily-cadence locally-accountable news                                                                   | untested                    | T2   | Structural evidence (no daily competitor; weekly circulation collapse) supports the gap; resident-felt-pain not validated                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| Category: daily local news subscription (digital + print)                                                                 | tested                      | T1   | Category exists; DCT operates it in two adjacent geographies                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Differentiator: DCT-proven daily newsroom operating model + town-level granularity                                        | tested (refined 2026-05-05) | T2   | Operating model proven for the*full daily title* in Aberdeen/Dundee, but DCT's *observed* practice in dispersed/low-density Scottish geographies (Elgin, Inverness, Oban) is NOT daily local — it is weekly newsletter from the regional title's editorial spine. The "daily" differentiator must specify daily *Borders-specific* reporting at meaningful editorial volume (5-7 stories/day), not merely daily newsletter delivery, to be meaningfully different from a Borders-newsletter-inside-existing-title pivot. Refined post-CHALLENGE. |
-| vs Alternative: Border Telegraph (weekly), Southern Reporter (weekly), BBC (broad), Facebook (unaccountable)              | tested                      | T1   | Competitive landscape directly observable; alternatives' inadequacies are structural                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| Unique capability: combination of operating model + town-level granularity + editorial scale (4-6 FTE vs incumbents' 1-2) | untested                    | T2   | Editorial scale assertion depends on internal decision; not yet committed                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 **Desired State:**
 

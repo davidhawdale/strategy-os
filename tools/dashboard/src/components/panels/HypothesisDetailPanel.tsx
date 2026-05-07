@@ -1,4 +1,4 @@
-import type { HypothesisDetailView, ScenarioEntry, PanelId } from '../../model/types';
+import type { HypothesisDetailView, ScenarioEntry, PanelId, Assumption } from '../../model/types';
 import { ConfidenceBadge } from '../shared/ConfidenceBadge';
 import { TierBadge } from '../shared/TierBadge';
 import { BlastRadiusBadge } from '../shared/BlastRadiusBadge';
@@ -31,7 +31,113 @@ function renderUpdateText(text: string) {
   );
 }
 
-export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
+function renderAssumptions(assumptions: Assumption[]) {
+  return (
+    <div className="detail-section">
+      <h3 className="section-heading">
+        Assumptions
+        <span className="section-heading__count">{assumptions.length}</span>
+      </h3>
+      <ul className="assumption-list">
+        {assumptions.map((a, i) => (
+          <li key={i} className="assumption-item">
+            <div className="assumption-item__header">
+              {a.status && (
+                <span className={`badge assumption-status assumption-status--${a.status.toLowerCase()}`}>
+                  {a.status.replace(/_/g, ' ')}
+                </span>
+              )}
+              {a.tag && (
+                <span className="assumption-item__tag">
+                  {a.tag === 'B' ? 'Belief' : a.tag === 'K' ? 'Knowledge' : 'Observation'}
+                </span>
+              )}
+              <BlastRadiusBadge radius={a.blastRadius} />
+              {a.loadBearing && <span className="badge badge--load-bearing">Load-Bearing</span>}
+              <TierBadge tier={a.tier} />
+            </div>
+            <p className="assumption-item__claim">{a.claim}</p>
+            {a.falsification && (
+              <p className="assumption-item__detail"><strong>Falsification:</strong> {a.falsification}</p>
+            )}
+            {a.validation && (
+              <p className="assumption-item__detail"><strong>Validation:</strong> {a.validation}</p>
+            )}
+            {a.challenges && a.challenges.map((c, j) => (
+              <p key={j} className="assumption-item__detail assumption-item__challenge">
+                <strong>Challenge {c.date}:</strong> {c.text}
+              </p>
+            ))}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+type PossibilitySpaceData = NonNullable<HypothesisDetailView['possibilitySpace']>;
+
+function renderPossibilitySpace(ps: PossibilitySpaceData, label: string) {
+  const primary = ps.entries.find(e => e.includes('[PRIMARY]'));
+  const primaryLabel = primary?.replace(/\s*\[PRIMARY\]/, '');
+  return (
+    <div className="detail-section">
+      <h3 className="section-heading">Possibility Space</h3>
+
+      {primaryLabel && (
+        <div className="possibility-primary">
+          <span className="possibility-primary__label">Primary {label}</span>
+          <p className="possibility-primary__text">{primaryLabel}</p>
+        </div>
+      )}
+
+      {(ps.carried?.length ?? 0) > 0 && (
+        <div className="possibility-zone">
+          <h4 className="subsection-heading">Carried into design</h4>
+          <ul className="possibility-carried-list">
+            {ps.carried.map((c, i) => {
+              const codeMatch = c.match(/^\([A-Z]\d+\)\s*/);
+              const code = codeMatch ? codeMatch[0].trim() : '';
+              const carriedBody = codeMatch ? c.slice(codeMatch[0].length) : c;
+              const entry = ps.entries.find(e => e.startsWith(code));
+              return (
+                <li key={i} className="possibility-carried-item">
+                  <span className="possibility-carried-item__entry">{entry ?? code}</span>
+                  <span className="possibility-carried-item__reason">{carriedBody}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {(ps.eliminations?.length ?? 0) > 0 && (
+        <div className="possibility-zone">
+          <h4 className="subsection-heading">Eliminated</h4>
+          <ul className="possibility-eliminated-list">
+            {ps.eliminations.map((e, i) => {
+              const codeFromCandidate = e.candidate.match(/^\([A-Z]\d+\)/)?.[0] ?? '';
+              const entry = codeFromCandidate
+                ? ps.entries.find(en => en.startsWith(codeFromCandidate))
+                : undefined;
+              const detail = e.reason === 'Eliminated'
+                ? e.evidence
+                : [e.reason, e.evidence].filter(Boolean).join(' — ');
+              return (
+                <li key={i} className="possibility-eliminated-item">
+                  <span className="possibility-eliminated-item__entry">{entry ?? e.candidate}</span>
+                  {detail && <span className="possibility-eliminated-item__detail">{detail}</span>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function HypothesisDetailPanel({ view, onBack }: Props) {
   return (
     <section id="panel-detail" role="tabpanel" aria-label={`${view.label} Hypothesis Detail`} className="panel">
       <div className="panel__header">
@@ -52,103 +158,6 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
         <div className="detail-section">
           <h3 className="section-heading">Claim</h3>
           <blockquote className="claim-block">{view.claim}</blockquote>
-        </div>
-      )}
-
-      {/* Segment: Budget Owner */}
-      {view.budgetOwner && (
-        <div className="detail-section">
-          <h3 className="section-heading">Budget Owner</h3>
-          <p className="segment-field">{view.budgetOwner}</p>
-        </div>
-      )}
-
-      {/* Segment: Current Spend */}
-      {view.currentSpend && (
-        <div className="detail-section">
-          <h3 className="section-heading">Current Spend</h3>
-          <p className="segment-field">{view.currentSpend}</p>
-        </div>
-      )}
-
-      {/* Segment: Observable Characteristics */}
-      {view.observableCharacteristics && view.observableCharacteristics.length > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">Observable Characteristics</h3>
-          <ol className="observable-characteristics">
-            {view.observableCharacteristics.map((f, i) => <li key={i}>{f}</li>)}
-          </ol>
-        </div>
-      )}
-
-      {/* Segment: Access Paths */}
-      {view.accessPaths && view.accessPaths.length > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">Access Paths</h3>
-          <ul className="access-path-list">
-            {view.accessPaths.map((p, i) => <li key={i}>{p}</li>)}
-          </ul>
-        </div>
-      )}
-
-      {/* Segment: Possible Trigger Events */}
-      {view.triggerEvent && (
-        <div className="detail-section">
-          <h3 className="section-heading">Possible Trigger Events</h3>
-          <ul className="access-path-list">
-            {view.triggerEvent.split(/;\s*/).filter(Boolean).map((t, i) => <li key={i}>{t.charAt(0).toUpperCase() + t.slice(1)}</li>)}
-          </ul>
-        </div>
-      )}
-
-      {/* Problem: Pain Intensity + Frequency */}
-      {(view.painIntensity || view.frequency) && (
-        <div className="detail-section">
-          <h3 className="section-heading">Pain Profile</h3>
-          <div className="pain-profile">
-            {view.painIntensity && (
-              <span className="pain-profile__item"><strong>Intensity:</strong> {view.painIntensity}</span>
-            )}
-            {view.frequency && (
-              <span className="pain-profile__item"><strong>Frequency:</strong> {view.frequency}</span>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Problem: Why Now */}
-      {view.whyNow && (
-        <div className="detail-section">
-          <h3 className="section-heading">Why Now</h3>
-          {view.whyNow.enablers.length > 0 && (
-            <>
-              <h4 className="subsection-heading">Enablers</h4>
-              <ul className="why-now-list">
-                {view.whyNow.enablers.map((e, i) => <li key={i}>{e}</li>)}
-              </ul>
-            </>
-          )}
-          {view.whyNow.changesLast36Months.length > 0 && (
-            <>
-              <h4 className="subsection-heading">Changes in last 36 months</h4>
-              <ul className="why-now-list">
-                {view.whyNow.changesLast36Months.map((e, i) => <li key={i}>{e}</li>)}
-              </ul>
-            </>
-          )}
-          {view.whyNow.whyNot5YearsAgo && (
-            <p className="why-now-why5"><strong>Why not 5 years ago:</strong> {view.whyNow.whyNot5YearsAgo}</p>
-          )}
-        </div>
-      )}
-
-      {/* Problem: Workarounds */}
-      {view.workarounds && view.workarounds.length > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">Workarounds</h3>
-          <ul className="workaround-list">
-            {view.workarounds.map((w, i) => <li key={i}>{w}</li>)}
-          </ul>
         </div>
       )}
 
@@ -215,107 +224,42 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
       )}
 
       {/* Possibility space */}
-      {view.possibilitySpace && (() => {
-        const primary = view.possibilitySpace!.entries.find(e => e.includes('[PRIMARY]'));
-        const primaryLabel = primary?.replace(/\s*\[PRIMARY\]/, '');
-        return (
-          <div className="detail-section">
-            <h3 className="section-heading">Possibility Space</h3>
+      {view.possibilitySpace && renderPossibilitySpace(view.possibilitySpace, view.label)}
 
-            {/* Zone 1: Primary */}
-            {primaryLabel && (
-              <div className="possibility-primary">
-                <span className="possibility-primary__label">Primary {view.label}</span>
-                <p className="possibility-primary__text">{primaryLabel}</p>
-              </div>
-            )}
-
-            {/* Zone 2: Carried into design */}
-            {(view.possibilitySpace!.carried?.length ?? 0) > 0 && (
-              <div className="possibility-zone">
-                <h4 className="subsection-heading">Carried into design</h4>
-                <ul className="possibility-carried-list">
-                  {view.possibilitySpace!.carried.map((c, i) => {
-                    const codeMatch = c.match(/^\([A-Z]\d+\)\s*/);
-                    const code = codeMatch ? codeMatch[0].trim() : '';
-                    const carriedBody = codeMatch ? c.slice(codeMatch[0].length) : c;
-                    const entry = view.possibilitySpace!.entries.find(e => e.startsWith(code));
-                    return (
-                      <li key={i} className="possibility-carried-item">
-                        <span className="possibility-carried-item__entry">{entry ?? code}</span>
-                        <span className="possibility-carried-item__reason">{carriedBody}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-
-            {/* Zone 3: Eliminated */}
-            {(view.possibilitySpace!.eliminations?.length ?? 0) > 0 && (
-              <div className="possibility-zone">
-                <h4 className="subsection-heading">Eliminated</h4>
-                <ul className="possibility-eliminated-list">
-                  {view.possibilitySpace!.eliminations.map((e, i) => {
-                    const codeFromCandidate = e.candidate.match(/^\([A-Z]\d+\)/)?.[0] ?? '';
-                    const entry = codeFromCandidate
-                      ? view.possibilitySpace!.entries.find(en => en.startsWith(codeFromCandidate))
-                      : undefined;
-                    const detail = e.reason === 'Eliminated'
-                      ? e.evidence
-                      : [e.reason, e.evidence].filter(Boolean).join(' — ');
-                    return (
-                      <li key={i} className="possibility-eliminated-item">
-                        <span className="possibility-eliminated-item__entry">{entry ?? e.candidate}</span>
-                        {detail && <span className="possibility-eliminated-item__detail">{detail}</span>}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-          </div>
-        );
-      })()}
-
-      {/* Related Gaps */}
-      {view.relatedGaps && view.relatedGaps.length > 0 && (
+      {/* VP: Jobs to be Done */}
+      {view.jobs && (view.jobs.functional || view.jobs.emotional || view.jobs.social) && (
         <div className="detail-section">
-          <h3
-            className="section-heading section-heading--link"
-            onClick={() => onSelectPanel('gapLedger')}
-            role="button"
-            tabIndex={0}
-            onKeyDown={e => e.key === 'Enter' && onSelectPanel('gapLedger')}
-          >
-            {view.label} Related Gaps
-          </h3>
-          <table className="gap-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Dimension</th>
-                <th>Status</th>
-                <th>Desired Condition</th>
-                <th>Current Observation</th>
-              </tr>
-            </thead>
-            <tbody>
-              {view.relatedGaps.map((g, i) => (
-                <tr key={i}>
-                  <td className="gap-table__id">{g.id ? g.id.replace(/\s*\(.*\)$/, '').trim() : '—'}</td>
-                  <td className="gap-table__dimension">{g.dimension.replace(/_/g, ' ')}</td>
-                  <td>
-                    <span className={`gap-tag__status gap-tag__status--${g.status.toLowerCase()}`}>
-                      {g.status}
-                    </span>
-                  </td>
-                  <td className="gap-table__text">{g.desiredCondition}</td>
-                  <td className="gap-table__text">{g.currentObservation}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3 className="section-heading">Jobs to be Done</h3>
+          <dl className="jobs-list">
+            {view.jobs.functional && (
+              <>
+                <dt className="jobs-list__term">Functional</dt>
+                <dd className="jobs-list__def">{view.jobs.functional}</dd>
+              </>
+            )}
+            {view.jobs.emotional && (
+              <>
+                <dt className="jobs-list__term">Emotional</dt>
+                <dd className="jobs-list__def">{view.jobs.emotional}</dd>
+              </>
+            )}
+            {view.jobs.social && (
+              <>
+                <dt className="jobs-list__term">Social</dt>
+                <dd className="jobs-list__def">{view.jobs.social}</dd>
+              </>
+            )}
+          </dl>
+        </div>
+      )}
+
+      {/* Segment: Observable Filters */}
+      {view.observableFilters && view.observableFilters.length > 0 && (
+        <div className="detail-section">
+          <h3 className="section-heading">Observable Filters</h3>
+          <ol className="observable-characteristics">
+            {view.observableFilters.map((f, i) => <li key={i}>{f}</li>)}
+          </ol>
         </div>
       )}
 
@@ -351,47 +295,7 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
       )}
 
       {/* Assumptions */}
-      {(view.assumptions?.length ?? 0) > 0 && (
-        <div className="detail-section">
-          <h3 className="section-heading">
-            Assumptions
-            <span className="section-heading__count">{view.assumptions?.length}</span>
-          </h3>
-          <ul className="assumption-list">
-            {view.assumptions.map((a, i) => (
-              <li key={i} className="assumption-item">
-                <div className="assumption-item__header">
-                  {a.status && (
-                    <span className={`badge assumption-status assumption-status--${a.status.toLowerCase()}`}>
-                      {a.status.replace(/_/g, ' ')}
-                    </span>
-                  )}
-                  {a.tag && (
-                    <span className="assumption-item__tag">
-                      {a.tag === 'B' ? 'Belief' : a.tag === 'K' ? 'Knowledge' : 'Observation'}
-                    </span>
-                  )}
-                  <BlastRadiusBadge radius={a.blastRadius} />
-                  {a.loadBearing && <span className="badge badge--load-bearing">Load-Bearing</span>}
-                  <TierBadge tier={a.tier} />
-                </div>
-                <p className="assumption-item__claim">{a.claim}</p>
-                {a.falsification && (
-                  <p className="assumption-item__detail"><strong>Falsification:</strong> {a.falsification}</p>
-                )}
-                {a.validation && (
-                  <p className="assumption-item__detail"><strong>Validation:</strong> {a.validation}</p>
-                )}
-                {a.challenges && a.challenges.map((c, j) => (
-                  <p key={j} className="assumption-item__detail assumption-item__challenge">
-                    <strong>Challenge {c.date}:</strong> {c.text}
-                  </p>
-                ))}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {(view.assumptions?.length ?? 0) > 0 && renderAssumptions(view.assumptions)}
 
       {/* Kill condition */}
       {view.killCondition && (
@@ -515,6 +419,7 @@ export function HypothesisDetailPanel({ view, onBack, onSelectPanel }: Props) {
           />
         </div>
       )}
+
     </section>
   );
 }

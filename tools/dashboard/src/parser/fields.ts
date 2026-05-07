@@ -449,9 +449,9 @@ export function extractListItems(text: string, label: string): string[] {
 }
 
 export function extractObservableFilters(text: string): string[] {
-  // Try Observable Characteristics first (new name), fallback to Observable Filters
-  let block = extractBlockAfterLabel(text, 'Observable Characteristics');
-  if (!block) block = extractBlockAfterLabel(text, 'Observable Filters');
+  // Try Observable Filters (canonical name), fallback to Observable Characteristics (legacy)
+  let block = extractBlockAfterLabel(text, 'Observable Filters');
+  if (!block) block = extractBlockAfterLabel(text, 'Observable Characteristics');
   if (!block) return [];
 
   const filters: string[] = [];
