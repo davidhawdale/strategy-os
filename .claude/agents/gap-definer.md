@@ -248,6 +248,10 @@ Run gap-enforcing-decisions skill:
 3. Update `strategy/gap-analysis.md` with full detail.
 4. Update hypothesis register summary sections (8: Destruction Log,
    9: Gap Ledger).
+5. Write the `### Decision Deadlines` block compiled by gap-enforcing-decisions
+   into section 9 of `strategy/hypotheses.md`. Format:
+   `- {target label} -- due {YYYY-MM-DD} -- {STATUS}` (one entry per deadline
+   with a hard date; items without hard dates noted in prose below the block).
 
 ### PASS 6: Write Comparison Document
 Run gap-write-diff skill.

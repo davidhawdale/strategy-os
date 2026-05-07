@@ -15,6 +15,7 @@ import { parseSolutionDesign, emptySolutionDesign } from './solution';
 import { parseDestructionLog } from './destruction';
 import { parseGapAnalysis } from './gap-analysis';
 import { parseValueProposition } from './value-proposition';
+import { parseGapLedgerSection } from './gap-ledger';
 
 export { parseGapAnalysis } from './gap-analysis';
 
@@ -137,7 +138,16 @@ export function parse(markdown: string): ParseResult {
     });
   }
 
-  // Step 5: Parse destruction log
+  // Step 5: Parse gap ledger (section 9)
+  let gapLedger;
+  const gapLedgerSection = sections.get('gapLedger');
+  if (gapLedgerSection) {
+    const { ledger, warnings: glWarnings } = parseGapLedgerSection(gapLedgerSection);
+    gapLedger = ledger;
+    warnings.push(...glWarnings);
+  }
+
+  // Step 7: Parse destruction log
   let destructionLog;
   const destructionSection = sections.get('destructionLog');
   fieldsAttempted += 5;
@@ -161,7 +171,7 @@ export function parse(markdown: string): ParseResult {
     });
   }
 
-  // Step 6: Assemble
+  // Step 8: Assemble
   const register: HypothesisRegister = {
     metadata,
     hypotheses,
@@ -171,6 +181,7 @@ export function parse(markdown: string): ParseResult {
       gtmPlan: emptyGtmPlan(),
     },
     destructionLog,
+    gapLedger,
   };
 
   const parseCompleteness = fieldsAttempted > 0 ? fieldsExtracted / fieldsAttempted : 0;

@@ -493,11 +493,11 @@ function parseReadinessHandoff(text: string): ReadinessHandoff {
 function parseGovernorEscalations(text: string): Escalation[] {
   const escalations: Escalation[] = [];
 
-  // Each escalation starts with "### Escalation: {title}"
-  const blocks = text.split(/(?=###\s+Escalation:\s*)/i);
+  // Each escalation starts with "### Escalation: {title}" or "#### Escalation {id} — {title}"
+  const blocks = text.split(/(?=#{3,4}\s+Escalation[\s:])/i);
 
   for (const block of blocks) {
-    const titleMatch = block.match(/###\s+Escalation:\s*(.+)/i);
+    const titleMatch = block.match(/#{3,4}\s+Escalation[\s:](.+)/i);
     if (!titleMatch) continue;
 
     const title = titleMatch[1].trim();

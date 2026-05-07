@@ -118,8 +118,41 @@ For each decision deadline:
 | EXCEEDED | Force disposition: KILL (mark BROKEN), PIVOT (reframe hypothesis), or COMMIT (accept current evidence and advance). Escalate to governor if disposition is a values decision. |
 
 **Gate:** `deadlines_enforced: bool` -- no EXCEEDED deadline without forced disposition.
-- Pass: Step 7.
+- Pass: Step 6a.
 - Fail: force disposition for each exceeded deadline.
+
+### Step 6a: Compile Decision Deadlines Block [S]
+
+After evaluating all deadlines, compile them into the structured block that the Gap Ledger parser expects. Produce this block as output data — the agent writes it to section 9 of `strategy/hypotheses.md` in PASS 5. (Writing to the register is out of scope for skills.)
+
+**Sources (collect from all three):**
+1. Escalations in `execution/queue/` files that state a deadline (any item with a date and an awaiting-governor status)
+2. Gap records from gap-computing-ledger where Time Penalty > 0 (implies an approaching or exceeded deadline)
+3. Any prior `### Decision Deadlines` entries from the last pass (carry forward RESOLVED items; update statuses)
+
+**For each deadline item compute status:**
+
+| Condition | Status |
+|---|---|
+| Due date < today AND no governor response recorded | EXCEEDED |
+| Governor response recorded since last pass | RESOLVED |
+| Due date = today | DUE |
+| Due date > today | OPEN |
+| No hard date (budget/authorisation items) | Omit from structured block; note in prose |
+
+**Output format:**
+
+```
+### Decision Deadlines
+
+- {target label} -- due {YYYY-MM-DD} -- {STATUS}
+```
+
+Where `target label` is the gap or escalation ID followed by a short description (e.g. `E-01: Platform marginal cost (separate-brand path)`). Use ISO 8601 dates only. One entry per line.
+
+**Gate:** `deadlines_block_compiled: bool` -- block compiled with one entry per deadline item that has a hard date; items without hard dates noted separately in prose.
+- Pass: Step 7.
+- Fail: identify which deadline items are missing from the block.
 
 ### Step 7: Apply Contradiction Rule [R]
 
@@ -223,8 +256,9 @@ Compile all rule application results into:
 3. **Execution queue:** top-3 gap-reduction tasks (valid per execution rule).
 4. **Governor escalations:** for values decisions, judgment calls, and ground-truth blockers that the system cannot resolve. Each escalation must include: decision needed, decision type, why system cannot decide, options with consequences, recommendation if any, what is at stake.
 5. **Blocks:** list of blocked execution paths with rationale.
+6. **Decision Deadlines block:** the `### Decision Deadlines` markdown block compiled in Step 6a, for writing into section 9 of `strategy/hypotheses.md`.
 
-**Gate:** `outputs_complete: bool` -- all five output categories populated (even if empty with "none").
+**Gate:** `outputs_complete: bool` -- all six output categories populated (even if empty with "none").
 - Pass: output.
 - Fail: identify which output category is missing.
 

@@ -940,6 +940,17 @@ Three kill conditions now missing or under-specified.
 **Action queue:** `execution/queue/2026-05-05-gap-definer-actions.md`
 **Pass 1 ledger summary retained at the bottom of this section for traceability.**
 
+### Decision Deadlines
+
+- E-01: Platform marginal cost (separate-brand path) -- due 2026-05-08 -- EXCEEDED
+- E-02: Overhead allocation policy -- due 2026-05-08 -- EXCEEDED
+- G-04: Borders segment NRS pull -- due 2026-05-15 -- OPEN
+- E-03: Brand architecture decision -- due 2026-06-15 -- OPEN
+- G-01: Borders resident interviews -- due 2026-06-23 -- OPEN
+- G-06: 3-cell landing-page test -- due 2026-06-23 -- OPEN
+
+*Esc-3 (Phase 0 validation budget) and Esc-4 (decision-deadline confirmation) have no hard date — tracked in Governor Escalations.*
+
 ### Top-3 Active Gaps (Pass 2 — execution order by deadline urgency within tied priority)
 
 | Rank | Gap ID | Target            | Dimension           | Final Priority | Action Type                                                                        | Status                                       | Δ from Pass 1                             |
