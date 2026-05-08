@@ -7,7 +7,6 @@ affects: segment-hypothesis
 depends-on: none
 produces: segment hypothesis in register format
 ---
-
 # Customer Segmentation
 
 Generate segment hypothesis using compression model: enumerate candidates, score, eliminate, carry alternatives. All segments defined by observable filters with tier-labeled evidence.
@@ -21,6 +20,7 @@ Read: market sizing notes (TAM/SAM/SOM), governor problem space description, res
 Produce: segment generation parameters (industry focus, market scope, problem type).
 
 **Gate:** `context_loaded: bool` -- market data and problem space available.
+
 - Pass: Step 2.
 - Fail: Report which inputs are missing. If market sizing is unavailable, proceed with governor input and research signals, noting reduced confidence.
 
@@ -29,6 +29,7 @@ Produce: segment generation parameters (industry focus, market scope, problem ty
 **Grounded in:** market data, problem space, research signals.
 
 From market research, identify 3-5 potential customer groups. For each:
+
 - Who they are (role, company type, industry)
 - Why they might have the problem (structural reason)
 - Rough size from TAM/SAM data
@@ -38,6 +39,7 @@ WebSearch for segment-specific signals if needed (job postings, forum activity, 
 Produce: candidate segment list with initial evidence.
 
 **Gate:** `candidates_enumerated: bool` -- at least 3 candidates identified, each with structural rationale for why they might have the problem.
+
 - Pass: Step 3.
 - Fail: If fewer than 3 candidates, broaden scope (adjacent industries, different company sizes, different roles). If still <3, document why the market may be narrower than expected.
 
@@ -45,22 +47,24 @@ Produce: candidate segment list with initial evidence.
 
 For each segment, identify 2-4 searchable criteria.
 
-| Valid Filters (Observable) | Invalid Filters (Reject) |
-|---------------------------|-------------------------|
-| Company size (employees, revenue) | "Innovative companies" |
-| Industry (NAICS code, vertical) | "Growth-minded founders" |
-| Technology used (specific tools, platforms) | "Tech-savvy teams" |
-| Geography (region, country) | "Forward-thinking" |
+| Valid Filters (Observable)                    | Invalid Filters (Reject)               |
+| --------------------------------------------- | -------------------------------------- |
+| Company size (employees, revenue)             | "Innovative companies"                 |
+| Industry (NAICS code, vertical)               | "Growth-minded founders"               |
+| Technology used (specific tools, platforms)   | "Tech-savvy teams"                     |
+| Geography (region, country)                   | "Forward-thinking"                     |
 | Behavioral signals (job postings, tool usage) | Any psychographic or subjective filter |
-| Funding stage (from Crunchbase) | "Quality-focused" |
+| Funding stage (from Crunchbase)               | "Quality-focused"                      |
 
 For invalid filters, replace with observable proxies:
+
 - "Tech-savvy" -> "uses [specific tools]"
 - "Growth-oriented" -> "raised funding in last 12 months" or "headcount grew >20% YoY"
 
 Produce: filtered candidate list. Candidates with only invalid filters are weakened but not eliminated -- flag for governor input.
 
 **Gate:** `filters_defined: bool` -- each candidate has at least 2 observable, searchable filters.
+
 - Pass: Step 4.
 - Fail: Candidates without observable filters cannot be targeted. Flag as "segment hypothesis requires governor input to operationalize."
 
@@ -68,13 +72,13 @@ Produce: filtered candidate list. Candidates with only invalid filters are weake
 
 For each segment, assess pain signal strength from public data:
 
-| Score | Level | Evidence Required |
-|-------|-------|-------------------|
-| 5 | Hair-on-fire, actively buying solutions | G2 reviews, competitor traction, job postings for manual workaround roles |
-| 4 | Recognized pain, some buying | Forum complaints, budget line items, partial solutions adopted |
-| 3 | Latent pain, workarounds common | DIY tools, spreadsheet solutions, occasional complaints |
-| 2 | Mild inconvenience | Mentioned but not prioritized |
-| 1 | Unaware or accepting | No public signal |
+| Score | Level                                   | Evidence Required                                                         |
+| ----- | --------------------------------------- | ------------------------------------------------------------------------- |
+| 5     | Hair-on-fire, actively buying solutions | G2 reviews, competitor traction, job postings for manual workaround roles |
+| 4     | Recognized pain, some buying            | Forum complaints, budget line items, partial solutions adopted            |
+| 3     | Latent pain, workarounds common         | DIY tools, spreadsheet solutions, occasional complaints                   |
+| 2     | Mild inconvenience                      | Mentioned but not prioritized                                             |
+| 1     | Unaware or accepting                    | No public signal                                                          |
 
 Every score requires cited evidence. No score without signal. If no signal found, score = 1 with note: "no public signal found -- T3 assumption."
 
@@ -83,12 +87,14 @@ Tier labels: scores based on direct observation of behavior (reviews, job postin
 Produce: scored candidate list, each score with evidence and tier label.
 
 **Gate:** `candidates_scored: bool` -- every candidate has a pain score with cited evidence and tier label.
+
 - Pass: Step 5.
 - Fail: Candidates without evidence get score 1 (unaware). Do not assign higher scores without signals.
 
 ### Step 5: Eliminate Weak Candidates (Compression) [R]
 
 Eliminate candidates that fail on 2+ of:
+
 - Pain score < 3
 - Observable filters are insufficient (cannot find them)
 - Market size too small (segment x estimated ARPU < operating costs)
@@ -99,6 +105,7 @@ Record elimination rationale with evidence for each eliminated candidate.
 Produce: surviving segments + elimination log.
 
 **Gate:** `compression_complete: bool` -- elimination rationale documented for every eliminated candidate.
+
 - Pass: Step 6.
 - Fail: If all candidates eliminated, broaden search. If only 1 survives, note the closest eliminated candidate as "weak alternative."
 
@@ -115,6 +122,7 @@ At least 1 alternative must survive. If all but one eliminated, note the closest
 Produce: segment hypothesis with possibility space (primary, alternatives, eliminated).
 
 **Gate:** `selection_complete: bool` -- primary identified, at least 1 alternative carried.
+
 - Pass: Step 7.
 - Fail: If no alternative can be carried, document: "Single viable segment identified. Compression model produced no alternatives. This is a concentration risk."
 
@@ -123,22 +131,15 @@ Produce: segment hypothesis with possibility space (primary, alternatives, elimi
 Write complete segment hypothesis in register format. Fields must appear in this order:
 
 - **Claim:** 3 sentences maximum: (1) who they are in behavioural terms (not demographic generalisation), (2) what observable signal identifies them, (3) why they are the primary segment rather than an alternative. Observable filters, access paths, and evidence belong in their own sections — not the Claim.
-- **Budget Owner:** Who controls the purchase decision, and at what ACV level does it become a formal decision vs. a consumption choice?
-- **Current Spend:** What do they currently spend on substitutes or adjacent products? Cite observable proxies (print subscription costs, comparable digital subs).
-- **Observable Filters:** Numbered list. Each item must be a concrete, searchable filter — no psychographics. Example: "Members of named Facebook community groups for [towns]."
-- **Access Paths:** Bulleted list of acquisition channels that reach this segment specifically, with rationale for why each path is viable.
-- **Trigger Event:** Semicolon-separated list of specific events or changes that move this person from non-buyer to active buyer. Example: "Cancellation of print delivery; arrival of fibre broadband; house purchase in the area." Rendered in the dashboard as bullet points.
-- **Desired State:** Conditions that would confirm this segment is correctly identified and reachable.
-- **Current State:** Current fulfilment status of each desired condition (MET / PARTIAL / MISSING / CONTRADICTED).
-- **Possibility Space:** Candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated. Identify which candidate is primary.
-- **Pain Scoring:** Table summarising pain scores for the primary segment and any alternatives carried, with one row per scored segment. Place immediately before Evidence.
+- **Possibility Space:** All segment candidates considered. Follow the Possibility Space Format in STANDARDS.md.
 - **Evidence:** Tier-labeled evidence items from scoring.
-- **Assumptions:** List what must be true about this segment. For each: classify as Belief / Knowledge / Observation, assign evidence tier, state the claim, mark load-bearing status, assign blast radius (High / Medium / Low), and provide a falsification condition, validation method, and current status.
+- **Assumptions:** List what must be true about this segment. Follow the Assumptions Format in STANDARDS.md for each entry.
 - **Kill Condition:** What would prove this is the wrong segment. Must be specific and observable (not "segment doesn't work"). Example: "Interviews with 5 [segment] companies reveal <2/5 experience this problem weekly."
 
 Produce: complete segment hypothesis in register format.
 
 **Gate:** `hypothesis_written: bool` -- all fields populated, kill condition is specific and observable.
+
 - Pass: Done.
 - Fail: Fix the missing or vague field.
 
@@ -147,21 +148,21 @@ Produce: complete segment hypothesis in register format.
 - Minimum 3 candidate segments considered (possibility space recorded)
 - At least 1 alternative carried (not just the winner)
 - Every segment defined by observable, searchable filters (no psychographics)
-- Pain scores backed by cited evidence with tier labels; sources in `[Name](URL)` format — never plain text
-- Evidence entries follow register format: `[TYPE] [TIER] DATE -- [Name](URL): one-sentence finding.`
+- Pain scores backed by cited evidence with tier labels; follow the Citation Format in STANDARDS.md for all sources.
+- Follow the Evidence Entry Format in STANDARDS.md for all register entries.
 - Elimination rationale documented for every eliminated candidate
 - Kill condition is specific and observable (not "segment doesn't work")
 - Claim uses behavioral language, not demographic generalization
 
 ## Failure Modes
 
-| Mode | Signal | Recovery |
-|------|--------|----------|
-| Over-length claim | Claim embeds observable filter list, access paths, or evidence | Move filters to Observable Filters section. Rewrite claim as: who + observable signal + why primary. 3 sentences maximum. |
-| Single-player assumption | Primary segment matches governor's own profile exactly | Flag to governor: "You may be designing for yourself. Is this segment defined by your characteristics or by market evidence?" Carry an alternative that explicitly differs from governor profile |
-| Psychographic filters masquerading as observable | Filters include "tech-savvy", "growth-oriented", "innovative" | Replace with observable proxies: "tech-savvy" -> "uses [specific tools]"; "growth-oriented" -> "raised funding in last 12 months" or "headcount grew >20% YoY" |
-| Pain score without evidence | Score assigned but evidence field is empty or says "likely" / "probably" | WebSearch for specific signals. If no signals found, score = 1 (unaware) with note: "no public signal found -- T3 assumption" |
-| Anchoring on first segment | First segment listed gets highest score; alternatives feel perfunctory | Re-score with the second segment as the assumed primary. Does the scoring change? If not, anchoring is not the issue. If yes, the scores are framing-dependent -- carry both |
+| Mode                                             | Signal                                                                   | Recovery                                                                                                                                                                                         |
+| ------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Over-length claim                                | Claim embeds observable filter list, access paths, or evidence           | Move filters to Observable Filters section. Rewrite claim as: who + observable signal + why primary. 3 sentences maximum.                                                                        |
+| Single-player assumption                         | Primary segment matches governor's own profile exactly                   | Flag to governor: "You may be designing for yourself. Is this segment defined by your characteristics or by market evidence?" Carry an alternative that explicitly differs from governor profile |
+| Psychographic filters masquerading as observable | Filters include "tech-savvy", "growth-oriented", "innovative"            | Replace with observable proxies: "tech-savvy" -> "uses [specific tools]"; "growth-oriented" -> "raised funding in last 12 months" or "headcount grew >20% YoY"                                   |
+| Pain score without evidence                      | Score assigned but evidence field is empty or says "likely" / "probably" | WebSearch for specific signals. If no signals found, score = 1 (unaware) with note: "no public signal found -- T3 assumption"                                                                    |
+| Anchoring on first segment                       | First segment listed gets highest score; alternatives feel perfunctory   | Re-score with the second segment as the assumed primary. Does the scoring change? If not, anchoring is not the issue. If yes, the scores are framing-dependent -- carry both                     |
 
 ## Boundaries
 

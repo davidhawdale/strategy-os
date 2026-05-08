@@ -161,9 +161,9 @@ Write complete unit economics hypothesis in register format:
 - **Evidence:** All calculations with sources and tier labels.
 - **Mode Thresholds:** Table with required vs estimated for each metric.
 - **Scenario Analysis:** Optimistic, base, pessimistic, kill -- with specific numbers.
-- **Assumptions:** Every input that is T2 or T3 is an assumption. List what must be true. For each: classify as Belief / Knowledge / Observation, assign evidence tier, state the claim, mark load-bearing status, assign blast radius (High / Medium / Low), and provide a falsification condition, validation method, and current status.
+- **Assumptions:** Every input that is T2 or T3 is an assumption. List what must be true. Follow the Assumptions Format in STANDARDS.md for each entry.
 - **Kill Condition:** At what LTV:CAC ratio or payback period does this stop working? State specific numbers.
-- **Possibility Space:** All revenue models considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated. Identify which model is primary.
+- **Possibility Space:** All revenue models considered. Follow the Possibility Space Format in STANDARDS.md.
 
 Produce: complete unit economics hypothesis in register format.
 

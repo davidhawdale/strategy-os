@@ -94,8 +94,7 @@ Produce: hypothesis-mapped claims.
 
 ### Step 5: Write Outputs [S]
 
-For hypothesis-specific insights: format as EvidenceItems:
-- [{TYPE: WEB_RESEARCH or OBSERVATION}] [{T1|T2|T3}] {date} -- [Name](URL): {detail}
+For hypothesis-specific insights: format as EvidenceItems following the Evidence Entry Format in STANDARDS.md.
 - Note which hypothesis they should be added to
 
 For general insights: write to `knowledge/` as standalone file if source is broadly relevant.
@@ -114,8 +113,8 @@ Produce: evidence items for register integration + optional knowledge file.
 - Tier labels applied to every claim with justification
 - Behavioral vs hypothetical distinction maintained (quotes about what happened vs what should happen)
 - Claims mapped to specific hypotheses (not all dumped as "general")
-- Internet sources must be formatted as `[Name](URL)` — never plain text. If the URL is not available, find it before citing the source.
-- Source metadata complete (date, author, URL as `[Name](URL)`)
+- Follow the Citation Format in STANDARDS.md for all internet sources.
+- Source metadata complete (date, author, source link)
 
 ## Failure Modes
 

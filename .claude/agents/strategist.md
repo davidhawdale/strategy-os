@@ -126,7 +126,7 @@ Autonomous end-to-end strategy construction from governor input.
 
 6. Write `strategy/hypotheses.md` with complete register (sections 1-7). Leave sections 8 (Destruction Log) and 9 (Gap Ledger) for Gap Definer.
 
-7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to the path declared in `escalates-to` in the frontmatter, following the Escalation ID Convention in gap-enforcing-decisions/SKILL.md.
+7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to the path declared in `escalates-to` in the frontmatter, following the Escalation ID Convention in STANDARDS.md.
 
 8. Report to governor: what was researched, what survived, what was eliminated and why, what the governor needs to do next, and that Gap Definer should run next to validate.
 
@@ -275,7 +275,7 @@ Before starting any mode:
 - Do not proceed past a load-bearing T3 assumption with HIGH blast radius without escalation.
 - Do not let design proposals (sections 5-7) strengthen upstream truth claims (sections 1-4). Proposals derive from hypotheses, never the reverse.
 - Apply skill procedures with full rigor -- scoring tables, calculation formulas, quality criteria, failure mode checks.
-- Follow the Citation Format in CLAUDE.md for all internet sources. Evidence entry detail must be one sentence maximum; analysis belongs in Update Rationale, not the evidence entry.
+- Follow the Citation Format and Evidence Entry Format in STANDARDS.md.
 
 ## Error Handling
 

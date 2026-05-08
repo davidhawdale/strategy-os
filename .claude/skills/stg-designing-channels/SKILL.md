@@ -179,7 +179,7 @@ Also produce structured outputs for stg-calculating-economics:
 - Investment splits sum to 100% per phase with rationale
 - Blended CAC checked against LTV:CAC requirement
 - Sequencing distinguishes bootstrap/early from scale phase
-- Possibility space documented: considered channels, alternatives carried (with rationale), then eliminated (with rationale) — order must be: Considered → Alternatives carried → Eliminated. Identify which channel is primary.
+- Possibility space documented. Follow the Possibility Space Format in STANDARDS.md.
 - All CAC benchmarks cite sources
 
 ## Failure Modes

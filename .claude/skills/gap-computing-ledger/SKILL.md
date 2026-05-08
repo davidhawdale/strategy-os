@@ -165,41 +165,8 @@ Produce:
 3. Deferred gaps list (if any, with reason for deferral).
 4. Any blockers detected (sections with no desired state, contradictions).
 
-**Section 4 completeness rule (MUST follow — dashboard depends on it):**
-Section 4 of `gap-analysis.md` (Full Gap Records) must contain a `### Gap: G-XX` block
-for **every** gap in the Ranked Gaps table — active, deferred, and escalated alike.
-Do NOT limit section 4 to gaps that changed or are new this pass.
-- The dashboard parser reads section 4 to render gap cards; any gap absent from section 4
-  will be invisible in the dashboard regardless of whether it appears in the ranked table.
-- On subsequent passes, update the existing record in place — do not delete unchanged records.
-- Changed records must show their new values; score components and status must be current.
+Follow the Gap Record Field Values in STANDARDS.md for all target and status field values.
 
-**Target field values (must match exactly — used by the dashboard to link gaps to hypothesis panels):**
-
-| Hypothesis section    | Target value       |
-|-----------------------|--------------------|
-| Problem               | PROBLEM            |
-| Segment               | SEGMENT            |
-| Unit Economics        | UNIT_ECONOMICS     |
-| Value Proposition     | VALUE_PROPOSITION  |
-| Growth Architecture   | GROWTH_ARCHITECTURE|
-| Solution Design       | SOLUTION_DESIGN    |
-| GTM Plan              | GTM_PLAN           |
-
-A gap that spans multiple sections uses the primary section as target. Multi-section gaps may add secondary targets separated by ` / ` (e.g. `"SOLUTION_DESIGN / GTM_PLAN"`) — the dashboard matches on substring so both will resolve.
-
-**Status field values (must be one of the following — used by the dashboard to render gap status badges):**
-
-| Status       | When to use |
-|--------------|-------------|
-| OPEN         | Gap is active and unresolved |
-| IN_PROGRESS  | An action is currently underway |
-| RESOLVED     | Gap has been closed with evidence |
-| BLOCKED      | Cannot progress — dependency or constraint |
-| DEFERRED     | Below the active focus cap (Focus Rule: max 3 active); re-evaluate next pass |
-| ESCALATED    | Requires governor decision; waiting for response |
-
-Any other value will be rendered as OPEN by the dashboard parser.
 
 ---
 

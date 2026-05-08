@@ -7,7 +7,6 @@ affects: problem-hypothesis
 depends-on: none
 produces: problem hypothesis in register format
 ---
-
 # Problem Scoring
 
 Score problem candidates using four-property framework with compression-model elimination. Every score carries a tier label and cited evidence. Output is a problem hypothesis, not a canvas section.
@@ -21,6 +20,7 @@ Read: segment hypothesis (or candidates if segment not yet finalized), governor'
 Produce: problem generation parameters anchored to segment.
 
 **Gate:** `context_loaded: bool` -- segment context and problem space available.
+
 - Pass: Step 2.
 - Fail: Report missing inputs. If no segment data, proceed with governor input alone, noting reduced confidence.
 
@@ -29,6 +29,7 @@ Produce: problem generation parameters anchored to segment.
 **Grounded in:** segment context, governor's problem description, research signals.
 
 For the target segment, identify 5-7 candidate problems from:
+
 - Governor input (what they believe the problem is)
 - Public signals (forums, reviews, job postings, support tickets)
 - Competitive analysis (what alternatives solve -- implies the problem)
@@ -39,6 +40,7 @@ WebSearch for segment-specific pain signals.
 Produce: candidate problem list.
 
 **Gate:** `candidates_enumerated: bool` -- at least 5 candidates identified from at least 2 different sources.
+
 - Pass: Step 3.
 - Fail: If fewer than 5, broaden search to adjacent problem categories. If still <5, document the search strategy used and proceed with available candidates.
 
@@ -48,49 +50,50 @@ For each problem, score:
 
 **Frequency (1-5):**
 
-| Score | Meaning | Evidence Type |
-|-------|---------|---------------|
-| 5 | Multiple times daily | T1 if from workflow analysis; T2 if inferred |
-| 4 | Daily | Cite: job descriptions mentioning task, forum post frequency |
-| 3 | Weekly | |
-| 2 | Monthly | |
-| 1 | Rarely | |
+| Score | Meaning              | Evidence Type                                                |
+| ----- | -------------------- | ------------------------------------------------------------ |
+| 5     | Multiple times daily | T1 if from workflow analysis; T2 if inferred                 |
+| 4     | Daily                | Cite: job descriptions mentioning task, forum post frequency |
+| 3     | Weekly               |                                                              |
+| 2     | Monthly              |                                                              |
+| 1     | Rarely               |                                                              |
 
 **Severity (1-5):**
 
-| Score | Meaning | Evidence Type |
-|-------|---------|---------------|
-| 5 | Business stops | T2 from public signals; T3 for actual pain intensity |
-| 4 | Significant loss | Cite: quantified cost (time, money, risk) if available |
-| 3 | Notable pain | Qualitative signal if no quantification |
-| 2 | Mild annoyance | |
-| 1 | Trivial | |
+| Score | Meaning          | Evidence Type                                          |
+| ----- | ---------------- | ------------------------------------------------------ |
+| 5     | Business stops   | T2 from public signals; T3 for actual pain intensity   |
+| 4     | Significant loss | Cite: quantified cost (time, money, risk) if available |
+| 3     | Notable pain     | Qualitative signal if no quantification                |
+| 2     | Mild annoyance   |                                                        |
+| 1     | Trivial          |                                                        |
 
 **Breadth (1-5):**
 
-| Score | Meaning | Evidence Type |
-|-------|---------|---------------|
-| 5 | >1M potential buyers | T1 if from market sizing; T2 if estimated |
-| 4 | 100K-1M | Cross-reference with segment size from stg-segmenting-customers |
-| 3 | 10K-100K | |
-| 2 | 1K-10K | |
-| 1 | <1K | |
+| Score | Meaning              | Evidence Type                                                   |
+| ----- | -------------------- | --------------------------------------------------------------- |
+| 5     | >1M potential buyers | T1 if from market sizing; T2 if estimated                       |
+| 4     | 100K-1M              | Cross-reference with segment size from stg-segmenting-customers |
+| 3     | 10K-100K             |                                                                 |
+| 2     | 1K-10K               |                                                                 |
+| 1     | <1K                  |                                                                 |
 
 **Alternatives' Inadequacy (1-5):**
 
-| Score | Meaning | Evidence Type |
-|-------|---------|---------------|
-| 5 | No alternatives | T1 for observable alternative landscape |
-| 4 | Poor alternatives | T2 for inadequacy assessment |
-| 3 | Adequate but painful | Cite specific alternatives and their gaps |
-| 2 | Good alternatives exist | |
-| 1 | Well-served | |
+| Score | Meaning                 | Evidence Type                             |
+| ----- | ----------------------- | ----------------------------------------- |
+| 5     | No alternatives         | T1 for observable alternative landscape   |
+| 4     | Poor alternatives       | T2 for inadequacy assessment              |
+| 3     | Adequate but painful    | Cite specific alternatives and their gaps |
+| 2     | Good alternatives exist |                                           |
+| 1     | Well-served             |                                           |
 
 **Composite** = Frequency x Severity x Breadth x Alternatives_Inadequacy (max 625, useful for ranking, not absolute).
 
 Produce: scored problem matrix with per-property tier labels.
 
 **Gate:** `problems_scored: bool` -- every candidate scored on all four properties, each score cites evidence and carries tier label.
+
 - Pass: Step 4.
 - Fail: Scores without evidence are invalid. WebSearch for missing evidence or assign score 1 with "no evidence found" note.
 
@@ -103,6 +106,7 @@ If governor's stated problem is eliminated, flag explicitly -- do not silently d
 Produce: surviving problems + elimination log.
 
 **Gate:** `compression_complete: bool` -- elimination rationale documented, governor's problem status explicitly stated.
+
 - Pass: Step 5.
 - Fail: If all problems eliminated, broaden candidate generation. If governor's problem is the only survivor despite weak evidence, flag potential confirmation bias.
 
@@ -111,14 +115,15 @@ Produce: surviving problems + elimination log.
 Primary = highest composite score. Write in register format:
 
 - **Claim:** State the problem independent of any solution. 3 sentences maximum: (1) who has the problem, (2) why existing alternatives fail structurally, (3) what the gap is. Supporting evidence and data belong in the Evidence section — the Claim states; the Evidence proves. "Customers struggle with X" not "customers need a tool that does Y."
+- **Possibility Space:** All problem candidates considered. Follow the Possibility Space Format in STANDARDS.md.
 - **Evidence:** Tier-labeled evidence items from scoring (per-property evidence).
-- **Possibility Space:** All candidates considered, alternatives carried (with rationale), then eliminated (with rationale). Order must be: Considered → Alternatives carried → Eliminated. Identify which candidate is primary.
-- **Assumptions:** List what must be true for this problem to be worth solving. For each: classify as Belief / Knowledge / Observation, assign evidence tier, state the claim, mark load-bearing status, assign blast radius (High / Medium / Low), and provide a falsification condition, validation method, and current status.
+- **Assumptions:** List what must be true for this problem to be worth solving. Follow the Assumptions Format in STANDARDS.md for each entry.
 - **Kill Condition:** What would prove this problem is not worth solving. Must reference specific observable thresholds. Example: "Interviews reveal <2/5 people in the segment experience this problem weekly" or "existing alternative achieves >80% satisfaction."
 
 Produce: complete problem hypothesis in register format.
 
 **Gate:** `hypothesis_written: bool` -- claim is solution-independent, kill condition references observable thresholds, possibility space records all candidates.
+
 - Pass: Done.
 - Fail: If claim contains solution language, rewrite as pain statement. If kill condition is vague, add specific thresholds.
 
@@ -134,12 +139,12 @@ Produce: complete problem hypothesis in register format.
 
 ## Failure Modes
 
-| Mode | Signal | Recovery |
-|------|--------|----------|
-| Over-length claim | Claim runs beyond 3 sentences or contains data (circulation figures, market statistics, pricing) | Move data to Evidence section. Rewrite as: who has the problem + why alternatives fail structurally + what the gap is. |
-| Solution-shaped problem | Problem statement includes solution language ("need a tool", "need a platform") | Rewrite as pain: "teams spend 40 hours building design systems" not "teams need an automated design system generator" |
-| Governor's problem auto-promoted | Governor's stated problem has highest score despite weak evidence | Explicitly compare evidence quality between governor's problem and alternatives. If governor's problem has weaker evidence but higher score, flag: "Your stated problem scored highest but evidence is thinner than alternative X. This may be confirmation bias." |
-| All problems score similarly | Top 3 problems within 20% of each other | This is useful information, not a failure. Carry all 3 as alternatives. Recommend governor input to distinguish |
+| Mode                             | Signal                                                                                           | Recovery                                                                                                                                                                                                                                                           |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Over-length claim                | Claim runs beyond 3 sentences or contains data (circulation figures, market statistics, pricing) | Move data to Evidence section. Rewrite as: who has the problem + why alternatives fail structurally + what the gap is.                                                                                                                                             |
+| Solution-shaped problem          | Problem statement includes solution language ("need a tool", "need a platform")                  | Rewrite as pain: "teams spend 40 hours building design systems" not "teams need an automated design system generator"                                                                                                                                              |
+| Governor's problem auto-promoted | Governor's stated problem has highest score despite weak evidence                                | Explicitly compare evidence quality between governor's problem and alternatives. If governor's problem has weaker evidence but higher score, flag: "Your stated problem scored highest but evidence is thinner than alternative X. This may be confirmation bias." |
+| All problems score similarly     | Top 3 problems within 20% of each other                                                          | This is useful information, not a failure. Carry all 3 as alternatives. Recommend governor input to distinguish                                                                                                                                                    |
 
 ## Boundaries
 

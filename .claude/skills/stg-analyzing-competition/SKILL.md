@@ -7,7 +7,6 @@ affects: problem-hypothesis, unit-economics-hypothesis, solution-design-section
 depends-on: none
 produces: competitive landscape notes and red-team intelligence for hypothesis register
 ---
-
 # Competitive Analysis
 
 Map competitive landscape, identify positioning gaps, and assess competitor response capability. All competitive claims carry tier labels. Output feeds hypothesis evidence across the register.
@@ -23,6 +22,7 @@ Define competitive frame from problem + segment intersection. Competition is fra
 Produce: competitive frame definition (problem domain x target segment = competitive arena).
 
 **Gate:** `frame_defined: bool` -- competitive frame states problem and segment, not just technology category.
+
 - Pass: Step 2.
 - Fail: If problem/segment not yet defined, use governor's problem space as initial frame. Note that competitive frame may need revision after hypothesis construction.
 
@@ -31,6 +31,7 @@ Produce: competitive frame definition (problem domain x target segment = competi
 WebSearch for companies solving the same problem for the same segment.
 
 Search strategies:
+
 - "[Problem] software"
 - "[Problem] solution for [segment]"
 - "Alternative to [known competitor]"
@@ -41,6 +42,7 @@ Search strategies:
 Data sources: G2, Capterra, Product Hunt, Crunchbase, company websites.
 
 For each competitor:
+
 - Positioning (headline/tagline from website)
 - Target segment (from marketing copy)
 - Pricing model (from pricing page)
@@ -51,6 +53,7 @@ All claims cite source URL. Label T1 (directly observable on website).
 Produce: direct competitor profiles.
 
 **Gate:** `direct_competitors_identified: bool` -- at least 3 direct competitors identified with source URLs, or documented that fewer exist with evidence of search exhaustion.
+
 - Pass: Step 3.
 - Fail: Widen search. Try adjacent categories, broader problem framing. If genuinely no direct competitors, document: "No direct competitors found -- this is either a new category or the search missed them."
 
@@ -58,19 +61,20 @@ Produce: direct competitor profiles.
 
 Classify alternatives into types:
 
-| Type | Example | Evidence Source |
-|------|---------|----------------|
-| Manual process | Spreadsheets, email, paper | Forum posts, job descriptions |
-| Adjacent product | Feature in larger platform | Product feature pages |
-| Service provider | Consultants, agencies | Service marketplace listings |
-| DIY solution | Internal tools, scripts | GitHub repos, forum posts |
-| Status quo | Do nothing | Inferred from lack of solution adoption |
+| Type             | Example                    | Evidence Source                         |
+| ---------------- | -------------------------- | --------------------------------------- |
+| Manual process   | Spreadsheets, email, paper | Forum posts, job descriptions           |
+| Adjacent product | Feature in larger platform | Product feature pages                   |
+| Service provider | Consultants, agencies      | Service marketplace listings            |
+| DIY solution     | Internal tools, scripts    | GitHub repos, forum posts               |
+| Status quo       | Do nothing                 | Inferred from lack of solution adoption |
 
 For each: how used, why inadequate. Label T1 for existence, T2 for inadequacy assessment.
 
 Produce: indirect competitor map with all 5 types evaluated (even if "not applicable" for some).
 
 **Gate:** `indirect_competitors_mapped: bool` -- all 5 types evaluated.
+
 - Pass: Step 4.
 - Fail: The most common "competitor" is doing nothing or using spreadsheets. Always evaluate status quo and DIY alternatives. If these are missing, add them.
 
@@ -79,6 +83,7 @@ Produce: indirect competitor map with all 5 types evaluated (even if "not applic
 **Grounded in:** direct competitor profiles, problem candidates.
 
 For each direct competitor, map:
+
 - Which problems they address
 - Which segments they target
 - Price range
@@ -86,6 +91,7 @@ For each direct competitor, map:
 - Key weakness
 
 Identify gaps:
+
 - Problems unaddressed by any competitor
 - Segments underserved by existing solutions
 - Price points uncovered (premium or value end)
@@ -93,6 +99,7 @@ Identify gaps:
 Produce: positioning matrix with gap analysis. Label T1 for observable facts, T2 for gap identification.
 
 **Gate:** `matrix_built: bool` -- at least 1 gap identified, or documented "no gaps found -- market is saturated" as a finding.
+
 - Pass: Step 5.
 - Fail: If no gaps visible, the market may genuinely be saturated. This is a finding, not a failure. Report it.
 
@@ -101,6 +108,7 @@ Produce: positioning matrix with gap analysis. Label T1 for observable facts, T2
 **Grounded in:** top 2-3 direct competitors from Step 2.
 
 For each:
+
 - **Resource level:** Funding raised, team size (from Crunchbase, LinkedIn). Label T1.
 - **Product velocity:** Feature release frequency (from changelogs, Product Hunt, release notes). Label T1.
 - **Strategic focus:** Inferred from hiring patterns (LinkedIn jobs), blog posts, conference talks. Label T2.
@@ -110,6 +118,7 @@ This feeds the strategist's destruction phase red-team mechanism: "You are the i
 Produce: competitor response profiles. Label T2 (inferred from public signals).
 
 **Gate:** `response_capability_assessed: bool` -- at least 2 competitors profiled with resource level, product velocity, and strategic focus.
+
 - Pass: Done.
 - Fail: If competitor data is thin, note: "Competitor response assessment is low-confidence (T2-T3). Red-team should assume capable response."
 
@@ -117,20 +126,19 @@ Produce: competitor response profiles. Label T2 (inferred from public signals).
 
 - Minimum 3 direct competitors identified (or documented that fewer exist with evidence)
 - All 5 indirect competitor types evaluated (even if "not applicable" for some)
-- Every competitor claim cites a specific source with URL in `[Name](URL)` format — never plain text
-- Competitor pricing claims must link to the specific pricing or subscribe page in the evidence entry — the subscribe page URL belongs in the evidence entry itself, not only in Research Sources
-- Evidence entries follow register format: `[TYPE] [TIER] DATE -- [Name](URL): one-sentence finding.`
+- Follow the Citation Format in STANDARDS.md for all internet sources.
+- Pricing claims must link to specific pricing/subscribe page in evidence entry which must follow the Evidence Entry Format in STANDARDS.md for all register entries.
 - Positioning matrix identifies at least 1 gap (or documents "no gaps found -- market is saturated" as a finding)
 - Competitor response profiles include resource level, product velocity, and strategic focus
 - Tier labels on every claim (T1 for observable facts, T2 for inferred strategy)
 
 ## Failure Modes
 
-| Mode | Signal | Recovery |
-|------|--------|----------|
-| Fabricated competitors | Competitor names that return no results on WebSearch | Remove. Only include verifiable competitors |
-| Straw man competitors | All competitors described as weak, slow, or poorly positioned | Re-evaluate with adversarial frame: "What would a smart investor see as the incumbent advantage?" Report competitor strengths honestly |
-| Missing the real competition | Competitor list is only direct SaaS competitors; status quo and manual processes ignored | The most common "competitor" is doing nothing or using spreadsheets. Always evaluate status quo and DIY alternatives |
+| Mode                         | Signal                                                                                   | Recovery                                                                                                                               |
+| ---------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Fabricated competitors       | Competitor names that return no results on WebSearch                                     | Remove. Only include verifiable competitors                                                                                            |
+| Straw man competitors        | All competitors described as weak, slow, or poorly positioned                            | Re-evaluate with adversarial frame: "What would a smart investor see as the incumbent advantage?" Report competitor strengths honestly |
+| Missing the real competition | Competitor list is only direct SaaS competitors; status quo and manual processes ignored | The most common "competitor" is doing nothing or using spreadsheets. Always evaluate status quo and DIY alternatives                   |
 
 ## Boundaries
 

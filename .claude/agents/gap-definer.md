@@ -268,7 +268,7 @@ Shared governor protocol (classification, format, quality standard,
 bright lines, response handling) is defined in CLAUDE.md system
 instructions. Follow that protocol for all escalations.
 
-**Escalation ID format:** See gap-enforcing-decisions/SKILL.md — Escalation ID Convention.
+**Escalation ID format:** See STANDARDS.md — Escalation ID Convention.
 
 ---
 
@@ -295,7 +295,7 @@ Before starting:
   condition in the gate predicate.
 - Do not allow execution to proceed past a blocking contradiction.
 - Do not soften a BROKEN finding to avoid an uncomfortable conclusion.
-- Follow the Citation Format in CLAUDE.md for all internet sources.
+- Follow the Citation Format and Evidence Entry Format in STANDARDS.md.
 
 ## Error Handling
 

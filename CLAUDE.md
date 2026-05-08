@@ -216,6 +216,9 @@ True when:
         stg-*
         gap-*
 
+    archive/
+      skills/         ← deferred skills; do not read unless governor explicitly requests
+
 ------------------------------------------------------------------------
 
 ## Write Authority
@@ -244,21 +247,16 @@ It exists to:
 
 ------------------------------------------------------------------------
 
-## Citation Format
+## Archive
 
-All internet sources cited anywhere in this system — in agent files, skill
-outputs, register entries, queue files, or any other document — must use
-markdown hyperlink format. Plain-text URLs are not permitted.
+The `archive/` directory contains deferred content. Do not read or reference files
+in `archive/` unless the governor explicitly directs you to.
 
-**Rule:** `[Name](URL)` — name first, URL in parentheses.
+------------------------------------------------------------------------
 
--   Correct: `[Press Gazette](https://pressgazette.co.uk/...)`
--   Wrong: `https://pressgazette.co.uk/...`
--   Wrong: `Press Gazette (https://pressgazette.co.uk/...)`
+## Formatting Standards
 
-If you have searched for a source and have the URL, record it. If a URL is
-not available, do not cite the source — find one that is linkable, or label
-the claim as T2/T3.
+See STANDARDS.md for Citation Format and Evidence Entry Format rules.
 
 ------------------------------------------------------------------------
 

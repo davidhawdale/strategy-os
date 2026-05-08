@@ -115,8 +115,8 @@ Produce: mode validation result with specific concerns if any.
 ## Quality Criteria
 
 - TAM calculated using both top-down and bottom-up methods
-- Every figure cites a specific source with date (not "industry reports say") in `[Name](URL)` format — never plain text
-- Evidence entries follow register format: `[TYPE] [TIER] DATE -- [Name](URL): one-sentence finding.`
+- Follow the Citation Format in STANDARDS.md. Every figure cites a specific source with date (not "industry reports say").
+- Follow the Evidence Entry Format in STANDARDS.md for all register entries.
 - All figures presented as ranges, not points
 - Every figure carries a tier label (T1/T2/T3)
 - SAM filters are enumerated with individual reduction ratios
