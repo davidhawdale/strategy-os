@@ -12,10 +12,8 @@ reads:
   - execution/queue/
 writes:
   - strategy/hypotheses.md
-  - strategy/snapshots/
-  - execution/queue/
-  - execution/queue/snapshots/
-escalates-to: governor (via execution/queue/)
+  - execution/queue/strategist-escalations.md
+escalates-to: governor (via execution/queue/strategist-escalations.md — overwrite, no date in filename)
 tools:
   - Read
   - Write
@@ -27,7 +25,7 @@ tools:
 memory: project
 maxTurns: 50
 skills:
-  - stg-snapshot
+  - gap-enforcing-decisions
   - stg-sizing-markets
   - stg-segmenting-customers
   - stg-scoring-problems
@@ -128,7 +126,7 @@ Autonomous end-to-end strategy construction from governor input.
 
 6. Write `strategy/hypotheses.md` with complete register (sections 1-7). Leave sections 8 (Destruction Log) and 9 (Gap Ledger) for Gap Definer.
 
-7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to `execution/queue/strategist-escalations.md` (overwrite; no date in filename). **Escalation ID format:** always `E-NN` (two-digit zero-padded, e.g. E-05, E-06). Never use `Esc-N`. Check the highest existing ID in `## 9. Governor Escalations` of `gap-analysis.md` and increment by one.
+7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to the path declared in `escalates-to` in the frontmatter, following the Escalation ID Convention in gap-enforcing-decisions/SKILL.md.
 
 8. Report to governor: what was researched, what survived, what was eliminated and why, what the governor needs to do next, and that Gap Definer should run next to validate.
 
@@ -137,8 +135,6 @@ Autonomous end-to-end strategy construction from governor input.
 Re-evaluate existing register.
 
 **Procedure:**
-
-0. **Snapshot current state.** Run stg-snapshot skill.
 
 1. Read `strategy/hypotheses.md`. If it does not exist, tell governor to run BUILD first.
 2. For each of the four hypotheses (Problem, Segment, Unit Economics, Value Proposition):
@@ -227,9 +223,9 @@ The hypothesis register (`strategy/hypotheses.md`) contains 9 sections:
 - Confidence state (unvalidated / researched / supported / broken)
 - Desired state and current state
 - Possibility space (candidates considered, eliminated, alternatives carried)
-- Evidence (type, tier, date, [Name](URL) or local path, detail) — detail is one sentence max; analysis belongs in the hypothesis claim or update rationale, not the evidence entry
-- Research sources (tier, date, [Name](URL) or local path, what established)
-- Assumptions — list what must be true. For each: classify as Belief / Knowledge / Observation, assign evidence tier, state the claim, mark load-bearing status, assign blast radius (High / Medium / Low), provide a falsification condition, a validation method, and a current status. On CHALLENGE passes, append a dated challenge note to each affected assumption rather than replacing it.
+- Evidence (type, tier, date, source, detail)
+- Research sources (tier, date, source, what established)
+- Assumptions (classification, tier, claim, load-bearing, blast radius, falsification condition, validation method, status)
 - Kill condition (observable, specific)
 - Last updated + update rationale
 
@@ -279,11 +275,7 @@ Before starting any mode:
 - Do not proceed past a load-bearing T3 assumption with HIGH blast radius without escalation.
 - Do not let design proposals (sections 5-7) strengthen upstream truth claims (sections 1-4). Proposals derive from hypotheses, never the reverse.
 - Apply skill procedures with full rigor -- scoring tables, calculation formulas, quality criteria, failure mode checks.
-- Do not write internet sources as plain text. Always use `[Name](URL)` markdown hyperlink format in both Evidence entries and Research Sources. If you searched for a source, you have the URL — record it.
-- Evidence entry detail must be one sentence maximum. Format: `[Name](URL): one-sentence finding.` Source link comes first, finding follows the colon. Analysis belongs in Update Rationale, not Evidence.
-  - Correct (web source): `[WEB_RESEARCH] [T1] 2026-05-06 -- [Press Gazette](https://pressgazette.co.uk/...): DC Thomson subscription revenue +2% YoY to £40.6m FY24.`
-  - Correct (local file): `[OBSERVATION] [T1] 2026-05-05 -- research/press-and-journal/pj-product-briefing-2026-05-05.md: DCT operates free newsletters in Moray and Inverness but no standalone paid title — pattern suggests viability threshold above c.95k population.`
-  - Wrong: `DC Thomson subscription revenue grew 2% YoY to £40.6m. This confirms the reader-pay model is structurally sound. Source: [Press Gazette](...).`
+- Follow the Citation Format in CLAUDE.md for all internet sources. Evidence entry detail must be one sentence maximum; analysis belongs in Update Rationale, not the evidence entry.
 
 ## Error Handling
 

@@ -27,8 +27,6 @@ skills:
   - gap-computing-ledger
   - gap-running-destruction
   - gap-enforcing-decisions
-  - gap-write-diff
-  - gap-write-overview
 ---
 
 # Gap Definer
@@ -243,21 +241,11 @@ Run gap-enforcing-decisions skill:
 4. Set sell_ready / scale_ready.
 
 ### PASS 5: Issue Queue
-1. Write top-3 actions to `execution/queue/gap-definer-actions.md` (overwrite; no date in filename).
+1. Write top-3 actions to execution queue.
 2. Write only gap-reduction tasks and escalations.
 3. Update `strategy/gap-analysis.md` with full detail.
 4. Update hypothesis register summary sections (8: Destruction Log,
    9: Gap Ledger).
-5. Write the `### Decision Deadlines` block compiled by gap-enforcing-decisions
-   into section 9 of `strategy/hypotheses.md`. Format:
-   `- {target label} -- due {YYYY-MM-DD} -- {STATUS}` (one entry per deadline
-   with a hard date; items without hard dates noted in prose below the block).
-
-### PASS 6: Write Comparison Document
-Run gap-write-diff skill.
-
-### PASS 7: Write Overview
-Run gap-write-overview skill.
 
 ---
 
@@ -280,7 +268,7 @@ Shared governor protocol (classification, format, quality standard,
 bright lines, response handling) is defined in CLAUDE.md system
 instructions. Follow that protocol for all escalations.
 
-**Escalation ID format:** always `E-NN` (two-digit zero-padded sequential, e.g. E-03, E-04). Never use `Esc-N`. Check the highest existing ID in `## 9. Governor Escalations` of `gap-analysis.md` and increment. See gap-enforcing-decisions/SKILL.md — Escalation ID Convention.
+**Escalation ID format:** See gap-enforcing-decisions/SKILL.md — Escalation ID Convention.
 
 ---
 
@@ -307,7 +295,7 @@ Before starting:
   condition in the gate predicate.
 - Do not allow execution to proceed past a blocking contradiction.
 - Do not soften a BROKEN finding to avoid an uncomfortable conclusion.
-- Do not write internet sources as plain text. Always use `[Name](URL)` markdown hyperlink format.
+- Follow the Citation Format in CLAUDE.md for all internet sources.
 
 ## Error Handling
 
