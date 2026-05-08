@@ -4,6 +4,9 @@ import type { AppState, AppEvent, CombinedParseResult, HypothesisId, PanelId } f
 import { transition } from './model/types';
 import { loadCombined } from './loader/index';
 import { Header } from './components/Header';
+import { OnboardingDialog } from './components/OnboardingDialog';
+import { generateSeedHypotheses } from './utils/generateSeedFile';
+import type { RegisterSeed } from './utils/generateSeedFile';
 import { ReadinessPanel } from './components/panels/ReadinessPanel';
 import { EvidencePanel } from './components/panels/EvidencePanel';
 import { RiskPanel } from './components/panels/RiskPanel';
@@ -36,6 +39,7 @@ const INITIAL_STATE: AppState = { _tag: 'Loading' };
 function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [rawQueueText, setRawQueueText] = useState<string | null>(null);
+  const [onboardingDismissed, setOnboardingDismissed] = useState(false);
 
   const fetchData = useCallback(async () => {
     dispatch({ _tag: 'FetchStart' });
@@ -96,6 +100,20 @@ function App() {
     fetchData();
   }, [fetchData]);
 
+  const handleGenerate = useCallback(async (seed: RegisterSeed) => {
+    const today = new Date().toISOString().slice(0, 10);
+    const content = generateSeedHypotheses(seed, today);
+    const res = await fetch('/api/hypotheses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/markdown' },
+      body: content,
+    });
+    if (res.ok) {
+      setOnboardingDismissed(true);
+      fetchData();
+    }
+  }, [fetchData]);
+
   // Loading
   if (state._tag === 'Loading') {
     return (
@@ -129,6 +147,11 @@ function App() {
   const register = data.register;
   const gapAnalysis = data.gapAnalysis;
 
+  // Template placeholders contain '{' — real dates/values never do
+  const isTemplateRegister =
+    !register.metadata.created || register.metadata.created.includes('{');
+  const showOnboarding = !onboardingDismissed && isTemplateRegister;
+
   // Parse completeness: average of both (gap analysis may be 0 if not present)
   const parseCompleteness = gapAnalysis
     ? (data.registerParseCompleteness + data.gapAnalysisParseCompleteness) / 2
@@ -146,6 +169,13 @@ function App() {
         <div className="stale-banner" role="alert">
           Showing cached data. Refresh failed: {state.error}
         </div>
+      )}
+
+      {showOnboarding && (
+        <OnboardingDialog
+          onDismiss={() => setOnboardingDismissed(true)}
+          onGenerate={handleGenerate}
+        />
       )}
 
       <Header
