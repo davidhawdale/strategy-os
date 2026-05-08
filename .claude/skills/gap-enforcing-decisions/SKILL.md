@@ -24,6 +24,24 @@ must have explicit rationale.
 
 ---
 
+## Escalation ID Convention
+
+All escalations — whether raised by the Gap Definer or carried from the Strategist — use the format:
+
+```
+E-NN
+```
+
+where `NN` is a two-digit zero-padded sequential number (E-01, E-02, E-03, …).
+
+Rules:
+- Do NOT use `Esc-N` or any other prefix. The `E-` prefix is the only authorised form.
+- Numbers are assigned in creation order regardless of which agent raises the escalation.
+- Before raising a new escalation, check the current highest-numbered escalation in `## 9. Governor Escalations` of `gap-analysis.md` and increment by one.
+- Cross-references to gaps (e.g. `E-01 (G-02)`) are optional but must follow the base `E-NN` format.
+
+---
+
 ## Process
 
 ### Step 1: Collect Inputs [S]

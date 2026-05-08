@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useCallback } from 'react';
+import { useReducer, useEffect, useCallback, useState } from 'react';
 import { designTokensCSS } from './tokens/design-tokens';
 import type { AppState, AppEvent, CombinedParseResult, HypothesisId, PanelId } from './model/types';
 import { transition } from './model/types';
@@ -13,6 +13,7 @@ import { HypothesisDetailPanel } from './components/panels/HypothesisDetailPanel
 import { GapLedgerPanel } from './components/panels/GapLedgerPanel';
 import { EscalationsPanel } from './components/panels/EscalationsPanel';
 import { DeadlinesPanel } from './components/panels/DeadlinesPanel';
+import { QueuePanel } from './components/panels/QueuePanel';
 import { computeReadiness } from './views/readiness';
 import { computeEvidenceQuality } from './views/evidence-quality';
 import { computeRiskMap } from './views/risk-map';
@@ -22,6 +23,8 @@ import { computeHypothesisDetail } from './views/hypothesis-detail';
 import { computeGapLedgerView } from './views/gap-ledger';
 import { computeGovernorEscalationsView } from './views/escalations';
 import { computeDecisionDeadlinesView } from './views/deadlines';
+import { computeQueueView } from './views/queue';
+import { parseExecutionQueue } from './parser/queue';
 import './App.css';
 
 function reducer(state: AppState, event: AppEvent): AppState {
@@ -32,6 +35,7 @@ const INITIAL_STATE: AppState = { _tag: 'Loading' };
 
 function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [rawQueueText, setRawQueueText] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     dispatch({ _tag: 'FetchStart' });
@@ -67,6 +71,13 @@ function App() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    fetch('/gap-definer-actions.md')
+      .then(r => r.ok ? r.text() : null)
+      .then(text => { if (text) setRawQueueText(text); })
+      .catch(() => {});
+  }, []);
 
   const handleSelectPanel = useCallback((panel: PanelId) => {
     dispatch({ _tag: 'SelectPanel', panel });
@@ -125,10 +136,9 @@ function App() {
 
   const warningCount = data.registerWarnings.length + data.gapAnalysisWarnings.length;
 
-  // Open escalations count — drives badge
-  const openEscalationsCount = gapAnalysis
-    ? gapAnalysis.governorEscalations.filter(e => e.status === 'OPEN').length
-    : 0;
+  const queueView = rawQueueText
+    ? computeQueueView(parseExecutionQueue(rawQueueText), gapAnalysis)
+    : null;
 
   return (
     <div className="app">
@@ -145,7 +155,6 @@ function App() {
         activePanel={activePanel}
         onSelectPanel={handleSelectPanel}
         onRefresh={handleRefresh}
-        openEscalationsCount={openEscalationsCount}
         hasGapAnalysis={!!gapAnalysis}
       />
 
@@ -183,6 +192,13 @@ function App() {
 
         {activePanel === 'deadlines' && (
           <DeadlinesPanel view={computeDecisionDeadlinesView(register, gapAnalysis)} />
+        )}
+
+        {activePanel === 'queue' && (
+          <QueuePanel
+            view={queueView}
+            onSelectEscalations={gapAnalysis ? () => handleSelectPanel('escalations') : undefined}
+          />
         )}
 
         {activePanel === 'detail' && selectedHypothesis && (

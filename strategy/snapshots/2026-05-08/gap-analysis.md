@@ -4,7 +4,7 @@ Created: 2026-04-24
 Last Run: 2026-05-08 (Pass 3 — post Strategist CHALLENGE Pass 3; governor correction on DCT newsletter model)
 Source Register Version: 3
 Business Mode: ESTABLISHED (BOOTSTRAP-equivalent thresholds)
-Sell Ready: false (unchanged — core blockers unresolved; E-05 framing sharpened but not resolved)
+Sell Ready: false (unchanged — core blockers unresolved; E-03 framing sharpened but not resolved)
 Scale Ready: false
 
 ---
@@ -19,7 +19,7 @@ Scale Ready: false
 - **G-01 script update required:** the old "paid vs free newsletter" probe is withdrawn (newsletters are not product alternatives in DCT's model). Replaced by: brand-architecture preference probe (Borders-specific brand vs P&J/Courier extended southward as a geographic edition).
 - **G-06 test design update required:** the "free newsletter" landing-page cell (Page A) is replaced. The test should now compare paid brand-architecture options, with Newsquest All Access Scotland as the competitor reference cell.
 - **E-01/E-02 (G-02/G-03): deadline EXCEEDED today (2026-05-08).** Time penalty rises to 2. Scores recalculate to 21. URGENT — governor response overdue.
-- **E-05 framing sharpened:** the architecture question is now cleaner — "extend existing title southward as a geographic edition" vs "new standalone Borders title" — both paid subscription models.
+- **E-03 framing sharpened:** the architecture question is now cleaner — "extend existing title southward as a geographic edition" vs "new standalone Borders title" — both paid subscription models.
 - **Section 6/7 rationale inconsistency (C-5, new LOW):** Phase 0 rationale in Sections 6 and 7 cites DCT's Elgin/Inverness/Oban pattern as "newsletter-as-product" evidence. With the correction, the newsletters are acquisition tools. Phase 0 recommendation remains valid but the cited mechanism is wrong. Non-blocking; flagged as C-5 for Strategist to correct in next pass.
 - **VP Section 4 inconsistency (G-17, new DEFERRED):** Section 4 assumption [B] CHALLENGE note (2026-05-05) still references "free weekly Borders newsletter" as a product alternative in the WTP test. This was not corrected in CHALLENGE Pass 3 (out of scope). Strategist must update Section 4 in the next CHALLENGE pass.
 
@@ -28,17 +28,17 @@ Scale Ready: false
 - Three of the four blocking conditions from Pass 1 are unchanged. One (architecture contradiction) is *worse* — the introduction of Phase 0 created a new contradiction (C-3) between Section 5's brand-architecture condition and Section 7's Phase 0 commencement.
 - The two-stage MVP introduces new risks the v1 register did not have: newsletter cannibalisation (G-13), Phase 0 path-dependency on brand architecture (G-14), and weaker demand signal from free newsletter than from paid trial (G-15). The first two are deferred but the third is structurally important.
 - The new T1 evidence cluster (pj-product-briefing) is a strong observation source but its *interpretation* — that newsletter-first sequencing reduces overall risk — is itself an inference that is not validated by the underlying screenshots. This is the highest-priority new concentration risk.
-- **Governor escalations were overdue-imminent at Pass 2:** E-01 and E-02 (deadline 2026-05-08, 3 days from Pass 2 date) had no recorded response. E-05 (brand architecture, raised 2026-05-05) was new. E-03 (Phase 0 budget, raised Pass 1) had no recorded response and blocked G-01 + G-06 execution.
+- **Governor escalations were overdue-imminent at Pass 2:** E-01 and E-02 (deadline 2026-05-08, 3 days from Pass 2 date) had no recorded response. E-03 (brand architecture, raised 2026-05-05) was new. Esc-3 (Phase 0 budget, raised Pass 1) had no recorded response and blocked G-01 + G-06 execution.
 
 **Readiness Gate Predicate Check (Pass 3):**
 - Problem ≥ RESEARCHED: pass (unchanged; Section 1 correction strengthens but does not change confidence state)
 - Segment ≥ RESEARCHED: pass (unchanged)
-- No HIGH-blast unresolved blocker: **fail** (E-01/E-02 deadlines exceeded; G-04 deadline 7 days; G-01/G-06 unvalidated; E-05 unresolved; E-03 unauthorised)
+- No HIGH-blast unresolved blocker: **fail** (E-01/E-02 deadlines exceeded; G-04 deadline 7 days; G-01/G-06 unvalidated; E-03 unresolved; Esc-3 unauthorised)
 - No architecture contradiction: **fail (C-3 carried — unchanged)**
 
 **Current Constraint Summary:**
 - Phase 1 launch BLOCKED (carried)
-- **Phase 0 launch BLOCKED (carried)** until C-3 resolves (E-05 governor decision OR E-06 Strategist clarification)
+- **Phase 0 launch BLOCKED (carried)** until C-3 resolves (E-03 governor decision OR Esc-5 Strategist clarification)
 - E-01/E-02 (G-02/G-03): governor response OVERDUE as of today
 - Section 3 unit economics: model modestly improved in Pass 2; no new changes this pass
 - Pessimistic scenario in Section 3 still kills (unchanged)
@@ -47,7 +47,7 @@ Scale Ready: false
 **Readiness Gate Predicate Check (Pass 2 — preserved):**
 - Problem ≥ RESEARCHED: pass (unchanged)
 - Segment ≥ RESEARCHED: pass (unchanged)
-- No HIGH-blast unresolved blocker: **fail** (3 escalations now overdue-imminent; 3 active gaps unvalidated; E-05 newly raised; E-03 unauthorised)
+- No HIGH-blast unresolved blocker: **fail** (3 escalations now overdue-imminent; 3 active gaps unvalidated; E-03 newly raised; Esc-3 unauthorised)
 - No architecture contradiction: **fail (NEW — C-3 introduced)**
 
 ---
@@ -82,9 +82,9 @@ Final Priority = Gap Score x Blast Radius
 | 1= | G-06 | VALUE_PROPOSITION | VALUE_PROP_VALIDITY | n≥4 of 6 VP clauses validated; landing page intent >5% at the winning brand-architecture configuration **Pass 3 update: test cells revised — all paid options; newsletter-as-product cell removed** | All buyer-side clauses untested; landing page does not exist; test design updated | 2 | 3 | 2 | 0 | 3 | **21** | EXPERIMENT (**revised 3-cell test** — all paid configurations; paired with G-01 interview tail) | OPEN | Score unchanged; test design updated (free newsletter cell removed) |
 | — | G-02 | UNIT_ECONOMICS | GOVERNOR_DECISION_REQUIRED | DCT confirms separate-brand platform marginal cost | ESCALATED; **deadline EXCEEDED 2026-05-08 (today)** | 3 | 2 | 0 | **2** | 3 | **21** | ESCALATION (in queue; **OVERDUE**) | ESCALATED | TP 1→2 (deadline exceeded); score 18→21 corrected |
 | — | G-03 | UNIT_ECONOMICS | GOVERNOR_DECISION_REQUIRED | DCT confirms overhead allocation policy | ESCALATED; **deadline EXCEEDED 2026-05-08 (today)** | 3 | 2 | 0 | **2** | 3 | **21** | ESCALATION (in queue; **OVERDUE**) | ESCALATED | TP 1→2 (deadline exceeded); score 18→21 corrected |
-| — | G-16 | GROWTH_ARCH / SOLUTION / GTM | GOVERNOR_DECISION_REQUIRED | Brand architecture: **Pass 3 sharpened — "extend P&J or Courier southward as a geographic edition" vs "new standalone Borders title"** — both paid models | ESCALATED (E-05); deadline ~2026-06-15 (38 days) | 3 | 3 | 0 | 1 | 3 | **21** | ESCALATION (in queue; framing sharpened) | ESCALATED | Framing updated; score unchanged |
+| — | G-16 | GROWTH_ARCH / SOLUTION / GTM | GOVERNOR_DECISION_REQUIRED | Brand architecture: **Pass 3 sharpened — "extend P&J or Courier southward as a geographic edition" vs "new standalone Borders title"** — both paid models | ESCALATED (E-03); deadline ~2026-06-15 (38 days) | 3 | 3 | 0 | 1 | 3 | **21** | ESCALATION (in queue; framing sharpened) | ESCALATED | Framing updated; score unchanged |
 | 4 | G-05 | UNIT_ECONOMICS | ECONOMIC_VIABILITY | Behavioural CAC <£30 across ≥2 channels; trial-to-paid >15% | Modelled only | 2 | 2 | 1 | 0 | 3 | 15 | EXPERIMENT (deferred to Phase 1) | DEFERRED | Unchanged |
-| 5 | G-14 | SOLUTION / GTM | GTM_FEASIBILITY | Phase 0 brand-neutral execution path designed AND path-dependency cost <£15k OR brand decision made before Phase 0 | Strategist preferred (C) deferral; brand-neutral Phase 0 not designed | 2 | 2 | 2 | 0 | 2 | **12** | RESEARCH (Phase 0 brand-neutral design spec) — **deferred until E-05 resolves** | DEFERRED | Unchanged |
+| 5 | G-14 | SOLUTION / GTM | GTM_FEASIBILITY | Phase 0 brand-neutral execution path designed AND path-dependency cost <£15k OR brand decision made before Phase 0 | Strategist preferred (C) deferral; brand-neutral Phase 0 not designed | 2 | 2 | 2 | 0 | 2 | **12** | RESEARCH (Phase 0 brand-neutral design spec) — **deferred until E-03 resolves** | DEFERRED | Unchanged |
 | 5= | G-15 | SOLUTION / GTM | EVIDENCE_STRENGTH | Phase 0 includes paid-trial test cell so WTP is measured within Phase 0 | Phase 0 exit gates are engagement metrics only; WTP signal deferred to Phase 1 | 2 | 2 | 2 | 0 | 2 | **12** | SOLUTION_REDESIGN (insert paid-trial cell into Phase 0; ~£2-4k) | DEFERRED | Unchanged |
 | 6 | G-08 | UNIT_ECONOMICS | ECONOMIC_VIABILITY | Annual churn observed 18-30% in cohort tracking | T3 assumption | 2 | 3 | 1 | 0 | 2 | 12 | EXPERIMENT (deferred to post-launch) | DEFERRED | Unchanged |
 | 7 | G-18 | PROBLEM / VALUE_PROPOSITION | EVIDENCE_STRENGTH | 5-8 depth interviews with existing P&J subscribers in Moray/Inverness establish actual subscription trigger events, content value ranking, cadence importance, and brand role | No motivational data from actual paying DCT subscribers in comparable geographies; entirely inferred from statistics | 1 | 2 | 2 | 0 | 2 | **10** | INTERVIEW (5-8 existing P&J Moray/Inverness subscribers; governor-unlockable; **execute BEFORE G-01**) | OPEN | NEW — prerequisite to G-01 |
@@ -92,7 +92,7 @@ Final Priority = Gap Score x Blast Radius
 | 8 | G-13 | SOLUTION | SOLUTION_ADEQUACY | Newsletter cannibalisation kill threshold defined AND tested | Failure mode flagged; no kill threshold specified | 2 | 2 | 1 | 0 | 2 | 10 | Flag back to Strategist: define cannibalisation kill condition for Phase 0 | DEFERRED | Unchanged |
 | 9 | G-07 | UNIT_ECONOMICS | ECONOMIC_VIABILITY | Print delivery quotes ≤80p/copy with carrier coverage | Modelled only; print is adjacent product not in digital unit | 1 | 2 | 1 | 0 | 2 | 8 | RESEARCH (carrier tender) — DEFERRED | DEFERRED | Unchanged |
 | 9= | G-09 | SEGMENT | SEGMENT_CLARITY | Per-town acquisition CAC measured | Model assumes evenly distributable | 1 | 2 | 1 | 0 | 2 | 8 | EXPERIMENT (deferred to Phase 1) | DEFERRED | Unchanged |
-| 9= | G-11 | VALUE_PROPOSITION | VALUE_PROP_VALIDITY | Borders brand-awareness shows DCT/P&J/Courier recognition sufficient | Untested | 1 | 2 | 1 | 0 | 2 | 8 | RESEARCH (small fast survey) — DEFERRED. **Note:** importance rises if E-05 resolves to (B) section in existing brand. | DEFERRED | Unchanged |
+| 9= | G-11 | VALUE_PROPOSITION | VALUE_PROP_VALIDITY | Borders brand-awareness shows DCT/P&J/Courier recognition sufficient | Untested | 1 | 2 | 1 | 0 | 2 | 8 | RESEARCH (small fast survey) — DEFERRED. **Note:** importance rises if E-03 resolves to (B) section in existing brand. | DEFERRED | Unchanged |
 | 10 | G-10 | PROBLEM | EVIDENCE_STRENGTH | Coverage audit Border Telegraph + Southern Reporter vs P&J | Asserted; no audit | 1 | 2 | 1 | 0 | 1 | 4 | RESEARCH (desk audit) — DEFERRED | DEFERRED | Unchanged |
 | 11 | G-12 | SOLUTION / GROWTH_ARCH / GTM | EVIDENCE_STRENGTH | Sections 5-7 explicit Desired State / Current State blocks; Section 6 paid-MVP kill condition | Still missing after two CHALLENGE passes | 1 | 2 | 0 | 0 | 1 | 3 | Flag to Strategist: address in next BUILD/CHALLENGE pass | DEFERRED | Unchanged |
 
@@ -101,11 +101,11 @@ Final Priority = Gap Score x Blast Radius
 - Deadline-urgency: G-04 has the nearest deadline (7 days), leads the queue.
 
 **Active gaps (Focus Rule cap = 3):** G-04, G-01, G-06.
-**Governor escalations (tracked separately):** G-02 (OVERDUE), G-03 (OVERDUE), G-16/E-05, E-03, E-04 (carried), E-06 (Strategist clarification on C-3).
+**Governor escalations (tracked separately):** G-02 (OVERDUE), G-03 (OVERDUE), G-16/E-03, Esc-3, Esc-4 (carried), Esc-5 (Strategist clarification on C-3).
 
 ---
 
-## 4. Full Gap Records
+## 4. Full Gap Records (changes from Pass 1 only — see Pass 1 record for unchanged gaps)
 
 ### Gap: G-04 (UPDATED)
 
@@ -125,7 +125,7 @@ Final Priority = Gap Score x Blast Radius
 - Description: Pull NRS Households and Dwellings 2024 dataset for Scottish Borders council area. Cross-reference Ofcom Connected Nations 2025 Borders data (fixed broadband by output area). Cross-reference Project Gigabit programme coverage. Compute the 50+/broadband-served household population. Compare against (a) the 25-35k modelled assumption, (b) the 15k Section 2 kill floor, (c) the DCT revealed-preference newsletter-vs-paid threshold band (~95k vs ~260k pop). **Output additionally:** a triangulated assessment of whether Borders (~117k pop) sits closer to the newsletter-only side or the paid-title side of the threshold.
 - Expected Output: Single-page tabulation; pass/fail vs Section 2 kill condition; explicit calibration against DCT's observed threshold band.
 - Evidence Target: T1 (official statistical data)
-- Owner: TBD — assignment urgent; should be executable without E-03 budget authorisation (desk research within DCT analyst capacity)
+- Owner: TBD — assignment urgent; should be executable without Esc-3 budget authorisation (desk research within DCT analyst capacity)
 
 **Decision Rule Triggered:** Priority Rule, Deadline Rule (urgent), Kill Rule (audit), Architecture Validity Rule
 
@@ -149,13 +149,13 @@ Final Priority = Gap Score x Blast Radius
 **Recommended Action (Pass 3 — revised)**
 - Type: INTERVIEW
 - Description: Same Pass 1 sampling spec (10-15 residents, ≥4 of 11 towns + 1 rural-only postcode, age cohorts 40-50/51-65/66+, mix of subscriber/lapsed/never). Stages 1-4 unchanged (problem-led; no product mentioned). **Stage 5 revised:** probe brand-architecture preference sequentially — (a) Would you subscribe to a standalone "Borders Journal" daily subscription at £7.99/mo? (b) Would you add "Borders" coverage to an existing P&J subscription at £8.99/mo if it included daily Borders-specific reporting? (c) Which framing would make you more likely to try it — a new Borders brand, or Borders coverage inside a title you already recognise? Additionally probe Newsquest bundle awareness: (d) Are you aware of the Border Telegraph's £8.99/mo bundle with national titles? Does a Borders-specific daily product at the same price feel like better or worse value? **Solution Contamination Rule binds:** stages 1-4 must complete before any product is mentioned.
-- Expected Output: Interview evidence mapped to Section 1 desired-state thresholds; brand-architecture signal to inform E-05; WTP signal at both architecture options; Newsquest bundle competitive awareness level.
+- Expected Output: Interview evidence mapped to Section 1 desired-state thresholds; brand-architecture signal to inform E-03; WTP signal at both architecture options; Newsquest bundle competitive awareness level.
 - Evidence Target: T1 (CONVERSATION ground truth)
 - Sequencing constraint: G-01 interviews must complete BEFORE Phase 0 newsletter launches.
 
 **Decision Rule Triggered:** Priority Rule, Solution Contamination Rule, Readiness Gate Rule
 
-**Status:** OPEN — gated on E-03 budget authorisation
+**Status:** OPEN — gated on Esc-3 budget authorisation
 
 **Pass 2 record (preserved):**
 - Desired Condition: n≥10 Borders residents describe felt deficit; n≥2 weekly-title subscribers WTP £4.99-£5.99 for daily-cadence DCT product; CHALLENGE-extended: interview probe also tests whether residents prefer free DCT-branded Borders newsletter, paid daily product, or paid section in existing brand
@@ -183,13 +183,13 @@ Final Priority = Gap Score x Blast Radius
   - **Page B:** "Borders coverage in The Press & Journal" — Borders as a paid geographic edition within P&J at £8.99/mo. Headline: "The same team behind P&J and The Courier now covers the Scottish Borders — every day." Emphasis on DCT brand continuity and proven operating model.
   - **Page C:** Competitor reference — "Newsquest All Access Scotland" framing at £8.99/mo. Headline: "Everything Scottish — Herald, National, Border Telegraph, sport and 7 local titles." Used as anchor for relative-value test: does Borders-depth beat Scotland-breadth at price parity?
   - Each page: proposition, 3 sample story summaries (council/court/sport), clear signup CTA ("Notify me at launch" or "Start £1 trial"). Drive c.2,500-3,000 paid Facebook clicks split equally, targeted to TD postcodes 50+. Measure: email-capture rate, click-through to CTA, explicit intent signal; per-page differential.
-- Expected Output: Brand-architecture intent signal (A vs B); competitive-positioning signal (A or B vs C); triangulates E-05 with behavioural data; informs G-01 interview interpretation.
+- Expected Output: Brand-architecture intent signal (A vs B); competitive-positioning signal (A or B vs C); triangulates E-03 with behavioural data; informs G-01 interview interpretation.
 - Evidence Target: T1 (BEHAVIOURAL for intent rate; CONVERSATION for VP clause validation via interview tail)
-- Cost implication: Revised design is cost-equivalent to Pass 2 design (~£1-2k added to E-03 budget).
+- Cost implication: Revised design is cost-equivalent to Pass 2 design (~£1-2k added to Esc-3 budget).
 
 **Decision Rule Triggered:** Priority Rule, Solution Contamination Rule
 
-**Status:** OPEN — gated on E-03 budget authorisation
+**Status:** OPEN — gated on Esc-3 budget authorisation
 
 **Pass 2 record (preserved):**
 - Page A (withdrawn): free Borders weekly newsletter from "Borders Bulletin powered by The Press & Journal"
@@ -227,7 +227,7 @@ Final Priority = Gap Score x Blast Radius
 - **Target:** GROWTH_ARCH / SOLUTION / GTM
 - **Dimension:** GOVERNOR_DECISION_REQUIRED
 - **Desired Condition:** Governor decides between (A) new standalone Borders title with its own brand and subscription product, or (B) Borders as a geographic edition within an existing DCT title (P&J or The Courier) — **Pass 3 update: both options are paid subscription models; the question is brand architecture, not paid-vs-free.** Option (C) sequenced remains valid: Phase 0 inside existing brand, full brand decision deferred until Phase 0 data.
-- **Current Observation:** Strategist raised E-05 2026-05-05. Pass 3 correction sharpens the framing: the P&J 6-edition model (confirmed from pj-6-editions-coverage.png) shows DCT CAN serve geographies of Borders population scale (~100-120k) within a single paid brand as a geographic edition (Moray precedent). The architecture choice is now between replicating the Moray-edition pattern (option B) vs creating a new standalone brand with its own subscription product (option A). Both are viable DCT operating patterns; the decision is values/portfolio, not viability.
+- **Current Observation:** Strategist raised E-03 2026-05-05. Pass 3 correction sharpens the framing: the P&J 6-edition model (confirmed from pj-6-editions-coverage.png) shows DCT CAN serve geographies of Borders population scale (~100-120k) within a single paid brand as a geographic edition (Moray precedent). The architecture choice is now between replicating the Moray-edition pattern (option B) vs creating a new standalone brand with its own subscription product (option A). Both are viable DCT operating patterns; the decision is values/portfolio, not viability.
 - **Confidence Gap:** 3
 - **Evidence Weakness:** 3 (values decision; G-06 landing page test provides behavioural input but cannot resolve the values question)
 - **Pain Uncertainty:** 0
@@ -255,15 +255,15 @@ Final Priority = Gap Score x Blast Radius
 **Recommended Action**
 - Type: INTERVIEW
 - Description: Commission 5-8 short depth interviews (30-40 min each) with P&J subscribers in Moray and Inverness postal districts — the two closest geographic analogs to Borders by population density and DCT edition structure. Recruit from the existing subscriber list (governor/DCT internal action; no external list rental required). Interview structure: (1) trigger event — what prompted you to subscribe? (2) content value — what do you read most? what would make you cancel? (3) cadence — does daily matter to you, or would weekly be fine? (4) brand — if the same journalism appeared under a different brand name, would you still subscribe? (5) price tolerance — at what price would you start to hesitate?
-- Expected Output: Ranked list of actual subscription motivations from a paying population in an analogous geography; directly informs the G-01 Borders interview script (you know which hypotheses to probe hardest); provides analogical T1 evidence for VP clause weighting; feeds E-05 brand-architecture question with a behavioral signal on whether brand identity is load-bearing to conversion.
+- Expected Output: Ranked list of actual subscription motivations from a paying population in an analogous geography; directly informs the G-01 Borders interview script (you know which hypotheses to probe hardest); provides analogical T1 evidence for VP clause weighting; feeds E-03 brand-architecture question with a behavioral signal on whether brand identity is load-bearing to conversion.
 - Evidence Target: T1 (CONVERSATION from actual paying subscribers)
-- Budget: Near-zero marginal cost — DCT recruits from its own subscriber list; no E-03 dependency.
+- Budget: Near-zero marginal cost — DCT recruits from its own subscriber list; no Esc-3 dependency.
 
 **Sequencing constraint:** G-18 should execute BEFORE G-01 (Borders resident interviews). G-18 informs which VP clauses and trigger-event hypotheses to probe hardest in G-01. Running G-18 first improves the Borders interview design at no additional cost. Estimated lead time: 1-2 weeks from governor authorisation.
 
 **Decision Rule Triggered:** Evidence Promotion Rule (produces analogical T1 input), Priority Rule
 
-**Status:** OPEN — governor-unlockable immediately (no E-03 dependency; requires only DCT subscriber list access)
+**Status:** OPEN — governor-unlockable immediately (no Esc-3 dependency; requires only DCT subscriber list access)
 
 ---
 
@@ -299,10 +299,10 @@ Final Priority = Gap Score x Blast Radius
 
 - **Target:** GTM (Phase 0 design)
 - **Dimension:** GTM_FEASIBILITY
-- **Desired Condition:** Phase 0 either (a) executed brand-neutrally so it preserves all three E-05 options as open at Phase 1 transition, OR (b) executed inside a chosen host brand because E-05 has been resolved to (B) or (C-with-host-confirmed)
-- **Current Observation:** Strategist proposes Phase 0 commences before E-05 resolves. This is internally inconsistent with Section 5's required condition "Brand-architecture decision made before Phase 1" if Phase 0 commits to a host brand. Path-dependency cost unmodelled.
-- **Final Priority Score:** 12 (DEFERRED until E-05 resolves)
-- **Recommended Action:** Constraint inversion identified that brand-neutral Phase 0 contradicts the cost-minimisation logic of hosting Phase 0 inside an existing brand. Strategist should design a brand-neutral Phase 0 spec that preserves all three E-05 options, OR governor must resolve E-05 before Phase 0.
+- **Desired Condition:** Phase 0 either (a) executed brand-neutrally so it preserves all three E-03 options as open at Phase 1 transition, OR (b) executed inside a chosen host brand because E-03 has been resolved to (B) or (C-with-host-confirmed)
+- **Current Observation:** Strategist proposes Phase 0 commences before E-03 resolves. This is internally inconsistent with Section 5's required condition "Brand-architecture decision made before Phase 1" if Phase 0 commits to a host brand. Path-dependency cost unmodelled.
+- **Final Priority Score:** 12 (DEFERRED until E-03 resolves)
+- **Recommended Action:** Constraint inversion identified that brand-neutral Phase 0 contradicts the cost-minimisation logic of hosting Phase 0 inside an existing brand. Strategist should design a brand-neutral Phase 0 spec that preserves all three E-03 options, OR governor must resolve E-03 before Phase 0.
 
 ---
 
@@ -318,160 +318,13 @@ Final Priority = Gap Score x Blast Radius
 
 ---
 
-### Gap: G-05
-
-- **Target:** UNIT_ECONOMICS
-- **Dimension:** ECONOMIC_VIABILITY
-- **Desired Condition:** Behavioural CAC <£30 across ≥2 channels; trial-to-paid >15%
-- **Current Observation:** Modelled only
-- **Confidence Gap:** 2
-- **Evidence Weakness:** 2
-- **Pain Uncertainty:** 1
-- **Time Penalty:** 0
-- **Blast Radius Weight:** 3
-- **Final Priority Score:** 15
-- **Recommended Action**
-  - **Type:** EXPERIMENT
-  - **Description:** Deferred to Phase 1 — run acquisition experiment across ≥2 channels to measure behavioural CAC and trial-to-paid conversion
-  - **Expected Output:** CAC and conversion actuals vs model
-  - **Evidence Target:** T1
-- **Status:** DEFERRED
-
----
-
-### Gap: G-07
-
-- **Target:** UNIT_ECONOMICS
-- **Dimension:** ECONOMIC_VIABILITY
-- **Desired Condition:** Print delivery quotes ≤80p/copy with carrier coverage in Borders geography
-- **Current Observation:** Modelled only; print is adjacent product not in digital unit economics
-- **Confidence Gap:** 1
-- **Evidence Weakness:** 2
-- **Pain Uncertainty:** 1
-- **Time Penalty:** 0
-- **Blast Radius Weight:** 2
-- **Final Priority Score:** 8
-- **Recommended Action**
-  - **Type:** RESEARCH
-  - **Description:** Carrier tender for Borders print delivery — deferred until paid digital product confirmed viable
-  - **Expected Output:** Print delivery cost per copy
-  - **Evidence Target:** T1
-- **Status:** DEFERRED
-
----
-
-### Gap: G-08
-
-- **Target:** UNIT_ECONOMICS
-- **Dimension:** ECONOMIC_VIABILITY
-- **Desired Condition:** Annual churn observed at 18-30% in cohort tracking
-- **Current Observation:** T3 assumption; no cohort data
-- **Confidence Gap:** 2
-- **Evidence Weakness:** 3
-- **Pain Uncertainty:** 1
-- **Time Penalty:** 0
-- **Blast Radius Weight:** 2
-- **Final Priority Score:** 12
-- **Recommended Action**
-  - **Type:** EXPERIMENT
-  - **Description:** Deferred to post-launch — measure churn in first 3 subscriber cohorts
-  - **Expected Output:** Observed annual churn rate vs 18-30% model assumption
-  - **Evidence Target:** T1
-- **Status:** DEFERRED
-
----
-
-### Gap: G-09
-
-- **Target:** SEGMENT
-- **Dimension:** SEGMENT_CLARITY
-- **Desired Condition:** Per-town acquisition CAC measured across Borders towns
-- **Current Observation:** Model assumes CAC is evenly distributable across geography
-- **Confidence Gap:** 1
-- **Evidence Weakness:** 2
-- **Pain Uncertainty:** 1
-- **Time Penalty:** 0
-- **Blast Radius Weight:** 2
-- **Final Priority Score:** 8
-- **Recommended Action**
-  - **Type:** EXPERIMENT
-  - **Description:** Deferred to Phase 1 — measure per-town CAC from acquisition campaigns
-  - **Expected Output:** CAC variance map across Borders towns
-  - **Evidence Target:** T1
-- **Status:** DEFERRED
-
----
-
-### Gap: G-10
-
-- **Target:** PROBLEM
-- **Dimension:** EVIDENCE_STRENGTH
-- **Desired Condition:** Coverage audit confirms Border Telegraph + Southern Reporter leave meaningful gap vs P&J
-- **Current Observation:** Coverage gap asserted; no systematic audit conducted
-- **Confidence Gap:** 1
-- **Evidence Weakness:** 2
-- **Pain Uncertainty:** 1
-- **Time Penalty:** 0
-- **Blast Radius Weight:** 1
-- **Final Priority Score:** 4
-- **Recommended Action**
-  - **Type:** RESEARCH
-  - **Description:** Desk audit — compare Border Telegraph and Southern Reporter coverage scope vs P&J Borders edition equivalent; deferred (structural evidence is sufficient for Phase 0 go/no-go)
-  - **Expected Output:** Coverage gap confirmation or refutation
-  - **Evidence Target:** T1
-- **Status:** DEFERRED
-
----
-
-### Gap: G-11
-
-- **Target:** VALUE_PROPOSITION
-- **Dimension:** VALUE_PROP_VALIDITY
-- **Desired Condition:** Borders brand-awareness survey shows sufficient DCT/P&J/Courier recognition to support brand-architecture choice
-- **Current Observation:** Untested; recognition level entirely assumed
-- **Confidence Gap:** 1
-- **Evidence Weakness:** 2
-- **Pain Uncertainty:** 1
-- **Time Penalty:** 0
-- **Blast Radius Weight:** 2
-- **Final Priority Score:** 8
-- **Recommended Action**
-  - **Type:** RESEARCH
-  - **Description:** Small fast brand-recognition survey in Borders — deferred. Note: importance rises significantly if E-05 resolves to option (B) — Borders section within existing P&J or Courier brand.
-  - **Expected Output:** DCT/P&J/Courier brand recognition rates in Borders
-  - **Evidence Target:** T1
-- **Status:** DEFERRED
-
----
-
-### Gap: G-12
-
-- **Target:** SOLUTION_DESIGN / GROWTH_ARCHITECTURE / GTM_PLAN
-- **Dimension:** EVIDENCE_STRENGTH
-- **Desired Condition:** Sections 5-7 contain explicit Desired State / Current State blocks; Section 6 includes a paid-MVP kill condition
-- **Current Observation:** Still missing after two CHALLENGE passes
-- **Confidence Gap:** 1
-- **Evidence Weakness:** 2
-- **Pain Uncertainty:** 0
-- **Time Penalty:** 0
-- **Blast Radius Weight:** 1
-- **Final Priority Score:** 3
-- **Recommended Action**
-  - **Type:** SOLUTION_REDESIGN
-  - **Description:** Flag to Strategist — address desired/current state blocks for sections 5-7 and paid-MVP kill condition in the next BUILD or CHALLENGE pass
-  - **Expected Output:** Sections 5-7 with complete desired/current state structure
-  - **Evidence Target:** T2
-- **Status:** DEFERRED
-
----
-
 ## 5. Contradictions
 
 | Contradiction ID | Between | Description | Impact | Required Resolution | Block Execution? |
 |---|---|---|---|---|---|
 | C-1 | Methodology vs Sections 5-7 | Sections 5, 6, 7 lack explicit Desired State / Current State blocks. Carried from Pass 1; Strategist did NOT address in CHALLENGE pass. | LOW | Strategist to add in next pass | No |
 | C-2 | Section 3 base vs pessimistic | Routed via E-02 | MEDIUM | Resolved by E-02 governor response | No |
-| C-3 (NEW) | Section 5 vs Section 7 | Section 5 lists "Brand-architecture decision made before Phase 1" as a required architecture condition. Section 7 has Phase 0 commencing months -3 to 0, BEFORE the brand decision. If Phase 0 hosts inside an existing brand, the brand decision is *de facto* made by Phase 0 execution; the architecture condition is therefore violated by the GTM plan. | MEDIUM | Either (i) E-05 governor decision resolves the brand choice before Phase 0; or (ii) Strategist clarifies that the Section 5 condition binds at Phase 1 not Phase 0, AND adds a brand-neutral Phase 0 design spec that preserves E-05 optionality. Tracked as E-06 (Strategist clarification, not governor escalation). | **YES** — Phase 0 launch BLOCKED until C-3 resolves |
+| C-3 (NEW) | Section 5 vs Section 7 | Section 5 lists "Brand-architecture decision made before Phase 1" as a required architecture condition. Section 7 has Phase 0 commencing months -3 to 0, BEFORE the brand decision. If Phase 0 hosts inside an existing brand, the brand decision is *de facto* made by Phase 0 execution; the architecture condition is therefore violated by the GTM plan. | MEDIUM | Either (i) E-03 governor decision resolves the brand choice before Phase 0; or (ii) Strategist clarifies that the Section 5 condition binds at Phase 1 not Phase 0, AND adds a brand-neutral Phase 0 design spec that preserves E-03 optionality. Tracked as Esc-5 (Strategist clarification, not governor escalation). | **YES** — Phase 0 launch BLOCKED until C-3 resolves |
 | C-4 (NEW) | Section 6 vs Section 4 | Section 6 feature map still lists "Print bundle" as a downgraded-but-present feature. Section 4 differentiator clauses make no reference to a print bundle. T1 correction removed bundle from the unit; Section 6 feature-map row is residual. | LOW | Cosmetic — Strategist remove the row in next pass | No |
 | C-5 (NEW Pass 3) | Section 6/7 vs Section 1 Pass 3 | Section 6 MVP rationale and Section 7 Phase 0 rationale both cite DCT's practice in Elgin/Inverness/Oban as evidence that "newsletter-as-standalone-product" is DCT's observed pattern for low-density geographies. This reasoning was the basis for the two-stage MVP. Pass 3 establishes that those newsletters are acquisition tools within P&J's paid ecosystem, not standalone products. The Phase 0 recommendation is still valid (newsletter as acquisition funnel feeding paid product is exactly what DCT does), but the *stated mechanism* in Sections 6 and 7 is wrong. | LOW | Non-blocking. Strategist to update Section 6/7 rationale text in next pass: replace "DCT serves low-density geographies with newsletters instead of paid titles" with "DCT uses newsletters as the acquisition funnel for its paid editions" — same recommendation, correct mechanism. | No |
 
@@ -513,7 +366,7 @@ The dominant failure chain shifts under the two-stage model. New failure scenari
 | Web Pack ARPU c.£7.99-£8.99/mo holds in Borders (Sec 3 T1-anchored) | Borders cannot hold above £4.99 (Border Telegraph anchor) | ARPU £75 → c.£55; LTV:CAC base falls 8x → 5-6x; payback 5mo → 7-9mo | WITH_MODIFICATION (revise Sec 3 scenarios; ePaper upsell becomes the ARPU lever) |
 | Multi-locale platform supports adding Borders as topic at marginal cost (Sec 5 NEW T2) | Adding 10th locale needs editorial-CMS work DCT has not done in this configuration; £30-60k integration | Phase 0 cost envelope (£8-15k) breached; Phase 0 timeline slips 2-3 months | WITH_MODIFICATION (extend Phase 0 budget OR use email-only newsletter without app/web integration; latter weakens the asset built in Phase 0) |
 | Phase 0 newsletter ≥1,500 signups in 6 weeks at CAC <£8 indicates paid-product demand (Sec 6/7 NEW T2) | Newsletter signup volume uncorrelated with paid demand; ≥1,500 free signups → 4% paid conversion (60 trials), not 12% (180 trials) | Phase 0 succeeds on its own metrics; Phase 1 fails because newsletter-list does not deliver expected paid base | WITH_MODIFICATION (Phase 0 must include a paid-trial test cell — see G-15 — to triangulate WTP within Phase 0) |
-| Brand architecture deferrable to post-Phase-0 (E-05 option C) | Brand decision is path-dependent on Phase 0 execution choices (host brand, sender identity, app-section vs separate domain) | Phase 0 / Phase 1 transition costs c.£15-30k in re-permissioning + brand re-attribution | WITH_MODIFICATION (option C feasible only if Phase 0 designed brand-neutrally — see G-14 — which contradicts the cost-minimisation logic that argued for hosting inside an existing brand) |
+| Brand architecture deferrable to post-Phase-0 (E-03 option C) | Brand decision is path-dependent on Phase 0 execution choices (host brand, sender identity, app-section vs separate domain) | Phase 0 / Phase 1 transition costs c.£15-30k in re-permissioning + brand re-attribution | WITH_MODIFICATION (option C feasible only if Phase 0 designed brand-neutrally — see G-14 — which contradicts the cost-minimisation logic that argued for hosting inside an existing brand) |
 | Borders is in the borderline DCT-revealed-preference band (Sec 2 T1) | Borders converges to newsletter-only outcome; segment too small/dispersed for paid title | Phase 0 succeeds; Phase 1 paid fails; net is a free Borders newsletter at near-zero contribution | NO for paid-product hypothesis; YES for "minimum viable presence" but probably does not justify c.£20-30k Phase 0 + c.£60-120k Phase 1 spend |
 | Newsletter-list-to-paid conversion >8% (Sec 7 NEW T3) | Conversion lands 3-5% — within Sec 7 kill but well below target | Phase 1 misses paid-subs floor; KILL not formally triggered but base case fails | NO for base case; would force Phase 2 redesign |
 | Pessimistic scenario in Sec 3 still kills (unchanged) | Already kill | n/a | n/a |
@@ -568,7 +421,7 @@ The v1 register included print production/distribution as a unit cost within the
 - Effective execution priority: G-04 → G-01 → G-06.
 
 ### Execution Rule (Pass 3)
-- Valid: G-04 NRS pull (T1, no E-03 dependency); G-01 interviews (T1, gated on E-03; **script updated**); G-06 landing-page test (T1, gated on E-03; **test cells updated**).
+- Valid: G-04 NRS pull (T1, no Esc-3 dependency); G-01 interviews (T1, gated on Esc-3; **script updated**); G-06 landing-page test (T1, gated on Esc-3; **test cells updated**).
 - Rejected (carried):
   - Phase 0 newsletter LAUNCH — REJECTED (C-3 unresolved; G-01 sequencing constraint).
   - Phase 1 launch — REJECTED.
@@ -589,9 +442,9 @@ The v1 register included print production/distribution as a unit cost within the
 ### Deadline Rule (Pass 3)
 - **G-02 deadline 2026-05-08: EXCEEDED TODAY.** Governor response overdue. Per error-handling rule, do not re-escalate; report waiting. Forced disposition pending.
 - **G-03 deadline 2026-05-08: EXCEEDED TODAY.** Same.
-- **G-04 deadline 2026-05-15 (7 days):** OPEN. Not gated on E-03. **Action required: confirm NRS pull is in progress or assign owner immediately.**
-- **G-01, G-06:** No hard deadline but gated on E-03. If E-03 not resolved by 2026-05-15, field work is at risk of slipping past E-05 deadline (2026-06-15).
-- **E-05 deadline ~2026-06-15 (38 days):** ESCALATED.
+- **G-04 deadline 2026-05-15 (7 days):** OPEN. Not gated on Esc-3. **Action required: confirm NRS pull is in progress or assign owner immediately.**
+- **G-01, G-06:** No hard deadline but gated on Esc-3. If Esc-3 not resolved by 2026-05-15, field work is at risk of slipping past E-03 deadline (2026-06-15).
+- **E-03 deadline ~2026-06-15 (38 days):** ESCALATED.
 
 ### Contradiction Rule (Pass 3)
 - C-1 (LOW): non-blocking; carried.
@@ -613,7 +466,7 @@ The v1 register included print production/distribution as a unit cost within the
 - **sell_ready = false** (unchanged from Pass 2)
   - Problem ≥ RESEARCHED: pass
   - Segment ≥ RESEARCHED: pass
-  - No HIGH-blast unresolved blocker: **fail** (G-02/G-03 OVERDUE; G-04 deadline 7 days; G-01/G-06 unvalidated; E-05 unresolved; E-03 unauthorised; C-3 blocking Phase 0)
+  - No HIGH-blast unresolved blocker: **fail** (G-02/G-03 OVERDUE; G-04 deadline 7 days; G-01/G-06 unvalidated; E-03 unresolved; Esc-3 unauthorised; C-3 blocking Phase 0)
   - No architecture contradiction: **fail (C-3 carried)**
 - **scale_ready = false** (unchanged)
   - Problem = SUPPORTED: fail
@@ -624,7 +477,7 @@ The v1 register included print production/distribution as a unit cost within the
 
 ### Focus Rule (Pass 3)
 - Active gaps: 3 (G-04, G-01, G-06) — at cap.
-- Governor escalations tracked separately: G-02 (OVERDUE), G-03 (OVERDUE), G-16/E-05, E-03, E-04 (carried), E-06 (Strategist clarification on C-3).
+- Governor escalations tracked separately: G-02 (OVERDUE), G-03 (OVERDUE), G-16/E-03, Esc-3, Esc-4 (carried), Esc-5 (Strategist clarification on C-3).
 
 ---
 
@@ -633,12 +486,12 @@ The v1 register included print production/distribution as a unit cost within the
 ### Approved Actions for Downstream Systems (Pass 3)
 - **None** for revenue/build execution
 - Approved for validation work:
-  - G-04 NRS pull (independent of E-03 budget; **deadline May 15 — 7 days**; must commence immediately)
-  - **G-18 subscriber motivation interviews** (5-8 existing P&J subscribers in Moray/Inverness; **governor-unlockable now, no E-03 dependency**; execute BEFORE G-01 — informs Borders interview script design)
-  - G-01 interviews (**Pass 3 script: brand-architecture probe replaces newsletter-pivot probe**; execute AFTER G-18) — gated on E-03 authorisation
-  - G-06 landing-page test (**Pass 3 cells: all paid options; free-newsletter cell removed**) — gated on E-03 authorisation
-  - Awaiting governor responses on G-02 (**OVERDUE**), G-03 (**OVERDUE**), E-05, E-03, E-04
-  - Awaiting Strategist clarification on E-06 (C-3 resolution) and G-17 (Section 4 update)
+  - G-04 NRS pull (independent of Esc-3 budget; **deadline May 15 — 7 days**; must commence immediately)
+  - **G-18 subscriber motivation interviews** (5-8 existing P&J subscribers in Moray/Inverness; **governor-unlockable now, no Esc-3 dependency**; execute BEFORE G-01 — informs Borders interview script design)
+  - G-01 interviews (**Pass 3 script: brand-architecture probe replaces newsletter-pivot probe**; execute AFTER G-18) — gated on Esc-3 authorisation
+  - G-06 landing-page test (**Pass 3 cells: all paid options; free-newsletter cell removed**) — gated on Esc-3 authorisation
+  - Awaiting governor responses on G-02 (**OVERDUE**), G-03 (**OVERDUE**), E-03, Esc-3, Esc-4
+  - Awaiting Strategist clarification on Esc-5 (C-3 resolution) and G-17 (Section 4 update)
 
 ### Explicitly Forbidden Actions
 - **Phase 0 Newsletter MVP launch — BLOCKED until C-3 resolves** (NEW this pass)
@@ -647,7 +500,7 @@ The v1 register included print production/distribution as a unit cost within the
 - Public messaging / pre-announcement — **strengthened by Pass 2 red-team finding** that Newsquest's optimal counter to a free newsletter is a defensive mirror; leakage shortens DCT's solo window
 - Carrier negotiations — DEFERRED (G-07)
 - Solution-led validation — FORBIDDEN
-- Hosting Phase 0 inside an existing P&J or Courier brand without explicit E-05 (B) or (C-with-host-confirmed) governor decision — would violate C-3 and create G-14 path-dependency
+- Hosting Phase 0 inside an existing P&J or Courier brand without explicit E-03 (B) or (C-with-host-confirmed) governor decision — would violate C-3 and create G-14 path-dependency
 
 ### Allowed Constraints (carried forward subject to validation, with CHALLENGE updates)
 - Target segment: unchanged (TD1-TD15 50+ broadband-served)
@@ -661,7 +514,7 @@ The v1 register included print production/distribution as a unit cost within the
 - Interview evidence confirming felt-pain at Section 1 desired-state thresholds AND brand-architecture preference signal (standalone Borders brand vs P&J/Courier geographic edition)
 - NRS data confirming 25-35k HH in segment AND placing Borders relative to Moray (confirmed P&J paid edition at ~100k pop / 8,834 circ)
 - Landing-page intent >5% at the *winning* paid configuration in the revised 3-cell test
-- Governor confirmation on E-01, E-02 (both OVERDUE), E-05, E-03
+- Governor confirmation on E-01, E-02 (both OVERDUE), E-03, Esc-3
 
 ### Failure Signals Downstream Should Return Immediately (Pass 3)
 - Interview signal: <3/10 describe felt deficit (Section 1 kill triggered)
@@ -669,7 +522,7 @@ The v1 register included print production/distribution as a unit cost within the
 - NRS data: segment <15k HH (Section 2 kill triggered)
 - NRS data: Borders falls meaningfully below Moray on addressable HH profile (recalibrates viability)
 - Landing-page: neither Page A nor Page B achieves >5% intent; only Page C (Newsquest bundle) shows meaningful interest (competitive positioning structurally weak)
-- Governor response: E-01 "material build £200k+" AND E-02 "standalone overhead" — Section 3 base case dies (if E-05 resolves to option A — standalone brand)
+- Governor response: E-01 "material build £200k+" AND E-02 "standalone overhead" — Section 3 base case dies (if E-03 resolves to option A — standalone brand)
 
 ---
 
@@ -680,55 +533,45 @@ The v1 register included print production/distribution as a unit cost within the
 #### Escalation E-01 (G-02) — Marginal cost of platform extension (separate-brand path)
 - Decision Type: GROUND_TRUTH
 - Blast Radius: HIGH
-- Status: OPEN
-- Decision Needed: What is the marginal cost of a separate-brand digital platform build relative to extending existing DCT infrastructure? Provide a ground-truth cost range.
-- What Is at Stake: Separate-brand path (E-05 option A) cannot be costed until this is resolved. OVERDUE — deadline 2026-05-08 exceeded with no recorded governor response. Per error-handling rule, not re-escalated; waiting status reported. Scope: separate-brand pathway only — locale-within-existing-brand path partially resolved by T1 multi-locale evidence.
+- Status: **OVERDUE — deadline 2026-05-08 EXCEEDED TODAY**. No recorded response. Per error-handling rule, not re-escalated; waiting status reported.
+- Scope: separate-brand pathway only. Locale-within-existing-brand path partially resolved by T1 multi-locale evidence.
 - See queue file 2026-04-24-strategist-escalations.md and 2026-05-05-strategist-escalations.md §"Escalations 1 and 2 — status update"
 
 #### Escalation E-02 (G-03) — Central overhead allocation policy
-- Decision Type: VALUES
+- Decision Type: VALUES + GROUND_TRUTH
 - Blast Radius: HIGH
-- Status: OPEN
-- Decision Needed: What central overhead allocation policy applies to a new Borders title — at-cost shared services, market-rate charge, or ringfenced standalone P&L?
-- Why System Cannot Decide: This is a values and commercial-model decision that determines whether a separate Borders title can achieve positive unit economics. The system cannot assume an allocation policy.
-- What Is at Stake: Unit economics model (G-04) cannot be finalised for the separate-brand path without this input. OVERDUE — deadline 2026-05-08 exceeded with no recorded governor response. Note: loses force entirely if E-05 resolves to option B (Borders as geographic edition within existing brand — no separate P&L).
+- Status: **OVERDUE — deadline 2026-05-08 EXCEEDED TODAY**. No recorded response.
+- Note: Loses force entirely if E-03 resolves to (B) section in existing brand (no separate P&L). Otherwise unchanged.
 
-#### Escalation E-03 — Phase 0 validation budget authorisation
-- Decision Type: VALUES
+#### Escalation Esc-3 — Phase 0 validation budget authorisation
+- Decision Type: VALUES (resource allocation)
 - Blast Radius: MEDIUM
-- Status: OPEN
-- Decision Needed: Authorise Phase 0 validation budget of £10–17k (or £12–21k if G-15 paid-trial cell included). This is the Phase 0 strategy phase budget authorisation — no deadline set but now URGENT because G-01 and G-06 cannot execute without it.
-- Why System Cannot Decide: Resource allocation is a Governor values decision. Updated cost envelope: c.£10–17k (was £8–15k; +£1–2k for G-06 expanded 3-cell landing-page test; +£2–4k if G-15 paid-trial cell incorporated). Strategist's CHALLENGE pass endorses Phase 0 as a full strategy phase, not merely a validation exercise.
+- Status: OPEN — no deadline set; **now URGENT in effect** because G-01 + G-06 cannot execute without authorisation
+- Updated cost envelope: c.£10-17k (was £8-15k; +£1-2k for G-06 expanded 3-cell landing-page test; +£2-4k if G-15 paid-trial cell is incorporated, taking total to c.£12-21k)
+- Strategist's CHALLENGE pass effectively endorses Phase 0 as a strategy phase, increasing Esc-3's importance from "validation budget" to "Phase 0 budget" — the same money but explicit as a strategy phase commitment
 
-#### Escalation E-04 — Decision-deadline confirmation
-- Decision Type: JUDGMENT
-- Blast Radius: LOW
-- Status: OPEN
-- Decision Needed: Confirm or modify the system-proposed decision deadlines for open escalations E-01, E-02, and E-05. No governor response recorded; system continues operating on self-proposed deadlines.
+#### Escalation Esc-4 — Decision-deadline confirmation
+- Status: OPEN, no governor response. Continues to operate on system-proposed deadlines.
 
 ### NEW from Strategist this pass (carried into queue)
 
-#### Escalation E-05 (G-16) — Brand architecture decision
-- Decision Type: VALUES
-- Blast Radius: HIGH
-- Status: OPEN
-- Decision Needed: Which brand architecture path should the Borders product follow — standalone new title, geographic edition within existing DCT title, or sequenced approach? Deadline ~2026-06-15. Both A and B are paid subscription models; the choice is portfolio strategy, not viability.
-- Why System Cannot Decide: Long-run portfolio strategy and DCT identity question; cascades through Sections 3, 4, 5, 6, and 7 of the register.
-- Options:
-  - A: New standalone Borders title with its own brand, masthead, and subscription product (follows DCT Courier/P&J standalone-title model) -> brand architecture committed from Phase 0; requires new brand investment
-  - B: Borders as a geographic edition within P&J or The Courier (follows Moray/Inverness/H&I edition pattern confirmed by P&J 6-edition map) -> brand-stretch question since Borders is geographically outside both existing title footprints
-  - C: Sequenced — Phase 0 inside existing brand, full brand architecture decision deferred to Phase 1 on behavioural data -> preserves optionality but requires brand-neutral Phase 0 design (G-14 / E-06)
-- System Recommendation: (C) on optionality grounds — preserves all three options through Phase 0. Gap Definer assessment: (C) feasible only with brand-neutral Phase 0 design per G-14; G-06 landing-page test provides behavioural input before June 15 deadline.
+#### Escalation E-03 (G-16) — Brand architecture decision
+- Decision Type: VALUES (long-run portfolio strategy + DCT identity question)
+- Blast Radius: HIGH (cascades through Sec 3, 4, 5, 6, 7)
+- Status: OPEN (raised 2026-05-05); **deadline ~2026-06-15 (38 days)**
+- Options (Pass 3 — sharpened): **(A)** New standalone Borders title with its own brand, masthead, and subscription product — follows the DCT Courier/P&J standalone-title model; **(B)** Borders as a geographic edition within an existing DCT title (P&J covering north Scotland or The Courier covering Tayside/Fife) — follows the Moray/Inverness/H&I edition pattern confirmed by the P&J 6-edition map; **(C)** Sequenced — Phase 0 inside existing brand, full brand decision deferred until Phase 0 behavioural data. Both A and B are paid subscription models; the choice is portfolio strategy, not viability. The Borders sits outside both P&J's and The Courier's existing footprints geographically (south Scotland), which makes (B) a brand-stretch question.
+- Strategist preference: (C) on optionality grounds
+- Gap Definer assessment: unchanged — (C) feasible only with brand-neutral Phase 0 design (G-14). G-06 landing-page test (Page A vs B) provides behavioural input before the June 15 deadline.
 - See queue file 2026-05-05-strategist-escalations.md
 
 ### NEW from Gap Definer this pass
 
-#### Escalation E-06 — Strategist clarification on C-3 resolution
-- Decision Type: STRATEGIST_CLARIFICATION
-- Blast Radius: MEDIUM
-- Status: OPEN
-- Decision Needed: Does the Section 5 required condition "Brand-architecture decision made before Phase 1" bind at Phase 0 launch, or only at Phase 1 launch? If the latter, Strategist should add a brand-neutral Phase 0 design spec to Section 6 / Section 7 that preserves all three E-05 options through to Phase 1.
-- Why System Cannot Decide: This is a methodology and register-quality clarification, not a governor values choice — hence it is a back-pass to Strategist rather than a governor escalation. Section 5 said "before Phase 1" but Section 7's Phase 0 functionally pre-commits the brand if hosted inside an existing brand. Strategist can resolve by either (i) confirming Section 5 condition is Phase 1 only and designing Phase 0 brand-neutrally, OR (ii) accepting that Phase 0 is a brand commitment and routing the brand decision through E-05 before Phase 0. Unblocks Phase 0 design work even before E-05 governor decision.
+#### Escalation Esc-5 — Strategist clarification on C-3 resolution
+- Decision Type: STRATEGIST_CLARIFICATION (NOT a governor escalation; this is a back-pass to Strategist)
+- Blast Radius: MEDIUM — unblocks Phase 0 design work even before E-03 governor decision
+- Decision Needed: Does the Section 5 required condition "Brand-architecture decision made before Phase 1" bind at Phase 0 launch, or only at Phase 1 launch? If the latter, Strategist should add a brand-neutral Phase 0 design spec to Section 6 / Section 7 that preserves all three E-03 options through to Phase 1.
+- Why this is back to Strategist not governor: this is a methodology / register-quality clarification, not a values choice. Section 5 said "before Phase 1" but Section 7's Phase 0 functionally pre-commits the brand if hosted inside an existing brand. Strategist can resolve by either (i) confirming Section 5 condition is Phase 1 only and designing Phase 0 brand-neutrally, OR (ii) accepting that Phase 0 is a brand commitment and routing the brand decision through E-03 governor before Phase 0.
+- Status: OPEN (NEW this pass)
 
 ---
 
@@ -736,21 +579,21 @@ The v1 register included print production/distribution as a unit cost within the
 
 **Top 3 actions for next pass (in execution order — by deadline urgency within tied priority)**
 
-1. **G-04 — NRS / Ofcom / Project Gigabit data pull (URGENT, deadline 2026-05-15):** Independent of E-03 budget. Assign owner by 2026-05-08; output by 2026-05-15. Output additionally calibrates Borders against DCT's revealed-preference threshold band.
+1. **G-04 — NRS / Ofcom / Project Gigabit data pull (URGENT, deadline 2026-05-15):** Independent of Esc-3 budget. Assign owner by 2026-05-08; output by 2026-05-15. Output additionally calibrates Borders against DCT's revealed-preference threshold band.
 2. **G-01 — Borders resident interviews (extended script):** 10-15 problem-led interviews; CHALLENGE-extended Stage 5 includes 3-configuration probe. **Sequencing constraint:** must complete BEFORE Phase 0 newsletter launches (else solution-contaminates).
 3. **G-06 — Pre-launch landing-page test (3-cell configuration):** Three landing pages (free newsletter / paid daily / paid section in existing brand); c.2,500-3,000 paid Facebook clicks split equally; intent rate per cell.
 
 **Expected register changes if successful**
 - PROBLEM promotes to SUPPORTED (T1 conversation) OR is BROKEN per kill condition OR pivots per CHALLENGE-extended kill (newsletter form is the resolution)
 - SEGMENT promotes with refined size; G-04 specifically tests where Borders falls in DCT's threshold band
-- VALUE_PROPOSITION clauses validated/rejected; **the 3-cell landing-page test directly informs E-05 with behavioural data**
+- VALUE_PROPOSITION clauses validated/rejected; **the 3-cell landing-page test directly informs E-03 with behavioural data**
 - UNIT_ECONOMICS unchanged unless governor responses arrive
-- C-3 may resolve via E-06 (Strategist clarification) before E-05 governor decision
+- C-3 may resolve via Esc-5 (Strategist clarification) before E-03 governor decision
 - sell_ready re-evaluated; potentially flips if all three actions succeed AND escalations return non-killing answers
 
 **Re-run trigger:** Re-run when ANY of:
-- Any governor response arrives (G-02, G-03, E-05, E-03, E-04)
-- Strategist responds to E-06 (C-3 resolution path)
+- Any governor response arrives (G-02, G-03, E-03, Esc-3, Esc-4)
+- Strategist responds to Esc-5 (C-3 resolution path)
 - Any Action 1-3 produces evidence (interim signal)
 - A kill signal observed in the field
 - 2026-05-15 (G-04 deadline) — re-run on segment data to update Section 2 confidence

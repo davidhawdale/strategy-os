@@ -520,6 +520,7 @@ export interface GapLedger {
 }
 
 export interface GapLedgerEntry {
+  id?: string;
   rank?: number;
   target: string;
   dimension: string;
@@ -642,13 +643,14 @@ export interface ReadinessHandoff {
 
 export interface Escalation {
   title: string;
-  decisionType?: 'VALUES' | 'GROUND_TRUTH' | 'JUDGMENT';
+  decisionType?: 'VALUES' | 'GROUND_TRUTH' | 'JUDGMENT' | 'STRATEGIST_CLARIFICATION';
   blastRadius?: BlastRadius;
   decisionNeeded: string;
   whySystemCannotDecide?: string;
   options: { label: string; option: string; consequence: string }[];
   systemRecommendation?: string;
   whatIsAtStake?: string;
+  queueFileNote?: string;
   status: 'OPEN' | 'RESOLVED';
 }
 
@@ -958,7 +960,47 @@ export type PanelId =
   | 'proposals'
   | 'escalations'
   | 'detail'
-  | 'deadlines';
+  | 'deadlines'
+  | 'queue';
+
+// ============================================================
+// Execution Queue
+// ============================================================
+
+export interface QueueAction {
+  rank: number;
+  gapId: string;
+  actionType: string;
+  description: string;
+  deadline?: string;
+  isUrgent: boolean;
+  gatedOn?: string;
+  produces?: string;
+}
+
+export interface BlockedPath {
+  path: string;
+  blocker: string;
+}
+
+export interface PendingDecision {
+  id: string;
+  title: string;
+  whatIsAtStake?: string;
+  isOverdue: boolean;
+}
+
+export interface ExecutionQueueView {
+  decisionState: string;
+  passDate?: string;
+  passNumber?: number;
+  sellReady: boolean;
+  scaleReady: boolean;
+  actions: QueueAction[];
+  blockedPaths: BlockedPath[];
+  narrative?: string;
+  pendingDecisions: PendingDecision[];
+}
 
 export type AppState =
   | { _tag: 'Loading' }
@@ -980,7 +1022,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
     case 'Loading':
       switch (event._tag) {
         case 'FetchSuccess':
-          return { _tag: 'Loaded', data: event.data, activePanel: 'readiness' };
+          return { _tag: 'Loaded', data: event.data, activePanel: 'queue' };
         case 'FetchError':
           return { _tag: 'Error', message: event.message };
         default:
@@ -994,7 +1036,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'SelectHypothesis':
           return { ...state, activePanel: 'detail', selectedHypothesis: event.id };
         case 'Back':
-          return { ...state, activePanel: 'readiness', selectedHypothesis: undefined };
+          return { ...state, activePanel: 'queue', selectedHypothesis: undefined };
         case 'Refresh':
           return { _tag: 'Loading' };
         case 'FetchError':
@@ -1008,7 +1050,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'FetchStart':
           return { _tag: 'Loading' };
         case 'FetchSuccess':
-          return { _tag: 'Loaded', data: event.data, activePanel: 'readiness' };
+          return { _tag: 'Loaded', data: event.data, activePanel: 'queue' };
         default:
           return state;
       }
@@ -1024,7 +1066,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'SelectHypothesis':
           return { ...state, activePanel: 'detail', selectedHypothesis: event.id };
         case 'Back':
-          return { ...state, activePanel: 'readiness', selectedHypothesis: undefined };
+          return { ...state, activePanel: 'queue', selectedHypothesis: undefined };
         default:
           return state;
       }

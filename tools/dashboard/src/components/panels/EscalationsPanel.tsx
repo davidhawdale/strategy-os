@@ -1,4 +1,4 @@
-import type { GovernorEscalationsView, Escalation, BlastRadius } from '../../model/types';
+import type { GovernorEscalationsView, Escalation } from '../../model/types';
 import { BlastRadiusBadge } from '../shared/BlastRadiusBadge';
 
 interface Props {
@@ -74,6 +74,13 @@ function EscalationCard({ escalation }: { escalation: Escalation }) {
             <p className="escalation-card__field-value escalation-card__field-value--stake">
               {escalation.whatIsAtStake}
             </p>
+          </div>
+        )}
+
+        {escalation.queueFileNote && (
+          <div className="escalation-queue-note">
+            <span className="escalation-card__field-label">See queue files</span>
+            <p className="escalation-queue-note__text">{escalation.queueFileNote}</p>
           </div>
         )}
       </div>

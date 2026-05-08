@@ -123,6 +123,7 @@ export function GapLedgerPanel({ view }: Props) {
             <table className="data-table">
               <thead>
                 <tr>
+                  <th className="data-table__header" scope="col">ID</th>
                   <th className="data-table__header" scope="col">#</th>
                   <th className="data-table__header" scope="col">Target</th>
                   <th className="data-table__header" scope="col">Dimension</th>
@@ -134,6 +135,11 @@ export function GapLedgerPanel({ view }: Props) {
               <tbody>
                 {view.topGaps.map((gap, i) => (
                   <tr key={i} className="data-table__row">
+                    <td className="data-table__cell">
+                      {gap.id
+                        ? <a href={`#gap-record-${gap.id}`} className="gap-id-link">{gap.id}</a>
+                        : '—'}
+                    </td>
                     <td className="data-table__cell">{gap.rank ?? i + 1}</td>
                     <td className="data-table__cell">{gap.target}</td>
                     <td className="data-table__cell">{gap.dimension}</td>
@@ -167,7 +173,7 @@ export function GapLedgerPanel({ view }: Props) {
 
 function FullGapRecord({ gap }: { gap: GapRecord }) {
   return (
-    <article className="gap-record" aria-label={`Gap record: ${gap.id ?? gap.target}`}>
+    <article id={gap.id ? `gap-record-${gap.id}` : undefined} className="gap-record" data-status={gap.status?.toLowerCase() ?? ''} aria-label={`Gap record: ${gap.id ?? gap.target}`}>
       <div className="gap-record__header">
         <h4 className="gap-record__title">{gap.id ?? gap.target}</h4>
         <GapStatusBadge status={gap.status} />

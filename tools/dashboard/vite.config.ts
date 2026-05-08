@@ -28,5 +28,6 @@ export default defineConfig({
     react(),
     serveStrategyFile('/hypotheses.md', path.join(projectRoot, 'strategy', 'hypotheses.md')),
     serveStrategyFile('/gap-analysis.md', path.join(projectRoot, 'strategy', 'gap-analysis.md')),
+    serveStrategyFile('/gap-definer-actions.md', path.join(projectRoot, 'execution', 'queue', 'gap-definer-actions.md')),
   ],
 })

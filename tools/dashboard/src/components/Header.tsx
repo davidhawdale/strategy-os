@@ -7,7 +7,6 @@ interface Props {
   activePanel: PanelId;
   onSelectPanel: (panel: PanelId) => void;
   onRefresh: () => void;
-  openEscalationsCount: number;
   hasGapAnalysis: boolean;
 }
 
@@ -19,14 +18,15 @@ interface PanelDef {
 }
 
 const PANELS: PanelDef[] = [
+  { id: 'queue', label: 'Now', shortLabel: 'Now' },
+  { id: 'gapLedger', label: 'Gap Ledger', shortLabel: 'Gaps' },
+  { id: 'escalations', label: 'Escalations', shortLabel: 'Escalate', gapAnalysisOnly: true },
+  { id: 'deadlines', label: 'Deadlines', shortLabel: 'Deadlines' },
   { id: 'readiness', label: 'Readiness', shortLabel: 'Ready' },
-  { id: 'evidence', label: 'Evidence Quality', shortLabel: 'Evidence' },
-  { id: 'risk', label: 'Risk Map', shortLabel: 'Risk' },
+  { id: 'evidence', label: 'Evidence', shortLabel: 'Evidence' },
+  { id: 'risk', label: 'Risk', shortLabel: 'Risk' },
   { id: 'destruction', label: 'Destruction', shortLabel: 'Destruct' },
   { id: 'proposals', label: 'Solution', shortLabel: 'Solution' },
-  { id: 'gapLedger', label: 'Gap Ledger', shortLabel: 'Gaps', gapAnalysisOnly: false },
-  { id: 'escalations', label: 'Escalations', shortLabel: 'Escalate', gapAnalysisOnly: true },
-  { id: 'deadlines', label: 'Deadlines', shortLabel: 'Deadlines', gapAnalysisOnly: false },
 ];
 
 export function Header({
@@ -36,7 +36,6 @@ export function Header({
   activePanel,
   onSelectPanel,
   onRefresh,
-  openEscalationsCount,
   hasGapAnalysis,
 }: Props) {
   const completenessPercent = Math.round(parseCompleteness * 100);
@@ -96,7 +95,6 @@ export function Header({
         <ul className="header__nav-list" role="tablist">
           {PANELS.map(panel => {
             if (panel.gapAnalysisOnly && !hasGapAnalysis) return null;
-            const isEscalations = panel.id === 'escalations';
             return (
               <li key={panel.id} role="presentation">
                 <button
@@ -108,14 +106,6 @@ export function Header({
                 >
                   <span className="header__nav-tab-full">{panel.label}</span>
                   <span className="header__nav-tab-short">{panel.shortLabel}</span>
-                  {isEscalations && openEscalationsCount > 0 && (
-                    <span
-                      className="header__nav-badge"
-                      aria-label={`${openEscalationsCount} open escalation${openEscalationsCount === 1 ? '' : 's'}`}
-                    >
-                      {openEscalationsCount}
-                    </span>
-                  )}
                 </button>
               </li>
             );

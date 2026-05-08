@@ -128,7 +128,7 @@ Autonomous end-to-end strategy construction from governor input.
 
 6. Write `strategy/hypotheses.md` with complete register (sections 1-7). Leave sections 8 (Destruction Log) and 9 (Gap Ledger) for Gap Definer.
 
-7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to `execution/queue/strategist-escalations.md` (overwrite; no date in filename).
+7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to `execution/queue/strategist-escalations.md` (overwrite; no date in filename). **Escalation ID format:** always `E-NN` (two-digit zero-padded, e.g. E-05, E-06). Never use `Esc-N`. Check the highest existing ID in `## 9. Governor Escalations` of `gap-analysis.md` and increment by one.
 
 8. Report to governor: what was researched, what survived, what was eliminated and why, what the governor needs to do next, and that Gap Definer should run next to validate.
 

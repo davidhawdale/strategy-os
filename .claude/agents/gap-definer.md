@@ -280,6 +280,8 @@ Shared governor protocol (classification, format, quality standard,
 bright lines, response handling) is defined in CLAUDE.md system
 instructions. Follow that protocol for all escalations.
 
+**Escalation ID format:** always `E-NN` (two-digit zero-padded sequential, e.g. E-03, E-04). Never use `Esc-N`. Check the highest existing ID in `## 9. Governor Escalations` of `gap-analysis.md` and increment. See gap-enforcing-decisions/SKILL.md — Escalation ID Convention.
+
 ---
 
 ## Prerequisites

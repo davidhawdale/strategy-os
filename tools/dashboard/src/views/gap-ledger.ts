@@ -17,6 +17,7 @@ export function computeGapLedgerView(
     // Map GapRecord -> GapLedgerEntry
     for (const g of gapAnalysis.rankedGaps) {
       topGaps.push({
+        id: g.id,
         rank: g.rank,
         target: g.target,
         dimension: g.dimension,
@@ -63,10 +64,20 @@ export function computeGapLedgerView(
   const scaleReady = register.gapLedger?.scaleReady ?? register.metadata.scaleReady;
 
   // Full gap records from gap analysis
-  const fullGapRecords: GapRecord[] | undefined =
+  let fullGapRecords: GapRecord[] | undefined =
     gapAnalysis && gapAnalysis.fullGapRecords.length > 0
       ? gapAnalysis.fullGapRecords
       : undefined;
+
+  // Supplement with ranked-table data for any gap absent from section 4,
+  // so the page is complete even if section 4 was written without all records.
+  if (gapAnalysis) {
+    const fullRecordIds = new Set(fullGapRecords?.map(g => g.id).filter(Boolean));
+    const supplementary = gapAnalysis.rankedGaps.filter(g => g.id && !fullRecordIds.has(g.id));
+    if (supplementary.length > 0) {
+      fullGapRecords = [...(fullGapRecords ?? []), ...supplementary];
+    }
+  }
 
   return {
     topGaps,

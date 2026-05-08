@@ -230,7 +230,7 @@ function parseFullGapRecords(text: string): GapRecord[] {
   const gapBlocks = text.split(/(?=###\s+Gap:\s*)/i);
 
   for (const block of gapBlocks) {
-    const idMatch = block.match(/###\s+Gap:\s*(.+)/i);
+    const idMatch = block.match(/###\s+Gap:\s*([A-Z]-\d+)/i);
     if (!idMatch) continue;
 
     const id = idMatch[1].trim();
@@ -509,6 +509,7 @@ function parseGovernorEscalations(text: string): Escalation[] {
       if (upper === 'VALUES') decisionType = 'VALUES';
       else if (upper === 'GROUND_TRUTH') decisionType = 'GROUND_TRUTH';
       else if (upper === 'JUDGMENT') decisionType = 'JUDGMENT';
+      else if (upper === 'STRATEGIST_CLARIFICATION') decisionType = 'STRATEGIST_CLARIFICATION';
     }
 
     const blastRaw = extractDashField(block, 'Blast Radius');
@@ -524,6 +525,9 @@ function parseGovernorEscalations(text: string): Escalation[] {
     const whySystemCannotDecide = extractDashField(block, 'Why System Cannot Decide');
     const systemRecommendation = extractDashField(block, 'System Recommendation');
     const whatIsAtStake = extractDashField(block, 'What Is at Stake');
+
+    const queueMatch = block.match(/-\s*See queue files?\s+(.+)/i);
+    const queueFileNote = queueMatch ? queueMatch[1].trim() : undefined;
 
     const statusRaw = extractDashField(block, 'Status') || 'OPEN';
     const status: 'OPEN' | 'RESOLVED' = statusRaw.toUpperCase() === 'RESOLVED' ? 'RESOLVED' : 'OPEN';
@@ -551,6 +555,7 @@ function parseGovernorEscalations(text: string): Escalation[] {
       options,
       systemRecommendation,
       whatIsAtStake,
+      queueFileNote,
       status,
     });
   }
@@ -583,9 +588,12 @@ function parseNextCyclePlan(text: string): NextCyclePlan {
 
 function extractDashField(text: string, label: string): string | undefined {
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp(`-\\s*\\*\\*${escaped}:\\*\\*\\s*(.+)`, 'i');
-  const match = text.match(pattern);
-  return match ? match[1].trim() : undefined;
+  // Prefer bold format: - **Label:** value (used in gap record sections)
+  const boldMatch = text.match(new RegExp(`-\\s*\\*\\*${escaped}:\\*\\*\\s*(.+)`, 'i'));
+  if (boldMatch) return boldMatch[1].trim();
+  // Fall back to plain format: - Label: value (used in escalation sections)
+  const plainMatch = text.match(new RegExp(`-\\s*${escaped}:\\s*(.+)`, 'i'));
+  return plainMatch ? plainMatch[1].trim() : undefined;
 }
 
 function extractBulletList(text: string): string[] {
