@@ -6,25 +6,37 @@ import type {
   ParseWarning,
 } from '../model/types';
 
+function parseYamlFrontmatter(text: string): Record<string, string> {
+  const match = text.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return {};
+  const result: Record<string, string> = {};
+  for (const line of match[1].split('\n')) {
+    const kv = line.match(/^(\w[\w_]*):\s*(.+)/);
+    if (kv) result[kv[1].toLowerCase()] = kv[2].trim();
+  }
+  return result;
+}
+
 export function parseMetadata(text: string): { metadata: RegisterMetadata; warnings: ParseWarning[] } {
   const warnings: ParseWarning[] = [];
+  const yaml = parseYamlFrontmatter(text);
 
-  const created = extractSimple(text, /^Created:\s*(.+)/m);
+  const created = extractSimple(text, /^Created:\s*(.+)/m) ?? yaml['date'];
   const lastReviewed = extractSimple(text, /^Last Reviewed:\s*(.+)/m);
 
-  const businessModeRaw = extractSimple(text, /^Business Mode:\s*(\w+)/m);
+  const businessModeRaw = extractSimple(text, /^Business Mode:\s*(\w+)/m) ?? yaml['business_mode'];
   const businessMode = parseBusinessMode(businessModeRaw);
 
-  const buildMethodRaw = extractSimple(text, /^Build Method:\s*(.+)/m);
+  const buildMethodRaw = extractSimple(text, /^Build Method:\s*(.+)/m) ?? yaml['build_method'];
   const buildMethod = parseBuildMethod(buildMethodRaw);
 
-  const systemModeRaw = extractSimple(text, /^System Mode:\s*(\w+)/m);
+  const systemModeRaw = extractSimple(text, /^System Mode:\s*(\w+)/m) ?? yaml['mode'];
   const systemMode = parseSystemMode(systemModeRaw);
 
-  const sellReadyRaw = extractSimple(text, /^Sell Ready:\s*(yes|no|true|false)/mi);
+  const sellReadyRaw = extractSimple(text, /^Sell Ready:\s*(yes|no|true|false)/mi) ?? yaml['sell_ready'];
   const sellReady = sellReadyRaw?.toLowerCase() === 'yes' || sellReadyRaw?.toLowerCase() === 'true';
 
-  const scaleReadyRaw = extractSimple(text, /^Scale Ready:\s*(yes|no|true|false)/mi);
+  const scaleReadyRaw = extractSimple(text, /^Scale Ready:\s*(yes|no|true|false)/mi) ?? yaml['scale_ready'];
   const scaleReady = scaleReadyRaw?.toLowerCase() === 'yes' || scaleReadyRaw?.toLowerCase() === 'true';
 
   const registerVersionRaw = extractSimple(text, /^Register Version:\s*(\d+)/m);

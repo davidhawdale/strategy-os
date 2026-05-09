@@ -39,6 +39,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [rawQueueText, setRawQueueText] = useState<string | null>(null);
   const [onboardingDismissed, setOnboardingDismissed] = useState(false);
+  const [buildTriggered, setBuildTriggered] = useState(false);
 
   const fetchData = useCallback(async () => {
     dispatch({ _tag: 'FetchStart' });
@@ -88,6 +89,12 @@ function App() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (!buildTriggered) return;
+    const id = setInterval(fetchData, 5000);
+    return () => clearInterval(id);
+  }, [buildTriggered, fetchData]);
+
   const handleSelectPanel = useCallback((panel: PanelId) => {
     dispatch({ _tag: 'SelectPanel', panel });
   }, []);
@@ -103,6 +110,16 @@ function App() {
   const handleRefresh = useCallback(() => {
     dispatch({ _tag: 'Refresh' });
     fetchData();
+  }, [fetchData]);
+
+  const handleReset = useCallback(async () => {
+    if (!window.confirm('Danger Will Robinson — this will delete problem.md, reset both strategy files, and clear the execution queue. Continue?')) return;
+    const res = await fetch('/api/reset', { method: 'POST' });
+    if (res.ok) {
+      setOnboardingDismissed(false);
+      setBuildTriggered(false);
+      fetchData();
+    }
   }, [fetchData]);
 
   const handleGenerate = useCallback(async (seed: RegisterSeed) => {
@@ -135,6 +152,7 @@ function App() {
 
     if (problemRes.ok) {
       setOnboardingDismissed(true);
+      setBuildTriggered(true);
       fetchData();
       fetch('/api/build', { method: 'POST' }).catch(() => {});
     }
@@ -175,6 +193,10 @@ function App() {
 
   const showOnboarding = !onboardingDismissed;
 
+  // Stop polling once the register has real content (created date is no longer a placeholder)
+  const registerIsBuilt = !!(register.metadata.created && !register.metadata.created.includes('{'));
+  if (buildTriggered && registerIsBuilt) setBuildTriggered(false);
+
   // Parse completeness: average of both (gap analysis may be 0 if not present)
   const parseCompleteness = gapAnalysis
     ? (data.registerParseCompleteness + data.gapAnalysisParseCompleteness) / 2
@@ -194,6 +216,14 @@ function App() {
         </div>
       )}
 
+      {buildTriggered && (
+        <div className="build-banner" role="status" aria-live="polite">
+          Build in progress — watch the terminal running <code>npm run dev</code>.
+          This page will refresh automatically when the register is ready.
+          <button className="build-banner__dismiss" onClick={() => setBuildTriggered(false)}>Dismiss</button>
+        </div>
+      )}
+
       {showOnboarding && (
         <OnboardingDialog
           onDismiss={() => setOnboardingDismissed(true)}
@@ -208,6 +238,7 @@ function App() {
         activePanel={activePanel}
         onSelectPanel={handleSelectPanel}
         onRefresh={handleRefresh}
+        onReset={handleReset}
         hasGapAnalysis={!!gapAnalysis}
       />
 

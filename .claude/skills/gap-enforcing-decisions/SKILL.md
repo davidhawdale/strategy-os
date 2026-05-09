@@ -226,8 +226,8 @@ Compile all rule application results into:
 
 1. **State changes:** list of confidence/support state reclassifications with rationale.
 2. **sell_ready / scale_ready flags** with per-condition breakdown.
-3. **Execution queue:** top-3 gap-reduction tasks (valid per execution rule).
-4. **Governor escalations:** for values decisions, judgment calls, and ground-truth blockers that the system cannot resolve. Each escalation must include: decision needed, decision type, why system cannot decide, options with consequences, recommendation if any, what is at stake.
+3. **Execution queue:** top-3 gap-reduction tasks (valid per execution rule). Write to `execution/queue/gap-definer-actions.md` — one consolidated file, all tasks in priority order. Do NOT create one file per task.
+4. **Governor escalations:** for values decisions, judgment calls, and ground-truth blockers that the system cannot resolve. Each escalation must include: decision needed, decision type, why system cannot decide, options with consequences, recommendation if any, what is at stake. Write to `execution/queue/strategist-escalations.md` — one consolidated file, all escalations. Do NOT create one file per escalation.
 5. **Blocks:** list of blocked execution paths with rationale.
 
 **Gate:** `outputs_complete: bool` -- all five output categories populated (even if empty with "none").

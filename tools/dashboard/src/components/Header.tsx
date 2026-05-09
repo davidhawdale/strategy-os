@@ -7,6 +7,7 @@ interface Props {
   activePanel: PanelId;
   onSelectPanel: (panel: PanelId) => void;
   onRefresh: () => void;
+  onReset?: () => void;
   hasGapAnalysis: boolean;
 }
 
@@ -36,6 +37,7 @@ export function Header({
   activePanel,
   onSelectPanel,
   onRefresh,
+  onReset,
   hasGapAnalysis,
 }: Props) {
   const completenessPercent = Math.round(parseCompleteness * 100);
@@ -88,6 +90,11 @@ export function Header({
           <button className="header__refresh" onClick={onRefresh} aria-label="Refresh data">
             Refresh
           </button>
+          {onReset && (
+            <button className="header__reset" onClick={onReset} aria-label="Reset to blank state">
+              Start Over
+            </button>
+          )}
         </div>
       </div>
 

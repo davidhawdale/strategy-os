@@ -34,23 +34,19 @@ function triggerBuild(urlPath: string, root: string) {
           res.end('Method not allowed')
           return
         }
-        try {
-          const skillPath = path.join(root, '.claude', 'skills', 'stg-build-register', 'SKILL.md')
-          const seedPath = path.join(root, 'strategy', 'problem.md')
-          const skill = fs.readFileSync(skillPath, 'utf-8')
-          const seed = fs.readFileSync(seedPath, 'utf-8')
-          const prompt = `${skill}\n\n---\n\n${seed}\n\nbuild`
-          spawn('claude', ['-p', prompt], {
-            cwd: root,
-            detached: true,
-            stdio: 'inherit',
-          }).unref()
-          res.statusCode = 202
-          res.end('Build triggered')
-        } catch {
-          res.statusCode = 500
-          res.end('Build trigger failed')
-        }
+        const proc = spawn('/bin/bash', ['-l', '-c', 'claude -p "Run the stg-build-register skill."'], {
+          cwd: root,
+          detached: true,
+          stdio: ['ignore', 'inherit', 'inherit'],
+        })
+        proc.on('error', err => {
+          console.error(`\n[stg-build] Spawn failed: ${err.message}`)
+          console.error('[stg-build] Is claude in your PATH? Run: which claude')
+        })
+        console.log(`\n[stg-build] Build started (PID ${proc.pid}) — watch this terminal`)
+        proc.unref()
+        res.statusCode = 202
+        res.end('Build triggered')
       })
     },
   }
@@ -84,6 +80,46 @@ function writeStrategyFile(urlPath: string, filePath: string) {
   }
 }
 
+function resetStrategy(urlPath: string, root: string) {
+  return {
+    name: 'reset-strategy',
+    configureServer(server: import('vite').ViteDevServer) {
+      server.middlewares.use(urlPath, (req: import('http').IncomingMessage, res: import('http').ServerResponse) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405
+          res.end('Method not allowed')
+          return
+        }
+        try {
+          const problemPath = path.join(root, 'strategy', 'problem.md')
+          if (fs.existsSync(problemPath)) fs.unlinkSync(problemPath)
+
+          fs.copyFileSync(
+            path.join(root, 'templates', 'hypotheses.md'),
+            path.join(root, 'strategy', 'hypotheses.md'),
+          )
+          fs.copyFileSync(
+            path.join(root, 'templates', 'gap-analysis.md'),
+            path.join(root, 'strategy', 'gap-analysis.md'),
+          )
+
+          const queueDir = path.join(root, 'execution', 'queue')
+          for (const file of fs.readdirSync(queueDir)) {
+            if (file !== '.gitkeep') fs.unlinkSync(path.join(queueDir, file))
+          }
+
+          res.statusCode = 200
+          res.end('Reset complete')
+        } catch (err) {
+          console.error('[reset] Failed:', err)
+          res.statusCode = 500
+          res.end('Reset failed')
+        }
+      })
+    },
+  }
+}
+
 export default defineConfig({
   plugins: [
     react(),
@@ -93,5 +129,6 @@ export default defineConfig({
     serveStrategyFile('/problem.md', path.join(projectRoot, 'strategy', 'problem.md')),
     writeStrategyFile('/api/problem', path.join(projectRoot, 'strategy', 'problem.md')),
     triggerBuild('/api/build', projectRoot),
+    resetStrategy('/api/reset', projectRoot),
   ],
 })

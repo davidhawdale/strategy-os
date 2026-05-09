@@ -242,15 +242,46 @@ function parseUnitEconomicsExtensions(
       }
     }
 
-    // Mode thresholds
-    if (headers.some(h => /Metric/i.test(h)) && headers.some(h => /Required/i.test(h))) {
+    // Mode thresholds (heading col may be "Metric" or "Threshold")
+    if ((headers.some(h => /Metric/i.test(h)) || headers.some(h => /Threshold/i.test(h))) && headers.some(h => /Required/i.test(h))) {
       hypothesis.modeThresholds = parseModeThresholdsTable(table);
+    }
+
+    // Scenario table: Scenario | Subs | ARPU | Revenue | Costs | Contribution | Verdict
+    if (headers.some(h => /^Scenario$/i.test(h.trim())) && headers.some(h => /Verdict/i.test(h))) {
+      const scenarioMap: Record<string, ScenarioEntry> = {};
+      for (const row of rows.slice(1)) {
+        const name = (row[0] || '').toLowerCase().trim();
+        if (!name || name.startsWith('-') || name.startsWith('|')) continue;
+        scenarioMap[name] = {
+          subs:         row[1] || undefined,
+          arpu:         row[2] || undefined,
+          revenue:      row[3] || undefined,
+          costs:        row[4] || undefined,
+          contribution: row[5] || undefined,
+          narrative:    row[6] || row[row.length - 1] || '',
+        };
+      }
+      const result: ScenarioAnalysis = {};
+      const opt  = Object.entries(scenarioMap).find(([k]) => k.includes('optimistic'));
+      const base = Object.entries(scenarioMap).find(([k]) => k.includes('base'));
+      const pess = Object.entries(scenarioMap).find(([k]) => k.includes('pessimistic'));
+      const kill = Object.entries(scenarioMap).find(([k]) => k.includes('kill'));
+      if (opt)  result.optimistic  = opt[1];
+      if (base) result.base        = base[1];
+      if (pess) result.pessimistic = pess[1];
+      if (kill) result.kill        = kill[1].narrative;
+      if (result.optimistic || result.base || result.pessimistic) {
+        hypothesis.scenarioAnalysis = result;
+      }
     }
 
   }
 
-  // Scenario analysis
-  hypothesis.scenarioAnalysis = parseScenarioAnalysis(text);
+  // Scenario analysis (text-based fallback — only if table parsing didn't find data)
+  if (!hypothesis.scenarioAnalysis) {
+    hypothesis.scenarioAnalysis = parseScenarioAnalysis(text);
+  }
 }
 
 function parseChannelStrategyMetadata(text: string): Omit<ChannelStrategy, 'channels'> {

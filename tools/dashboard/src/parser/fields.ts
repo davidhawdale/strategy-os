@@ -26,12 +26,23 @@ const ASSUMPTION_STATUSES: Set<string> = new Set(['OPEN', 'TESTING', 'RESOLVED_T
 
 export function extractField(text: string, fieldName: string): string | undefined {
   const escaped = fieldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp(
-    `\\*\\*${escaped}:\\*\\*\\s*(.+(?:\\n(?!\\*\\*|---).*)*)`,
-    'm'
-  );
-  const match = text.match(pattern);
-  return match ? match[1].trim() : undefined;
+
+  // Bold field: **fieldName:** value
+  const boldPattern = new RegExp(`\\*\\*${escaped}:\\*\\*\\s*(.+(?:\\n(?!\\*\\*|---).*)*)`, 'm');
+  const boldMatch = text.match(boldPattern);
+  if (boldMatch) return boldMatch[1].trim();
+
+  // H3 heading fallback: ### fieldName\ncontent
+  const h3Pattern = new RegExp(`^###\\s+${escaped}\\s*$`, 'im');
+  const h3Match = text.match(h3Pattern);
+  if (h3Match && h3Match.index !== undefined) {
+    const rest = text.substring(h3Match.index + h3Match[0].length).replace(/^\n+/, '');
+    const endMatch = rest.match(/\n###\s|\n##\s|\n---/);
+    const snippet = rest.substring(0, endMatch?.index ?? rest.length).trim();
+    return snippet || undefined;
+  }
+
+  return undefined;
 }
 
 export function extractBoldField(text: string, fieldName: string): string | undefined {
@@ -129,9 +140,10 @@ export function extractEvidenceItems(text: string, sectionName: string): { items
     if (!trimmed.startsWith('-')) continue;
     if (trimmed.startsWith('->') || trimmed.startsWith('- >')) continue;
 
-    const raw = trimmed.replace(/^-\s*/, '');
+    const cleanedLine = trimmed.replace(/`/g, '');
+    const raw = cleanedLine.replace(/^-\s*/, '');
 
-    const structuredMatch = trimmed.match(
+    const structuredMatch = cleanedLine.match(
       /^-\s*\[(\w+(?:_\w+)*)\]\s*\[([T][123])\]\s*(\d{4}-\d{2}-\d{2})\s*--\s*(.+)/
     );
 
@@ -163,7 +175,13 @@ export function extractEvidenceItems(text: string, sectionName: string): { items
         detail,
       });
     } else {
-      items.push({ raw, detail: raw });
+      const mdLink = raw.match(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/);
+      items.push({
+        raw,
+        source: mdLink ? mdLink[1] : undefined,
+        url: mdLink ? mdLink[2] : undefined,
+        detail: mdLink ? raw.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/, '$1').trim() : raw,
+      });
       warnings.push({
         section: sectionName,
         field: 'evidence',
@@ -235,12 +253,65 @@ export function extractResearchSources(text: string, _sectionName: string): { it
   return { items, warnings };
 }
 
+function parseTableAssumptions(block: string, _sectionName: string): { items: Assumption[]; warnings: ParseWarning[] } {
+  const items: Assumption[] = [];
+  const tableLines = block.split('\n').filter(l => l.trim().startsWith('|'));
+  if (tableLines.length < 3) return { items, warnings: [] };
+
+  const headerCells = tableLines[0].split('|').slice(1, -1).map(c => c.trim().toLowerCase());
+  const col = (name: string) => headerCells.findIndex(h => h.includes(name));
+  const cols = {
+    classification: col('classification'),
+    tier:           col('tier'),
+    claim:          col('claim'),
+    loadBearing:    col('load'),
+    blast:          col('blast'),
+    falsification:  col('falsification'),
+    validation:     col('validation'),
+    status:         col('status'),
+  };
+
+  for (let i = 2; i < tableLines.length; i++) {
+    const cells = tableLines[i].split('|').slice(1, -1).map(c => c.trim());
+    const get = (idx: number) => (idx >= 0 && idx < cells.length ? cells[idx] : '');
+
+    const claim = get(cols.claim);
+    if (!claim || claim.startsWith('-')) continue;
+
+    const classRaw = get(cols.classification).toLowerCase();
+    const tag: EpistemicTag | undefined =
+      classRaw === 'belief' ? 'B' : classRaw === 'knowledge' ? 'K' : classRaw === 'observation' ? 'O' : undefined;
+
+    const tierRaw = get(cols.tier).toUpperCase();
+    const tier = TIERS.has(tierRaw) ? (tierRaw as EpistemicTier) : undefined;
+
+    const loadBearing = get(cols.loadBearing).toLowerCase() === 'yes';
+
+    const blastRaw = get(cols.blast).toUpperCase();
+    const blastRadius = BLAST_RADII.has(blastRaw) ? (blastRaw as BlastRadius) : undefined;
+
+    const falsification = get(cols.falsification) || undefined;
+    const validation    = get(cols.validation) || undefined;
+
+    const statusRaw = get(cols.status).toUpperCase().replace(/\s+/g, '_');
+    const status = ASSUMPTION_STATUSES.has(statusRaw) ? (statusRaw as AssumptionStatus) : undefined;
+
+    items.push({ raw: tableLines[i].trim(), tag, tier, claim, loadBearing, blastRadius, falsification, validation, status });
+  }
+
+  return { items, warnings: [] };
+}
+
 export function extractAssumptions(text: string, sectionName: string): { items: Assumption[]; warnings: ParseWarning[] } {
   const items: Assumption[] = [];
   const warnings: ParseWarning[] = [];
 
   const block = extractBlockAfterLabel(text, 'Assumptions');
   if (!block) return { items, warnings };
+
+  if (block.split('\n').some(l => l.trim().startsWith('|'))) {
+    return parseTableAssumptions(block, sectionName);
+  }
 
   const lines = block.split('\n');
   let currentAssumption: Partial<Assumption> & { raw: string; claim: string } | null = null;
@@ -345,17 +416,26 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
 
 export function extractBlockAfterLabel(text: string, label: string): string | null {
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp(`\\*\\*${escaped}:\\*\\*`, 'im');
-  const match = text.match(pattern);
-  if (!match || match.index === undefined) return null;
 
-  const startIndex = match.index + match[0].length;
-  const rest = text.substring(startIndex);
+  // Bold label: **Label:**
+  const boldPattern = new RegExp(`\\*\\*${escaped}:\\*\\*`, 'im');
+  const boldMatch = text.match(boldPattern);
+  if (boldMatch && boldMatch.index !== undefined) {
+    const rest = text.substring(boldMatch.index + boldMatch[0].length);
+    const endMatch = rest.match(/\n\*\*[A-Z][^*]+:\*\*|\n---|\n##\s/);
+    return rest.substring(0, endMatch?.index ?? rest.length);
+  }
 
-  const endMatch = rest.match(/\n\*\*[A-Z][^*]+:\*\*|\n---|\n##\s/);
-  const endIndex = endMatch?.index ?? rest.length;
+  // H3 heading fallback: ### Label (allow optional subtitle after the label)
+  const h3Pattern = new RegExp(`^###\\s+${escaped}\\b[^\\n]*`, 'im');
+  const h3Match = text.match(h3Pattern);
+  if (h3Match && h3Match.index !== undefined) {
+    const rest = text.substring(h3Match.index + h3Match[0].length);
+    const endMatch = rest.match(/\n###\s|\n##\s|\n---/);
+    return rest.substring(0, endMatch?.index ?? rest.length);
+  }
 
-  return rest.substring(0, endIndex);
+  return null;
 }
 
 export function extractPossibilitySpace(text: string): PossibilitySpace | undefined {
@@ -371,8 +451,8 @@ export function extractPossibilitySpace(text: string): PossibilitySpace | undefi
   if (consideredBlock) {
     for (const line of consideredBlock.split('\n')) {
       const trimmed = line.trim();
-      if (trimmed.startsWith('-')) {
-        const item = trimmed.replace(/^-\s*/, '');
+      if (trimmed.match(/^[-*]|\d+\./)) {
+        const item = trimmed.replace(/^(?:\d+\.|[-*])\s*/, '');
         if (item && !item.startsWith('{')) considered.push(item);
       }
     }
@@ -420,14 +500,16 @@ export function extractPossibilitySpace(text: string): PossibilitySpace | undefi
 }
 
 function extractSubBlock(text: string, label: string): string | null {
-  const pattern = new RegExp(`-\\s*${label}:?\\s*\\n`, 'i');
+  // Match either bold heading (**Label:**) or dash-prefixed (- Label:)
+  const pattern = new RegExp(`(?:\\*\\*${label}:?\\*\\*|-\\s*${label}:?)\\s*\\n`, 'i');
   const match = text.match(pattern);
   if (!match || match.index === undefined) return null;
 
   const start = match.index + match[0].length;
   const rest = text.substring(start);
 
-  const endMatch = rest.match(/\n\s*-\s*(Considered|Eliminated|Alternatives carried):?\s*\n/i);
+  // End at next bold heading or dash-prefixed heading
+  const endMatch = rest.match(/\n\s*(?:\*\*(?:Considered|Eliminated|Alternatives carried):?\*\*|-\s*(?:Considered|Eliminated|Alternatives carried):?)\s*\n/i);
   const endIndex = endMatch?.index ?? rest.length;
 
   return rest.substring(0, endIndex);

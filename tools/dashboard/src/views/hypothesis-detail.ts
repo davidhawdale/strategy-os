@@ -69,6 +69,10 @@ export function computeHypothesisDetail(
     whyNow: (h as any).whyNow,
     workarounds: (h as any).workarounds,
     jobs: vp?.jobs,
+    costStructure: (h as any).costStructure,
+    channelStrategy: (h as any).channelStrategy,
+    modeThresholds: (h as any).modeThresholds,
+    scenarioAnalysis: (h as any).scenarioAnalysis,
     relatedGaps: relatedGaps && relatedGaps.length > 0 ? relatedGaps : undefined,
   };
 }

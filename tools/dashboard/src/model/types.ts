@@ -457,6 +457,7 @@ export interface ModeThreshold {
   required: string;
   estimate: string;
   tier?: EpistemicTier;
+  passFail?: string;
   source?: string;
 }
 
@@ -472,6 +473,11 @@ export interface ScenarioEntry {
   paybackMonthsRange?: string;
   grossMarginRange?: string;
   narrative: string;
+  subs?: string;
+  arpu?: string;
+  revenue?: string;
+  costs?: string;
+  contribution?: string;
 }
 
 // ============================================================
@@ -1004,9 +1010,9 @@ export interface ExecutionQueueView {
 
 export type AppState =
   | { _tag: 'Loading' }
-  | { _tag: 'Loaded'; data: CombinedParseResult; activePanel: PanelId; selectedHypothesis?: HypothesisId }
+  | { _tag: 'Loaded'; data: CombinedParseResult; activePanel: PanelId; selectedHypothesis?: HypothesisId; previousPanel?: PanelId }
   | { _tag: 'Error'; message: string }
-  | { _tag: 'Stale'; data: CombinedParseResult; activePanel: PanelId; selectedHypothesis?: HypothesisId; error: string };
+  | { _tag: 'Stale'; data: CombinedParseResult; activePanel: PanelId; selectedHypothesis?: HypothesisId; previousPanel?: PanelId; error: string };
 
 export type AppEvent =
   | { _tag: 'FetchStart' }
@@ -1034,9 +1040,9 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'SelectPanel':
           return { ...state, activePanel: event.panel, selectedHypothesis: undefined };
         case 'SelectHypothesis':
-          return { ...state, activePanel: 'detail', selectedHypothesis: event.id };
+          return { ...state, activePanel: 'detail', selectedHypothesis: event.id, previousPanel: state.activePanel };
         case 'Back':
-          return { ...state, activePanel: 'queue', selectedHypothesis: undefined };
+          return { ...state, activePanel: state.previousPanel ?? 'readiness', selectedHypothesis: undefined };
         case 'Refresh':
           return { _tag: 'Loading' };
         case 'FetchError':
@@ -1064,9 +1070,9 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'SelectPanel':
           return { ...state, activePanel: event.panel, selectedHypothesis: undefined };
         case 'SelectHypothesis':
-          return { ...state, activePanel: 'detail', selectedHypothesis: event.id };
+          return { ...state, activePanel: 'detail', selectedHypothesis: event.id, previousPanel: state.activePanel };
         case 'Back':
-          return { ...state, activePanel: 'queue', selectedHypothesis: undefined };
+          return { ...state, activePanel: state.previousPanel ?? 'readiness', selectedHypothesis: undefined };
         default:
           return state;
       }

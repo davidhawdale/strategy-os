@@ -92,11 +92,12 @@ export function parseModeThresholdsTable(table: Table): ModeThreshold[] {
   if (rows.length < 2) return [];
 
   return rows.slice(1).map(row => ({
-    metric: row[0] || '',
+    metric:   row[0] || '',
     required: row[1] || '',
     estimate: row[2] || '',
-    tier: parseTier(row[3] || ''),
-    source: row[4] || undefined,
+    tier:     parseTier(row[3] || ''),
+    passFail: row[3] || undefined,
+    source:   row[4] || undefined,
   }));
 }
 
