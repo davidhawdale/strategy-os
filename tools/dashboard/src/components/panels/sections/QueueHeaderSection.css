@@ -1,0 +1,85 @@
+.queue-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
+}
+
+.queue-header__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.queue-header__title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.queue-header__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.queue-header__meta-item {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.queue-header__readiness {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.queue-header__readiness--yes {
+  background: color-mix(in srgb, var(--color-passes) 15%, transparent);
+  color: var(--color-passes);
+}
+
+.queue-header__readiness--no {
+  background: color-mix(in srgb, var(--color-fails) 15%, transparent);
+  color: var(--color-fails);
+}
+
+.queue-decision-badge {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.queue-decision--go {
+  background: color-mix(in srgb, var(--color-passes) 20%, transparent);
+  color: var(--color-passes);
+  border: 1px solid color-mix(in srgb, var(--color-passes) 40%, transparent);
+}
+
+.queue-decision--no-go {
+  background: color-mix(in srgb, var(--color-fails) 20%, transparent);
+  color: var(--color-fails);
+  border: 1px solid color-mix(in srgb, var(--color-fails) 40%, transparent);
+}
+
+.queue-decision--conditional {
+  background: color-mix(in srgb, var(--color-warn) 20%, transparent);
+  color: var(--color-warn);
+  border: 1px solid color-mix(in srgb, var(--color-warn) 40%, transparent);
+}
+
+.queue-decision--blocked {
+  background: color-mix(in srgb, var(--color-fails) 20%, transparent);
+  color: var(--color-fails);
+  border: 1px solid color-mix(in srgb, var(--color-fails) 40%, transparent);
+}

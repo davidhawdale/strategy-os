@@ -1,0 +1,103 @@
+.mvp-scope-section {
+  margin-bottom: var(--space-6);
+}
+
+.mvp-scope-card {
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.mvp-scope-zone + .mvp-scope-zone,
+.mvp-scope-zone + .mvp-scope-signals {
+  margin-top: var(--space-4);
+}
+
+.mvp-scope-zone__label {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-muted);
+}
+
+.mvp-scope-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.mvp-scope-list li {
+  position: relative;
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--color-on-surface);
+  line-height: var(--leading-relaxed);
+}
+
+.mvp-scope-list li::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: var(--weight-bold);
+}
+
+.mvp-scope-list--included li::before {
+  content: '+';
+  color: var(--color-passes);
+}
+
+.mvp-scope-list--excluded li::before {
+  content: '-';
+  color: var(--color-on-surface-subtle);
+}
+
+.mvp-scope-list--excluded li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.mvp-scope-list--excluded span {
+  color: var(--color-on-surface-muted);
+  font-size: var(--text-xs);
+}
+
+.mvp-scope-signals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.mvp-scope-signals p {
+  margin: 0;
+  padding: var(--space-3);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.mvp-scope-signals strong,
+.mvp-scope-signals span {
+  display: block;
+}
+
+.mvp-scope-signals strong {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-muted);
+}
+
+.mvp-scope-signals span {
+  font-size: var(--text-sm);
+  color: var(--color-on-surface);
+  line-height: var(--leading-relaxed);
+}

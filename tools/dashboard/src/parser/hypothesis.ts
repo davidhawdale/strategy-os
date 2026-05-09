@@ -49,7 +49,9 @@ export function parseHypothesis(
 
   // Core fields
   const claim = extractField(text, 'Claim');
-  const confidenceRaw = extractField(text, 'Confidence');
+  const confidenceRaw = (extractField(text, 'Confidence State') ?? extractField(text, 'Confidence'))
+    ?.split('\n')[0]
+    .trim();
   const confidence = confidenceRaw && CONFIDENCE_VALUES.has(confidenceRaw.toUpperCase())
     ? (confidenceRaw.toUpperCase() as ConfidenceState)
     : undefined;

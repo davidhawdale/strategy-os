@@ -1,0 +1,18 @@
+.jobs-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  font-size: var(--text-sm);
+  width: 100%;
+}
+
+.jobs-list dt {
+  font-weight: var(--weight-semibold);
+  color: var(--color-on-surface);
+}
+
+.jobs-list dd {
+  margin: 0;
+  color: var(--color-on-surface-muted);
+}

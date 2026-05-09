@@ -1,0 +1,10 @@
+.observable-characteristics {
+  padding-left: var(--space-4);
+  margin: var(--space-2) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-on-surface);
+  width: 100%;
+}

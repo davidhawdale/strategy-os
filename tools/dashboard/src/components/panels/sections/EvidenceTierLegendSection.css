@@ -1,0 +1,56 @@
+.tier-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface-elevated);
+  border-radius: 10px;
+  border-left: 3px solid var(--border-subtle);
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.tier-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tier-legend__badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 1.25rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-top: 0.15em;
+}
+
+.tier-legend__badge--t1 {
+  background: var(--tier-1);
+  color: var(--bg-primary);
+}
+
+.tier-legend__badge--t2 {
+  background: var(--tier-2);
+  color: var(--bg-primary);
+}
+
+.tier-legend__badge--t3 {
+  background: var(--tier-3);
+  color: var(--bg-primary);
+}
+
+.tier-legend__text {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.tier-legend__text strong {
+  color: var(--text-primary);
+}

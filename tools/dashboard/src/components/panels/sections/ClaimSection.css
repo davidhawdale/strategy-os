@@ -1,0 +1,12 @@
+.claim-block {
+  font-size: var(--text-base);
+  font-style: italic;
+  color: var(--color-on-surface);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  border-left: 3px solid var(--color-confidence-researched);
+  background: var(--color-surface-raised);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  width: 100%;
+}

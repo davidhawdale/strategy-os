@@ -1,0 +1,54 @@
+.red-team-card {
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-fails);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.red-team-item--labelled {
+  padding: var(--space-3);
+  background: var(--color-fails-bg);
+  border: 1px solid var(--color-confidence-broken-border);
+  border-radius: var(--radius-md);
+}
+
+.red-team-item__label {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-fails);
+}
+
+.red-team-item__text,
+.red-team-item__paragraph,
+.red-team-item__list {
+  font-size: var(--text-sm);
+  color: var(--color-on-surface);
+  line-height: var(--leading-relaxed);
+}
+
+.red-team-item__text,
+.red-team-item__paragraph {
+  margin: 0;
+}
+
+.red-team-item__list {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.red-team-item__list li + li {
+  margin-top: var(--space-2);
+}
+
+.red-team-card strong {
+  color: var(--color-on-surface);
+  font-weight: var(--weight-bold);
+}

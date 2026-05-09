@@ -91,3 +91,31 @@ describe('mode thresholds — Threshold column', () => {
     expect(h.modeThresholds![1].passFail).toBe('Fail in base; risk');
   });
 });
+
+// ─── Confidence field variants ────────────────────────────────────────────
+
+describe('confidence field variants', () => {
+  it('parses legacy Confidence label', () => {
+    const h = parseUE('### Claim\n\nA unit economics claim.');
+    expect(h.confidence).toBe('RESEARCHED');
+  });
+
+  it('parses Confidence State label', () => {
+    const md = '## 3. Unit Economics\n\n**Confidence State:** RESEARCHED\n\n### Claim\n\nA unit economics claim.';
+    const sections = splitSections(md);
+    const section = sections.get('unitEconomics')!;
+    const h = parseHypothesis(section, 'unitEconomics').hypothesis;
+    expect(h.confidence).toBe('RESEARCHED');
+  });
+
+  it('does not infer evidence from unit economics tables without an Evidence section', () => {
+    const h = parseUE(`
+### Pricing Inputs
+
+| Input | Range | Tier | Source / basis |
+| --- | --- | --- | --- |
+| ARPU blended | £40-£75 | T2 | Regional benchmark |
+`);
+    expect(h.evidence).toHaveLength(0);
+  });
+});

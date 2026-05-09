@@ -1,0 +1,28 @@
+.destruction-section {
+  margin-bottom: var(--space-8);
+  width: 100%;
+}
+
+.inversion-summary {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.inversion-summary__item {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+}
+
+.inversion-summary__item--survives {
+  color: var(--color-passes);
+}
+
+.inversion-summary__item--fails {
+  color: var(--color-fails);
+}
+
+.inversion-summary__item--marginal {
+  color: var(--color-warning);
+}

@@ -1,0 +1,44 @@
+.queue-blocked-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.queue-blocked-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid color-mix(in srgb, var(--color-fails) 50%, transparent);
+}
+
+.queue-blocked-item__mark {
+  color: var(--color-fails);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.queue-blocked-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.queue-blocked-item__path {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-primary);
+}
+
+.queue-blocked-item__blocker {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}

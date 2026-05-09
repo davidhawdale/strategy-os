@@ -1,0 +1,54 @@
+.deadlines-table {
+  width: 100%;
+}
+
+.deadlines-empty {
+  color: var(--color-on-surface-muted);
+  font-size: var(--text-sm);
+  text-align: center;
+  padding: var(--space-8);
+}
+
+.deadlines-empty p {
+  margin: 0;
+}
+
+.deadline-status {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.deadline-status--open {
+  background: var(--color-surface-raised);
+  color: var(--color-on-surface-muted);
+  border: 1px solid var(--color-border);
+}
+
+.deadline-status--due {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.deadline-status--exceeded {
+  background: var(--color-fails-bg);
+  color: var(--color-fails);
+}
+
+.deadline-status--resolved {
+  background: var(--color-passes-bg);
+  color: var(--color-passes);
+}
+
+.deadlines-table__row--due {
+  background: var(--color-warning-bg);
+}
+
+.deadlines-table__row--exceeded {
+  background: var(--color-fails-bg);
+}
