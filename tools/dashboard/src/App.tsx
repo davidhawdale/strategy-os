@@ -5,8 +5,7 @@ import { transition } from './model/types';
 import { loadCombined } from './loader/index';
 import { Header } from './components/Header';
 import { OnboardingDialog } from './components/OnboardingDialog';
-import { generateSeedHypotheses } from './utils/generateSeedFile';
-import type { RegisterSeed } from './utils/generateSeedFile';
+import type { RegisterSeed } from './components/OnboardingDialog';
 import { ReadinessPanel } from './components/panels/ReadinessPanel';
 import { EvidencePanel } from './components/panels/EvidencePanel';
 import { RiskPanel } from './components/panels/RiskPanel';
@@ -83,6 +82,12 @@ function App() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    fetch('/problem.md')
+      .then(r => { if (r.ok) setOnboardingDismissed(true); })
+      .catch(() => {});
+  }, []);
+
   const handleSelectPanel = useCallback((panel: PanelId) => {
     dispatch({ _tag: 'SelectPanel', panel });
   }, []);
@@ -102,15 +107,36 @@ function App() {
 
   const handleGenerate = useCallback(async (seed: RegisterSeed) => {
     const today = new Date().toISOString().slice(0, 10);
-    const content = generateSeedHypotheses(seed, today);
-    const res = await fetch('/api/hypotheses', {
+    const constraints = seed.otherConstraints.trim() || 'None';
+    const content = [
+      '# Strategy Seed',
+      '',
+      `Date: ${today}`,
+      `Mode: ${seed.mode.toUpperCase()}`,
+      '',
+      '## Problem or Opportunity',
+      seed.problem,
+      '',
+      '## Goals',
+      seed.goals,
+      '',
+      '## Capabilities and Resources',
+      seed.capabilities,
+      '',
+      '## Other Constraints',
+      constraints,
+    ].join('\n');
+
+    const problemRes = await fetch('/api/problem', {
       method: 'POST',
       headers: { 'Content-Type': 'text/markdown' },
       body: content,
     });
-    if (res.ok) {
+
+    if (problemRes.ok) {
       setOnboardingDismissed(true);
       fetchData();
+      fetch('/api/build', { method: 'POST' }).catch(() => {});
     }
   }, [fetchData]);
 
@@ -147,10 +173,7 @@ function App() {
   const register = data.register;
   const gapAnalysis = data.gapAnalysis;
 
-  // Template placeholders contain '{' — real dates/values never do
-  const isTemplateRegister =
-    !register.metadata.created || register.metadata.created.includes('{');
-  const showOnboarding = !onboardingDismissed && isTemplateRegister;
+  const showOnboarding = !onboardingDismissed;
 
   // Parse completeness: average of both (gap analysis may be 0 if not present)
   const parseCompleteness = gapAnalysis

@@ -31,6 +31,21 @@ All evidence entries in the hypothesis register must follow this format:
 -   **Source** — `[Name](URL)` per the Citation Format above; for local files, the file path
 -   **Finding** — one sentence maximum. Analysis belongs in Update Rationale, not here.
 
+### Evidence Quality Scoring
+
+The dashboard Evidence panel scores each hypothesis's evidence using weighted evidence tiers.
+These are the canonical weights — update here and in `views/evidence-quality.ts` if they change.
+
+| Tier | Weight | Rationale |
+|------|--------|-----------|
+| T1   | 1.0    | Direct / ground-truth evidence — full strength |
+| T2   | 0.6    | Synthesised / research evidence — partial credit |
+| T3   | 0.2    | Assertion / unvalidated — near-zero credit |
+
+**Formula:** `qualityScore = (t1 × 1.0 + t2 × 0.6 + t3 × 0.2) / totalEvidence`
+
+Score range: 0 (no evidence) to 1.0 (all T1).
+
 ------------------------------------------------------------------------
 
 ## Escalation ID Convention
@@ -61,6 +76,19 @@ Each assumption entry in the hypothesis register must specify:
 6.  **Falsification condition** — what observable evidence would prove this wrong
 7.  **Validation method** — how this assumption will be tested
 8.  **Status** — `OPEN`, `TESTING`, `RESOLVED_TRUE`, or `RESOLVED_FALSE`
+
+### Assumption Risk Classification
+
+The dashboard Risk Map classifies each assumption into a risk level using three properties
+already required above: load-bearing status, blast radius, and evidence tier.
+These rules are the canonical reference — update here and in `views/risk-map.ts` if they change.
+
+| Risk Level | Conditions |
+|------------|------------|
+| critical   | Load-bearing AND blast radius HIGH AND tier T3 |
+| high       | Load-bearing AND (blast radius HIGH OR tier T3) — not already critical |
+| medium     | Load-bearing AND blast radius MEDIUM |
+| low        | All other assumptions (non-load-bearing, or load-bearing with LOW blast) |
 
 ------------------------------------------------------------------------
 
@@ -106,3 +134,4 @@ may add secondary targets separated by ` / ` (e.g. `"SOLUTION_DESIGN / GTM_PLAN"
 | BLOCKED     | Cannot progress — dependency or constraint                        |
 | DEFERRED    | Below the active focus cap (Focus Rule: max 3 active); re-evaluate next pass |
 | ESCALATED   | Requires governor decision; waiting for response                  |
+

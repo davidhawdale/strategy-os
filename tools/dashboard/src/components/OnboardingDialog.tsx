@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import type { RegisterSeed } from '../utils/generateSeedFile';
+
+type Mode = 'bootstrap' | 'venture' | 'extension';
+
+export interface RegisterSeed {
+  problem: string;
+  goals: string;
+  capabilities: string;
+  mode: Mode;
+  otherConstraints: string;
+}
 
 interface Props {
   onDismiss: () => void;
@@ -8,17 +17,26 @@ interface Props {
 
 export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
   const [problem, setProblem] = useState('');
-  const [constraints, setConstraints] = useState('');
-  const [successCriteria, setSuccessCriteria] = useState('');
+  const [goals, setGoals] = useState('');
+  const [capabilities, setCapabilities] = useState('');
+  const [mode, setMode] = useState<Mode | null>(null);
+  const [otherConstraints, setOtherConstraints] = useState('');
 
   const isReady =
     problem.trim().length >= 10 &&
-    constraints.trim().length >= 10 &&
-    successCriteria.trim().length >= 10;
+    goals.trim().length >= 10 &&
+    capabilities.trim().length >= 10 &&
+    mode !== null;
 
   function handleSubmit() {
-    if (!isReady) return;
-    onGenerate({ problem: problem.trim(), constraints: constraints.trim(), successCriteria: successCriteria.trim() });
+    if (!isReady || !mode) return;
+    onGenerate({
+      problem: problem.trim(),
+      goals: goals.trim(),
+      capabilities: capabilities.trim(),
+      mode,
+      otherConstraints: otherConstraints.trim(),
+    });
   }
 
   return (
@@ -26,54 +44,77 @@ export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
       <div className="onboarding-dialog">
         <div className="onboarding-header">
           <h2 className="onboarding-title" id="onboarding-title">Strategy Command Centre</h2>
-          <p className="onboarding-subtitle">
-            No strategy register found. Answer three questions to generate a starter file,
-            then save it to <code>strategy/hypotheses.md</code> and click Refresh.
-          </p>
         </div>
 
         <div className="onboarding-field">
           <label className="onboarding-label" htmlFor="onboarding-problem">
-            1. What is the problem?
+            1. What is the problem or opportunity?
           </label>
-          <p className="onboarding-hint">The pain or opportunity you are targeting — independent of any solution.</p>
+          <p className="onboarding-hint">Who, what, why, where, and when?</p>
           <textarea
             id="onboarding-problem"
             className="onboarding-textarea"
             rows={3}
             value={problem}
             onChange={e => setProblem(e.target.value)}
-            placeholder="e.g. Small business owners in the Borders spend 4+ hours per week on manual invoicing with no local support..."
+            placeholder="e.g. The new checkout page (where) has caused a 20% drop in conversion rates (what) among mobile users (who) during the last month (when), leading to an estimated loss of $15,000 in monthly revenue (why)."
+          />
+        </div>
+
+        <div className="onboarding-field">
+          <label className="onboarding-label" htmlFor="onboarding-goals">
+            2. What outcome would make this worth the effort?
+          </label>
+          <p className="onboarding-hint">Revenue target, exit, community impact — whatever it is.</p>
+          <textarea
+            id="onboarding-goals"
+            className="onboarding-textarea"
+            rows={3}
+            value={goals}
+            onChange={e => setGoals(e.target.value)}
+            placeholder="e.g. 50 paying subscribers at £X/month within 6 months, with a clear path to 200..."
+          />
+        </div>
+
+        <div className="onboarding-field">
+          <label className="onboarding-label" htmlFor="onboarding-capabilities">
+            3. What can you build?
+          </label>
+          <p className="onboarding-hint">Resources, timeline, and budget at your disposal.</p>
+          <div className="onboarding-mode-toggle" role="group" aria-label="Mode">
+            {(['bootstrap', 'venture', 'extension'] as Mode[]).map(m => (
+              <button
+                key={m}
+                type="button"
+                className={`onboarding-mode-pill${mode === m ? ' onboarding-mode-pill--active' : ''}`}
+                onClick={() => setMode(m)}
+              >
+                {m.charAt(0).toUpperCase() + m.slice(1)}
+              </button>
+            ))}
+          </div>
+          <textarea
+            id="onboarding-capabilities"
+            className="onboarding-textarea"
+            rows={3}
+            value={capabilities}
+            onChange={e => setCapabilities(e.target.value)}
+            placeholder="e.g. Solo founder, 6-month runway, £10k budget, full-stack developer, no existing distribution..."
           />
         </div>
 
         <div className="onboarding-field">
           <label className="onboarding-label" htmlFor="onboarding-constraints">
-            2. What are the constraints?
+            4. Any other constraints or opportunities?
           </label>
-          <p className="onboarding-hint">Time, resource, geographic, regulatory, or strategic limits that bound the solution.</p>
+          <p className="onboarding-hint">Regulatory, geographic, strategic, or partnership factors.</p>
           <textarea
             id="onboarding-constraints"
             className="onboarding-textarea"
-            rows={3}
-            value={constraints}
-            onChange={e => setConstraints(e.target.value)}
-            placeholder="e.g. Bootstrap budget, 6-month runway, must be viable in a 100k-population geography..."
-          />
-        </div>
-
-        <div className="onboarding-field">
-          <label className="onboarding-label" htmlFor="onboarding-success">
-            3. What does success look like?
-          </label>
-          <p className="onboarding-hint">The observable outcome that would make this worth pursuing.</p>
-          <textarea
-            id="onboarding-success"
-            className="onboarding-textarea"
-            rows={3}
-            value={successCriteria}
-            onChange={e => setSuccessCriteria(e.target.value)}
-            placeholder="e.g. 50 paying subscribers at £X/month within 6 months, with a clear path to 200..."
+            rows={2}
+            value={otherConstraints}
+            onChange={e => setOtherConstraints(e.target.value)}
+            placeholder="Optional — e.g. Must comply with UK data protection law; existing partnership with regional council..."
           />
         </div>
 

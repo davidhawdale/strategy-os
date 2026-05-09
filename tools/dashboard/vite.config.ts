@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import fs from 'fs'
+import { spawn } from 'child_process'
 
 const projectRoot = path.resolve(__dirname, '..', '..')
 
@@ -17,6 +18,38 @@ function serveStrategyFile(urlPath: string, filePath: string) {
         } catch {
           res.statusCode = 404
           res.end('Not found')
+        }
+      })
+    },
+  }
+}
+
+function triggerBuild(urlPath: string, root: string) {
+  return {
+    name: `trigger-build`,
+    configureServer(server: import('vite').ViteDevServer) {
+      server.middlewares.use(urlPath, (req: import('http').IncomingMessage, res: import('http').ServerResponse) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405
+          res.end('Method not allowed')
+          return
+        }
+        try {
+          const skillPath = path.join(root, '.claude', 'skills', 'stg-build-register', 'SKILL.md')
+          const seedPath = path.join(root, 'strategy', 'problem.md')
+          const skill = fs.readFileSync(skillPath, 'utf-8')
+          const seed = fs.readFileSync(seedPath, 'utf-8')
+          const prompt = `${skill}\n\n---\n\n${seed}\n\nbuild`
+          spawn('claude', ['-p', prompt], {
+            cwd: root,
+            detached: true,
+            stdio: 'inherit',
+          }).unref()
+          res.statusCode = 202
+          res.end('Build triggered')
+        } catch {
+          res.statusCode = 500
+          res.end('Build trigger failed')
         }
       })
     },
@@ -57,6 +90,8 @@ export default defineConfig({
     serveStrategyFile('/hypotheses.md', path.join(projectRoot, 'strategy', 'hypotheses.md')),
     serveStrategyFile('/gap-analysis.md', path.join(projectRoot, 'strategy', 'gap-analysis.md')),
     serveStrategyFile('/gap-definer-actions.md', path.join(projectRoot, 'execution', 'queue', 'gap-definer-actions.md')),
-    writeStrategyFile('/api/hypotheses', path.join(projectRoot, 'strategy', 'hypotheses.md')),
+    serveStrategyFile('/problem.md', path.join(projectRoot, 'strategy', 'problem.md')),
+    writeStrategyFile('/api/problem', path.join(projectRoot, 'strategy', 'problem.md')),
+    triggerBuild('/api/build', projectRoot),
   ],
 })

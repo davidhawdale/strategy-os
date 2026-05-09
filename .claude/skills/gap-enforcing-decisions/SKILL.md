@@ -251,3 +251,31 @@ Compile all rule application results into:
 **In scope:** Decision rule application, confidence/support state reclassification, readiness gate evaluation, execution queue generation, governor escalation generation, block enforcement.
 
 **Out of scope:** Computing gap scores (gap-computing-ledger), running destruction protocol (gap-running-destruction), conducting research (strategist skills), writing to the register (agent handles I/O).
+
+---
+
+## Dashboard Readiness Rules
+
+The dashboard Readiness panel implements these rules to surface blockers and warnings.
+They are derived from the decision rules above. This section is the canonical reference —
+if rules change here, update `tools/dashboard/src/views/readiness.ts` to match.
+
+**Blockers** (prevent sell/scale):
+
+| Condition | Message |
+|-----------|---------|
+| Gap Definer gate decision is NO_GO | "Gap Definer gate decision: NO GO" |
+| `sellReady` is not true in register metadata | "Sell Ready is not set to true" |
+| Any hypothesis confidence is BROKEN | "{Hypothesis} hypothesis is BROKEN" |
+| Any hypothesis confidence is UNVALIDATED | "{Hypothesis} hypothesis is UNVALIDATED" |
+| Total T1 evidence across all hypotheses = 0 | "No T1 (direct) evidence across any hypothesis" |
+| Any gap has status BLOCKED and blast radius weight ≥ 3 (HIGH) | "HIGH-blast gap blocked: {target} — {dimension}" |
+
+**Warnings** (flag for attention, do not block):
+
+| Condition | Message |
+|-----------|---------|
+| Any hypothesis confidence is RESEARCHED (not SUPPORTED) | "{Hypothesis} is RESEARCHED but not yet SUPPORTED" |
+| Gap Definer gate decision is CONDITIONAL_GO | "Gap Definer gate decision is CONDITIONAL GO — constraints apply" |
+| >50% of load-bearing assumptions have HIGH blast radius and T3 evidence | "More than 50% of assumptions are HIGH blast radius with T3 evidence" |
+| No destruction log present in register | "No destruction log found — strategy has not been stress-tested" |
