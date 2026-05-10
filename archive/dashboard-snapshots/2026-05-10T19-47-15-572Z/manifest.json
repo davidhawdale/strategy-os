@@ -1,0 +1,15 @@
+{
+  "createdAt": "2026-05-10T19:47:15.572Z",
+  "copiedFiles": [
+    "strategy/problem.md",
+    "strategy/hypotheses.md",
+    "strategy/gap-analysis.md",
+    "execution/queue/E-01-deadlines-policy.md",
+    "execution/queue/E-02-fieldwork-budget.md",
+    "execution/queue/E-03-reconcile-ue-gtm.md",
+    "execution/queue/T-01-borders-fieldwork.md",
+    "execution/queue/T-02-segment-stratification.md",
+    "execution/queue/T-03-ai-trial-and-advertiser-interviews.md"
+  ],
+  "skippedFiles": []
+}

@@ -116,6 +116,7 @@ describe('dashboard layout model', () => {
 
   it('includes promoted hypothesis panels in the default navigation order', () => {
     expect(getDefaultNavigationPanelIds()).toEqual([
+      'overview',
       'queue',
       'problem',
       'segment',
@@ -129,6 +130,16 @@ describe('dashboard layout model', () => {
       'risk',
       'destruction',
       'proposals',
+    ]);
+  });
+
+  it('provides default section order for the overview panel', () => {
+    expect(getDefaultSectionOrders().overview).toEqual([
+      'state',
+      'journey',
+      'hypotheses',
+      'researchUnlocks',
+      'nextMoves',
     ]);
   });
 

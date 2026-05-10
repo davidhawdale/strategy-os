@@ -910,6 +910,43 @@ export interface EvidenceInventoryView {
   totalItems: number;
 }
 
+export interface OverviewJourneyView {
+  currentState: {
+    sellReady: boolean;
+    scaleReady: boolean;
+    gateDecision?: GateSummary['decision'];
+    decisionState?: string;
+    topBlocker?: string;
+  };
+  journeyStages: {
+    id: 'build' | 'challenge' | 'review' | 'queue';
+    label: string;
+    status: 'complete' | 'active' | 'blocked' | 'pending';
+    detail: string;
+  }[];
+  hypothesisLayer: {
+    id: HypothesisId;
+    label: string;
+    confidence?: ConfidenceState;
+    evidenceCount: number;
+    t1Count: number;
+    t2Count: number;
+    t3Count: number;
+    highBlastCount: number;
+  }[];
+  researchUnlocks: {
+    id: string;
+    source: string;
+    priority: 'high' | 'medium' | 'low';
+    reason: string;
+    unlocks: string;
+  }[];
+  nextMoves: {
+    queueActions: QueueAction[];
+    pendingDecisions: PendingDecision[];
+  };
+}
+
 export interface HypothesisDetailView {
   id: HypothesisId;
   label: string;
@@ -974,6 +1011,7 @@ export interface HypothesisDetailView {
 // ============================================================
 
 export type PanelId =
+  | 'overview'
   | 'problem'
   | 'segment'
   | 'unitEconomics'

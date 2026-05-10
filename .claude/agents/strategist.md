@@ -36,6 +36,7 @@ skills:
   - stg-designing-solutions
   - stg-designing-gtm
   - stg-extracting-insights
+  - stg-write-build-summary
 ---
 
 # Autonomous Strategist
@@ -128,7 +129,9 @@ Autonomous end-to-end strategy construction from governor input.
 
 7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to the path declared in `escalates-to` in the frontmatter, following the Escalation ID Convention in STANDARDS.md.
 
-8. Report to governor: what was researched, what survived, what was eliminated and why, what the governor needs to do next, and that Gap Definer should run next to validate.
+8. **Run stg-write-build-summary skill.** Write `strategy/build-pass-complete.md`.
+
+9. Report to governor: what was researched, what survived, what was eliminated and why, what the governor needs to do next, and that Gap Definer should run next to validate.
 
 ### CHALLENGE Mode (Default)
 

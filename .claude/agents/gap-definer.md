@@ -27,6 +27,7 @@ skills:
   - gap-computing-ledger
   - gap-running-destruction
   - gap-enforcing-decisions
+  - gap-write-pass-summary
 ---
 
 # Gap Definer
@@ -246,6 +247,7 @@ Run gap-enforcing-decisions skill:
 3. Update `strategy/gap-analysis.md` with full detail.
 4. Update hypothesis register summary sections (8: Destruction Log,
    9: Gap Ledger).
+5. **Run gap-write-pass-summary skill.** Write `strategy/gap-definer-pass-complete.md`.
 
 ---
 

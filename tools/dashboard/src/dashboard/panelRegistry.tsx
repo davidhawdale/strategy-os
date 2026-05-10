@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { GapAnalysis, HypothesisId, HypothesisRegister, PanelId, ExecutionQueueView } from '../model/types';
+import { OverviewPanel } from '../components/panels/OverviewPanel';
 import { ReadinessPanel } from '../components/panels/ReadinessPanel';
 import { EvidencePanel } from '../components/panels/EvidencePanel';
 import { RiskPanel } from '../components/panels/RiskPanel';
@@ -19,6 +20,7 @@ import { computeHypothesisDetail } from '../views/hypothesis-detail';
 import { computeGapLedgerView } from '../views/gap-ledger';
 import { computeGovernorEscalationsView } from '../views/escalations';
 import { computeDecisionDeadlinesView } from '../views/deadlines';
+import { computeOverviewJourneyView } from '../views/overview-journey';
 import type { SectionOrderMap } from './layoutModel';
 import { resolveSectionOrder } from './layoutModel';
 import { HYPOTHESIS_SECTION_PROFILES } from './hypothesisSectionProfiles';
@@ -111,6 +113,28 @@ function renderHypothesisPanel(
 // Change the order of this array to reshuffle the top-level dashboard.
 // Panels without navigation remain available for drill-down flows.
 export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
+  {
+    id: 'overview',
+    navigation: {
+      label: 'Overview',
+      shortLabel: 'Overview',
+      group: 'now',
+      description: 'Layered state of play, journey progress, research unlocks, and next moves.',
+      sections: [
+        { id: 'state', label: 'Current State' },
+        { id: 'journey', label: 'Journey' },
+        { id: 'hypotheses', label: 'Hypotheses' },
+        { id: 'researchUnlocks', label: 'Research Unlocks' },
+        { id: 'nextMoves', label: 'Next Moves' },
+      ],
+    },
+    render: ({ register, gapAnalysis, queueView, sectionOrders }) => (
+      <OverviewPanel
+        view={computeOverviewJourneyView(register, gapAnalysis, queueView)}
+        sectionOrder={sectionOrders.overview}
+      />
+    ),
+  },
   {
     id: 'queue',
     navigation: {

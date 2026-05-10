@@ -1,7 +1,70 @@
 import { describe, expect, it, vi } from 'vitest';
-import { renderDashboardPanel } from '../panelRegistry';
+import type { CombinedParseResult, ExecutionQueueView } from '../../model/types';
+import { getDefaultNavigationPanelIds, getDefaultSectionOrders, renderDashboardPanel } from '../panelRegistry';
+
+const data = {
+  register: {
+    metadata: { sellReady: false, scaleReady: false },
+    hypotheses: {
+      problem: { id: 'problem', evidence: [], researchSources: [], assumptions: [] },
+      segment: { id: 'segment', evidence: [], researchSources: [], assumptions: [] },
+      unitEconomics: { id: 'unitEconomics', evidence: [], researchSources: [], assumptions: [] },
+      valueProposition: { evidence: [], assumptions: [], clauseValidation: [] },
+    },
+    proposals: {
+      growthArchitecture: { requiredConditions: [], assumptions: [] },
+      solutionDesign: {
+        featureMap: [],
+        growthLoops: [],
+        constraintsFromHypotheses: [],
+        adequacyCriteria: [],
+      },
+      gtmPlan: {
+        channelSequence: [],
+        operationalConstraints: [],
+        successCriteria: [],
+        killCriteria: [],
+      },
+    },
+  },
+  registerWarnings: [],
+  gapAnalysisWarnings: [],
+  registerParseCompleteness: 1,
+  gapAnalysisParseCompleteness: 0,
+} satisfies CombinedParseResult;
+
+const queueView: ExecutionQueueView = {
+  decisionState: 'WAITING_ON_RESEARCH',
+  sellReady: false,
+  scaleReady: false,
+  actions: [],
+  blockedPaths: [],
+  pendingDecisions: [],
+  workItems: [],
+};
 
 describe('renderDashboardPanel', () => {
+  it('renders the overview panel and includes it in layout metadata', () => {
+    const result = renderDashboardPanel('overview', {
+      register: data.register,
+      queueView,
+      sectionOrders: getDefaultSectionOrders(),
+      onSelectHypothesis: vi.fn(),
+      onSelectPanel: vi.fn(),
+      onBack: vi.fn(),
+    });
+
+    expect(result).not.toBeNull();
+    expect(getDefaultNavigationPanelIds()[0]).toBe('overview');
+    expect(getDefaultSectionOrders().overview).toEqual([
+      'state',
+      'journey',
+      'hypotheses',
+      'researchUnlocks',
+      'nextMoves',
+    ]);
+  });
+
   it('warns in development when an unknown panel id is requested', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
