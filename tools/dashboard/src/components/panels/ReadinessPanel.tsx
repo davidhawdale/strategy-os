@@ -1,13 +1,15 @@
 import type { ReadinessView, HypothesisId } from '../../model/types';
 import { HypothesisReadinessGridSection } from './sections/HypothesisReadinessGridSection';
 import { ReadinessAlertsSection } from './sections/ReadinessAlertsSection';
+import { renderOrderedSections } from './sections/renderOrderedSections';
 
 interface Props {
   view: ReadinessView;
   onSelectHypothesis: (id: HypothesisId) => void;
+  sectionOrder?: string[];
 }
 
-export function ReadinessPanel({ view, onSelectHypothesis }: Props) {
+export function ReadinessPanel({ view, onSelectHypothesis, sectionOrder }: Props) {
   return (
     <section
       id="panel-readiness"
@@ -20,11 +22,18 @@ export function ReadinessPanel({ view, onSelectHypothesis }: Props) {
         <p className="panel__subtitle">Am I Sell & Grow ready? What's blocking?</p>
       </div>
 
-      <ReadinessAlertsSection blockers={view.blockers} warnings={view.warnings} />
-      <HypothesisReadinessGridSection
-        hypotheses={view.hypothesisSummary}
-        onSelectHypothesis={onSelectHypothesis}
-      />
+      {renderOrderedSections(sectionOrder, [
+        { id: 'alerts', render: () => <ReadinessAlertsSection blockers={view.blockers} warnings={view.warnings} /> },
+        {
+          id: 'hypothesisGrid',
+          render: () => (
+            <HypothesisReadinessGridSection
+              hypotheses={view.hypothesisSummary}
+              onSelectHypothesis={onSelectHypothesis}
+            />
+          ),
+        },
+      ])}
     </section>
   );
 }

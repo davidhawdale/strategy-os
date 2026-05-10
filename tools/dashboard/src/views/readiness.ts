@@ -1,9 +1,11 @@
 import type {
+  Hypothesis,
   HypothesisRegister,
   HypothesisId,
   ProposalId,
   ReadinessView,
   GapAnalysis,
+  ValueProposition,
 } from '../model/types';
 
 const HYPOTHESIS_LABELS: Record<HypothesisId, string> = {
@@ -47,7 +49,7 @@ export function computeReadiness(register: HypothesisRegister, gapAnalysis?: Gap
       t3Count,
       assumptionCount: h.assumptions.length,
       highBlastCount,
-      hasKillCondition: !!h.killCondition,
+      hasKillCondition: hasKillCondition(h),
       desiredStateMet,
       desiredStateTotal,
     };
@@ -134,4 +136,8 @@ export function computeReadiness(register: HypothesisRegister, gapAnalysis?: Gap
     gateDecision,
     predicateChecks,
   };
+}
+
+function hasKillCondition(hypothesis: Hypothesis | ValueProposition): boolean {
+  return 'killCondition' in hypothesis && !!hypothesis.killCondition;
 }

@@ -32,24 +32,28 @@ export function computeGapLedgerView(
     topGaps.push(...register.gapLedger.rankedGaps);
   }
 
-  // Status distribution — across all gaps
-  const allGaps: { status: GapLedgerEntry['status'] }[] = [
+  // Status distribution — across all gaps. Ranked and full records can point to
+  // the same gap, so stable ids are counted once while anonymous rows count as
+  // their own records.
+  const allGaps: { id?: string; status: GapLedgerEntry['status'] }[] = [
     ...topGaps,
     ...(register.gapLedger?.gaps ?? []),
   ];
 
   const statusCounts = { open: 0, inProgress: 0, resolved: 0, blocked: 0 };
-  const seen = new Set<string>();
+  const seenGapIds = new Set<string>();
   for (const g of allGaps) {
-    const key = `${g.status}`;
-    // Deduplicate by status bucket rather than identity (we may have ranked + unranked overlap)
+    if (g.id) {
+      if (seenGapIds.has(g.id)) continue;
+      seenGapIds.add(g.id);
+    }
+
     switch (g.status) {
       case 'OPEN': statusCounts.open++; break;
       case 'IN_PROGRESS': statusCounts.inProgress++; break;
       case 'RESOLVED': statusCounts.resolved++; break;
       case 'BLOCKED': statusCounts.blocked++; break;
     }
-    seen.add(key);
   }
 
   // Active gap count from focus rule or fallback

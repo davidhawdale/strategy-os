@@ -2,12 +2,14 @@ import type { ProposalsView } from '../../model/types';
 import { GrowthArchitectureSection } from './sections/GrowthArchitectureSection';
 import { GTMPlanSection } from './sections/GTMPlanSection';
 import { SolutionDesignSection } from './sections/SolutionDesignSection';
+import { renderOrderedSections } from './sections/renderOrderedSections';
 
 interface Props {
   view: ProposalsView;
+  sectionOrder?: string[];
 }
 
-export function ProposalsPanel({ view }: Props) {
+export function ProposalsPanel({ view, sectionOrder }: Props) {
   return (
     <section
       id="panel-proposals"
@@ -20,9 +22,11 @@ export function ProposalsPanel({ view }: Props) {
         <p className="panel__subtitle">Growth architecture, solution design, and GTM plan</p>
       </div>
 
-      <GrowthArchitectureSection growthArchitecture={view.growthArchitecture} />
-      <SolutionDesignSection solutionDesign={view.solutionDesign} />
-      <GTMPlanSection gtmPlan={view.gtmPlan} />
+      {renderOrderedSections(sectionOrder, [
+        { id: 'growthArchitecture', render: () => <GrowthArchitectureSection growthArchitecture={view.growthArchitecture} /> },
+        { id: 'solutionDesign', render: () => <SolutionDesignSection solutionDesign={view.solutionDesign} /> },
+        { id: 'gtmPlan', render: () => <GTMPlanSection gtmPlan={view.gtmPlan} /> },
+      ])}
     </section>
   );
 }

@@ -4,12 +4,13 @@ const LABELS: Record<HypothesisId, string> = {
   problem: 'Problem',
   segment: 'Segment',
   unitEconomics: 'Unit Economics',
+  valueProposition: 'Value Proposition',
 };
 
 const TIER_WEIGHTS = { T1: 1.0, T2: 0.6, T3: 0.2 };
 
 export function computeEvidenceQuality(register: HypothesisRegister): EvidenceQualityView {
-  const ids: HypothesisId[] = ['problem', 'segment', 'unitEconomics'];
+  const ids: HypothesisId[] = ['problem', 'segment', 'unitEconomics', 'valueProposition'];
 
   const byHypothesis = ids.map(id => {
     const h = register.hypotheses[id];

@@ -1,3 +1,5 @@
+import { DEFAULT_PANEL_ID, DETAIL_FALLBACK_PANEL_ID } from './panels';
+
 // ============================================================
 // Register Root
 // ============================================================
@@ -996,6 +998,29 @@ export interface PendingDecision {
   isOverdue: boolean;
 }
 
+export type QueueWorkItemKind = 'task' | 'escalation';
+
+export interface QueueWorkItem {
+  id: string;
+  title: string;
+  fileName: string;
+  kind: QueueWorkItemKind;
+  issued?: string;
+  issuedBy?: string;
+  status?: string;
+  type?: string;
+  blastRadius?: string;
+  reducesGap?: string;
+  actionType?: string;
+  evidenceTarget?: string;
+  blocks?: string;
+  summary?: string;
+  decisionNeeded?: string;
+  expectedResponse?: string;
+  expectedOutput?: string;
+  preconditions: string[];
+}
+
 export interface ExecutionQueueView {
   decisionState: string;
   passDate?: string;
@@ -1006,6 +1031,7 @@ export interface ExecutionQueueView {
   blockedPaths: BlockedPath[];
   narrative?: string;
   pendingDecisions: PendingDecision[];
+  workItems: QueueWorkItem[];
 }
 
 export type AppState =
@@ -1028,7 +1054,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
     case 'Loading':
       switch (event._tag) {
         case 'FetchSuccess':
-          return { _tag: 'Loaded', data: event.data, activePanel: 'queue' };
+          return { _tag: 'Loaded', data: event.data, activePanel: DEFAULT_PANEL_ID };
         case 'FetchError':
           return { _tag: 'Error', message: event.message };
         default:
@@ -1042,7 +1068,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'SelectHypothesis':
           return { ...state, activePanel: 'detail', selectedHypothesis: event.id, previousPanel: state.activePanel };
         case 'Back':
-          return { ...state, activePanel: state.previousPanel ?? 'readiness', selectedHypothesis: undefined };
+          return { ...state, activePanel: state.previousPanel ?? DETAIL_FALLBACK_PANEL_ID, selectedHypothesis: undefined };
         case 'Refresh':
           return { _tag: 'Loading' };
         case 'FetchError':
@@ -1056,7 +1082,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'FetchStart':
           return { _tag: 'Loading' };
         case 'FetchSuccess':
-          return { _tag: 'Loaded', data: event.data, activePanel: 'queue' };
+          return { _tag: 'Loaded', data: event.data, activePanel: DEFAULT_PANEL_ID };
         default:
           return state;
       }
@@ -1072,7 +1098,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'SelectHypothesis':
           return { ...state, activePanel: 'detail', selectedHypothesis: event.id, previousPanel: state.activePanel };
         case 'Back':
-          return { ...state, activePanel: state.previousPanel ?? 'readiness', selectedHypothesis: undefined };
+          return { ...state, activePanel: state.previousPanel ?? DETAIL_FALLBACK_PANEL_ID, selectedHypothesis: undefined };
         default:
           return state;
       }

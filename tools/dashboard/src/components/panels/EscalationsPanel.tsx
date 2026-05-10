@@ -1,11 +1,13 @@
 import type { GovernorEscalationsView } from '../../model/types';
 import { EscalationListSection } from './sections/EscalationListSection';
+import { renderOrderedSections } from './sections/renderOrderedSections';
 
 interface Props {
   view: GovernorEscalationsView;
+  sectionOrder?: string[];
 }
 
-export function EscalationsPanel({ view }: Props) {
+export function EscalationsPanel({ view, sectionOrder }: Props) {
   return (
     <section
       id="panel-escalations"
@@ -36,8 +38,10 @@ export function EscalationsPanel({ view }: Props) {
         </div>
       )}
 
-      <EscalationListSection title="Open" escalations={view.openEscalations} />
-      <EscalationListSection title="Resolved" escalations={view.resolvedEscalations} resolved />
+      {renderOrderedSections(sectionOrder, [
+        { id: 'openEscalations', render: () => <EscalationListSection title="Open" escalations={view.openEscalations} /> },
+        { id: 'resolvedEscalations', render: () => <EscalationListSection title="Resolved" escalations={view.resolvedEscalations} resolved /> },
+      ])}
     </section>
   );
 }

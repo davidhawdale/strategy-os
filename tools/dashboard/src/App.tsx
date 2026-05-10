@@ -1,32 +1,19 @@
 import { useReducer, useEffect, useCallback, useState } from 'react';
 import { designTokensCSS } from './tokens/design-tokens';
-import type { AppState, AppEvent, CombinedParseResult, HypothesisId, PanelId } from './model/types';
+import type { AppState, AppEvent, CombinedParseResult, ExecutionQueueView, HypothesisId, PanelId } from './model/types';
 import { transition } from './model/types';
 import { loadCombined } from './loader/index';
 import { Header } from './components/Header';
+import { LayoutEditor } from './components/LayoutEditor';
 import { OnboardingDialog } from './components/OnboardingDialog';
+import { ParserDiagnosticsDrawer } from './components/ParserDiagnosticsDrawer';
 import type { RegisterSeed } from './components/OnboardingDialog';
-import { ReadinessPanel } from './components/panels/ReadinessPanel';
-import { EvidencePanel } from './components/panels/EvidencePanel';
-import { RiskPanel } from './components/panels/RiskPanel';
-import { DestructionPanel } from './components/panels/DestructionPanel';
-import { ProposalsPanel } from './components/panels/ProposalsPanel';
-import { HypothesisDetailPanel } from './components/panels/HypothesisDetailPanel';
-import { GapLedgerPanel } from './components/panels/GapLedgerPanel';
-import { EscalationsPanel } from './components/panels/EscalationsPanel';
-import { DeadlinesPanel } from './components/panels/DeadlinesPanel';
-import { QueuePanel } from './components/panels/QueuePanel';
-import { computeReadiness } from './views/readiness';
-import { computeEvidenceQuality } from './views/evidence-quality';
-import { computeRiskMap } from './views/risk-map';
-import { computeDestructionView } from './views/destruction';
-import { computeProposalsView } from './views/proposals';
-import { computeHypothesisDetail } from './views/hypothesis-detail';
-import { computeGapLedgerView } from './views/gap-ledger';
-import { computeGovernorEscalationsView } from './views/escalations';
-import { computeDecisionDeadlinesView } from './views/deadlines';
 import { computeQueueView } from './views/queue';
-import { parseExecutionQueue } from './parser/queue';
+import { computeParseDiagnostics } from './views/diagnostics';
+import { parseExecutionQueue, parseQueueWorkItems, type QueueFileInput } from './parser/queue';
+import { getDefaultNavigationPanelIds, getDefaultSectionOrders, getLayoutEditorPanels, getNavigationPanels, renderDashboardPanel } from './dashboard/panelRegistry';
+import type { DashboardLayout, SectionOrderMap } from './dashboard/layoutModel';
+import { clearPanelOrder, loadDashboardLayout, movePanelOrderItem, moveSectionOrderItem, resolvePanelOrder, resolveSectionOrders, saveDashboardLayout } from './dashboard/layoutModel';
 import './App.css';
 
 function reducer(state: AppState, event: AppEvent): AppState {
@@ -34,12 +21,49 @@ function reducer(state: AppState, event: AppEvent): AppState {
 }
 
 const INITIAL_STATE: AppState = { _tag: 'Loading' };
+const DEFAULT_PANEL_ORDER = getDefaultNavigationPanelIds();
+const DEFAULT_SECTION_ORDERS = getDefaultSectionOrders();
+
+function loadInitialDashboardLayout(): DashboardLayout {
+  const defaultLayout = {
+    panelOrder: DEFAULT_PANEL_ORDER,
+    sectionOrders: DEFAULT_SECTION_ORDERS,
+  };
+  if (typeof window === 'undefined') return defaultLayout;
+
+  try {
+    const savedLayout = loadDashboardLayout(window.localStorage);
+    return {
+      panelOrder: resolvePanelOrder(DEFAULT_PANEL_ORDER, savedLayout.panelOrder),
+      sectionOrders: resolveSectionOrders(DEFAULT_SECTION_ORDERS, savedLayout.sectionOrders),
+    };
+  } catch {
+    return defaultLayout;
+  }
+}
+
+const INITIAL_DASHBOARD_LAYOUT = loadInitialDashboardLayout();
+
+const EMPTY_QUEUE_VIEW: ExecutionQueueView = {
+  decisionState: 'UNKNOWN',
+  sellReady: false,
+  scaleReady: false,
+  actions: [],
+  blockedPaths: [],
+  pendingDecisions: [],
+  workItems: [],
+};
 
 function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [rawQueueText, setRawQueueText] = useState<string | null>(null);
+  const [rawQueueFiles, setRawQueueFiles] = useState<QueueFileInput[]>([]);
   const [onboardingDismissed, setOnboardingDismissed] = useState(false);
   const [buildTriggered, setBuildTriggered] = useState(false);
+  const [panelOrder, setPanelOrder] = useState<PanelId[]>(INITIAL_DASHBOARD_LAYOUT.panelOrder);
+  const [sectionOrders, setSectionOrders] = useState<SectionOrderMap>(INITIAL_DASHBOARD_LAYOUT.sectionOrders);
+  const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
+  const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
     dispatch({ _tag: 'FetchStart' });
@@ -84,6 +108,13 @@ function App() {
   }, []);
 
   useEffect(() => {
+    fetch('/api/queue-files')
+      .then(r => r.ok ? r.json() as Promise<{ files?: QueueFileInput[] }> : null)
+      .then(data => { if (data?.files) setRawQueueFiles(data.files); })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
     fetch('/problem.md')
       .then(r => { if (r.ok) setOnboardingDismissed(true); })
       .catch(() => {});
@@ -121,6 +152,42 @@ function App() {
       fetchData();
     }
   }, [fetchData]);
+
+  const handleMovePanel = useCallback((panel: PanelId, direction: 'up' | 'down') => {
+    setPanelOrder(currentOrder => {
+      const nextOrder = movePanelOrderItem(currentOrder, panel, direction);
+      try {
+        saveDashboardLayout(window.localStorage, { panelOrder: nextOrder, sectionOrders });
+      } catch {
+        // Local layout persistence is a convenience; the live layout can still update.
+      }
+      return nextOrder;
+    });
+  }, [sectionOrders]);
+
+  const handleMoveSection = useCallback((panel: PanelId, section: string, direction: 'up' | 'down') => {
+    setSectionOrders(currentOrders => {
+      const nextOrders = moveSectionOrderItem(currentOrders, panel, section, direction);
+      try {
+        saveDashboardLayout(window.localStorage, { panelOrder, sectionOrders: nextOrders });
+      } catch {
+        // Local layout persistence is a convenience; the live layout can still update.
+      }
+      return nextOrders;
+    });
+  }, [panelOrder]);
+
+  const handleResetLayout = useCallback(() => {
+    const defaultOrder = [...DEFAULT_PANEL_ORDER];
+    const defaultSectionOrders = { ...DEFAULT_SECTION_ORDERS };
+    setPanelOrder(defaultOrder);
+    setSectionOrders(defaultSectionOrders);
+    try {
+      clearPanelOrder(window.localStorage);
+    } catch {
+      // Ignore storage failures and keep the reset visible for this session.
+    }
+  }, []);
 
   const handleGenerate = useCallback(async (seed: RegisterSeed) => {
     const today = new Date().toISOString().slice(0, 10);
@@ -203,10 +270,19 @@ function App() {
     : data.registerParseCompleteness;
 
   const warningCount = data.registerWarnings.length + data.gapAnalysisWarnings.length;
+  const diagnosticsView = computeParseDiagnostics(data);
 
-  const queueView = rawQueueText
-    ? computeQueueView(parseExecutionQueue(rawQueueText), gapAnalysis)
+  const queueWorkItems = parseQueueWorkItems(rawQueueFiles);
+  const rawQueueView = rawQueueText
+    ? parseExecutionQueue(rawQueueText)
+    : queueWorkItems.length > 0
+      ? EMPTY_QUEUE_VIEW
+      : null;
+  const queueView = rawQueueView
+    ? computeQueueView(rawQueueView, gapAnalysis, queueWorkItems)
     : null;
+  const navigationPanels = getNavigationPanels(!!gapAnalysis, panelOrder, sectionOrders);
+  const layoutEditorPanels = getLayoutEditorPanels(panelOrder, sectionOrders);
 
   return (
     <div className="app">
@@ -236,62 +312,45 @@ function App() {
         parseCompleteness={parseCompleteness}
         warningCount={warningCount}
         activePanel={activePanel}
+        panels={navigationPanels}
         onSelectPanel={handleSelectPanel}
         onRefresh={handleRefresh}
+        onOpenDiagnostics={() => setDiagnosticsOpen(true)}
+        onOpenLayoutEditor={() => setLayoutEditorOpen(true)}
         onReset={handleReset}
         hasGapAnalysis={!!gapAnalysis}
       />
 
+      {diagnosticsOpen && (
+        <ParserDiagnosticsDrawer
+          view={diagnosticsView}
+          onClose={() => setDiagnosticsOpen(false)}
+        />
+      )}
+
+      {layoutEditorOpen && (
+        <LayoutEditor
+          panels={layoutEditorPanels}
+          order={panelOrder}
+          sectionOrders={sectionOrders}
+          onMovePanel={handleMovePanel}
+          onMoveSection={handleMoveSection}
+          onReset={handleResetLayout}
+          onClose={() => setLayoutEditorOpen(false)}
+        />
+      )}
+
       <main className="app__main">
-        {activePanel === 'readiness' && (
-          <ReadinessPanel
-            view={computeReadiness(register, gapAnalysis)}
-            onSelectHypothesis={handleSelectHypothesis}
-          />
-        )}
-
-        {activePanel === 'evidence' && (
-          <EvidencePanel view={computeEvidenceQuality(register)} />
-        )}
-
-        {activePanel === 'risk' && (
-          <RiskPanel view={computeRiskMap(register)} />
-        )}
-
-        {activePanel === 'destruction' && (
-          <DestructionPanel view={computeDestructionView(register, gapAnalysis)} />
-        )}
-
-        {activePanel === 'proposals' && (
-          <ProposalsPanel view={computeProposalsView(register, gapAnalysis)} />
-        )}
-
-        {activePanel === 'gapLedger' && (
-          <GapLedgerPanel view={computeGapLedgerView(register, gapAnalysis)} />
-        )}
-
-        {activePanel === 'escalations' && (
-          <EscalationsPanel view={computeGovernorEscalationsView(gapAnalysis)} />
-        )}
-
-        {activePanel === 'deadlines' && (
-          <DeadlinesPanel view={computeDecisionDeadlinesView(register, gapAnalysis)} />
-        )}
-
-        {activePanel === 'queue' && (
-          <QueuePanel
-            view={queueView}
-            onSelectEscalations={gapAnalysis ? () => handleSelectPanel('escalations') : undefined}
-          />
-        )}
-
-        {activePanel === 'detail' && selectedHypothesis && (
-          <HypothesisDetailPanel
-            view={computeHypothesisDetail(register, selectedHypothesis, gapAnalysis)}
-            onBack={handleBack}
-            onSelectPanel={handleSelectPanel}
-          />
-        )}
+        {renderDashboardPanel(activePanel, {
+          register,
+          gapAnalysis,
+          queueView,
+          selectedHypothesis,
+          sectionOrders,
+          onSelectHypothesis: handleSelectHypothesis,
+          onSelectPanel: handleSelectPanel,
+          onBack: handleBack,
+        })}
       </main>
     </div>
   );

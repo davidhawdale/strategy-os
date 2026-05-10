@@ -2,7 +2,6 @@ import type {
   SolutionDesignProposal,
   SupportState,
   GrowthLoop,
-  HypothesisConstraint,
   MVPScope,
   ExclusionEntry,
   ParseWarning,
@@ -18,7 +17,7 @@ export function parseSolutionDesign(section: Section): { solution: SolutionDesig
   const warnings: ParseWarning[] = [];
   const text = section.rawText;
 
-  const supportStateRaw = extractField(text, 'Support State');
+  const supportStateRaw = extractField(text, 'Support State')?.split('\n')[0].trim();
   const supportState = supportStateRaw && SUPPORT_STATES.has(supportStateRaw.toUpperCase())
     ? (supportStateRaw.toUpperCase() as SupportState)
     : undefined;

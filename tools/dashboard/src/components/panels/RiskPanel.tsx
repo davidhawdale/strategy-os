@@ -2,12 +2,14 @@ import type { RiskMapView } from '../../model/types';
 import { KillSignalsSection } from './sections/KillSignalsSection';
 import { RiskAssumptionGroupsSection } from './sections/RiskAssumptionGroupsSection';
 import { RiskSummarySection } from './sections/RiskSummarySection';
+import { renderOrderedSections } from './sections/renderOrderedSections';
 
 interface Props {
   view: RiskMapView;
+  sectionOrder?: string[];
 }
 
-export function RiskPanel({ view }: Props) {
+export function RiskPanel({ view, sectionOrder }: Props) {
   return (
     <section id="panel-risk" role="tabpanel" aria-label="Risk Map" className="panel">
       <div className="panel__header">
@@ -15,9 +17,11 @@ export function RiskPanel({ view }: Props) {
         <p className="panel__subtitle">Which assumptions will kill the strategy if wrong?</p>
       </div>
 
-      <RiskSummarySection byCriticality={view.byCriticality} />
-      <RiskAssumptionGroupsSection assumptions={view.assumptions} />
-      <KillSignalsSection killConditions={view.killConditions} />
+      {renderOrderedSections(sectionOrder, [
+        { id: 'summary', render: () => <RiskSummarySection byCriticality={view.byCriticality} /> },
+        { id: 'assumptionGroups', render: () => <RiskAssumptionGroupsSection assumptions={view.assumptions} /> },
+        { id: 'killSignals', render: () => <KillSignalsSection killConditions={view.killConditions} /> },
+      ])}
     </section>
   );
 }

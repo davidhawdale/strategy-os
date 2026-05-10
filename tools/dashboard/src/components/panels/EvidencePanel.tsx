@@ -3,12 +3,14 @@ import { EvidenceHypothesisMatrixSection } from './sections/EvidenceHypothesisMa
 import { EvidenceQualityOverviewSection } from './sections/EvidenceQualityOverviewSection';
 import { EvidenceTierGapsSection } from './sections/EvidenceTierGapsSection';
 import { EvidenceTierLegendSection } from './sections/EvidenceTierLegendSection';
+import { renderOrderedSections } from './sections/renderOrderedSections';
 
 interface Props {
   view: EvidenceQualityView;
+  sectionOrder?: string[];
 }
 
-export function EvidencePanel({ view }: Props) {
+export function EvidencePanel({ view, sectionOrder }: Props) {
   return (
     <section id="panel-evidence" role="tabpanel" aria-label="Evidence Quality" className="panel">
       <div className="panel__header">
@@ -16,10 +18,12 @@ export function EvidencePanel({ view }: Props) {
         <p className="panel__subtitle">Where is my evidence weak? What's T3 that should be T1?</p>
       </div>
 
-      <EvidenceTierLegendSection />
-      <EvidenceQualityOverviewSection overall={view.overall} />
-      <EvidenceHypothesisMatrixSection hypotheses={view.byHypothesis} />
-      <EvidenceTierGapsSection tierGaps={view.tierGaps} />
+      {renderOrderedSections(sectionOrder, [
+        { id: 'tierLegend', render: () => <EvidenceTierLegendSection /> },
+        { id: 'qualityOverview', render: () => <EvidenceQualityOverviewSection overall={view.overall} /> },
+        { id: 'hypothesisMatrix', render: () => <EvidenceHypothesisMatrixSection hypotheses={view.byHypothesis} /> },
+        { id: 'tierGaps', render: () => <EvidenceTierGapsSection tierGaps={view.tierGaps} /> },
+      ])}
     </section>
   );
 }

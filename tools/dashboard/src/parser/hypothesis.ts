@@ -7,14 +7,11 @@ import type {
   ScenarioAnalysis,
   ScenarioEntry,
   WhyNow,
-  RevenueModel,
-  PriceHypothesis,
-  CostStructure,
   PainIntensity,
   ProblemFrequency,
 } from '../model/types';
 import type { Section } from './sections';
-import { extractTablesFromNodes, tableToRows, findTableNearHeading } from './sections';
+import { extractTablesFromNodes, tableToRows } from './sections';
 import {
   extractField,
   extractPriorUpdates,

@@ -1,42 +1,30 @@
 import type { RegisterMetadata, PanelId } from '../model/types';
+import type { DashboardPanelNavItem } from '../dashboard/panelRegistry';
 
 interface Props {
   metadata: RegisterMetadata;
   parseCompleteness: number;
   warningCount: number;
   activePanel: PanelId;
+  panels: DashboardPanelNavItem[];
   onSelectPanel: (panel: PanelId) => void;
   onRefresh: () => void;
+  onOpenDiagnostics: () => void;
+  onOpenLayoutEditor: () => void;
   onReset?: () => void;
   hasGapAnalysis: boolean;
 }
-
-interface PanelDef {
-  id: PanelId;
-  label: string;
-  shortLabel: string;
-  gapAnalysisOnly?: boolean;
-}
-
-const PANELS: PanelDef[] = [
-  { id: 'queue', label: 'Now', shortLabel: 'Now' },
-  { id: 'gapLedger', label: 'Gap Ledger', shortLabel: 'Gaps' },
-  { id: 'escalations', label: 'Escalations', shortLabel: 'Escalate', gapAnalysisOnly: true },
-  { id: 'deadlines', label: 'Deadlines', shortLabel: 'Deadlines' },
-  { id: 'readiness', label: 'Readiness', shortLabel: 'Ready' },
-  { id: 'evidence', label: 'Evidence', shortLabel: 'Evidence' },
-  { id: 'risk', label: 'Risk', shortLabel: 'Risk' },
-  { id: 'destruction', label: 'Destruction', shortLabel: 'Destruct' },
-  { id: 'proposals', label: 'Solution', shortLabel: 'Solution' },
-];
 
 export function Header({
   metadata,
   parseCompleteness,
   warningCount,
   activePanel,
+  panels,
   onSelectPanel,
   onRefresh,
+  onOpenDiagnostics,
+  onOpenLayoutEditor,
   onReset,
   hasGapAnalysis,
 }: Props) {
@@ -72,7 +60,13 @@ export function Header({
             </span>
           </div>
 
-          <div className="header__parse-health" title={`Parse completeness: ${completenessPercent}%, ${warningCount} warnings`}>
+          <button
+            className="header__parse-health"
+            type="button"
+            onClick={onOpenDiagnostics}
+            title={`Parse completeness: ${completenessPercent}%, ${warningCount} warnings`}
+            aria-label={`Open parser diagnostics: ${completenessPercent}% parsed, ${warningCount} warnings`}
+          >
             <div className="header__parse-bar">
               <div
                 className="header__parse-fill"
@@ -85,10 +79,13 @@ export function Header({
               />
             </div>
             <span className="header__parse-label">{completenessPercent}% parsed</span>
-          </div>
+          </button>
 
           <button className="header__refresh" onClick={onRefresh} aria-label="Refresh data">
             Refresh
+          </button>
+          <button className="header__refresh" onClick={onOpenLayoutEditor} aria-label="Open layout editor">
+            Layout
           </button>
           {onReset && (
             <button className="header__reset" onClick={onReset} aria-label="Reset to blank state">
@@ -100,23 +97,20 @@ export function Header({
 
       <nav className="header__nav" role="navigation" aria-label="Dashboard panels">
         <ul className="header__nav-list" role="tablist">
-          {PANELS.map(panel => {
-            if (panel.gapAnalysisOnly && !hasGapAnalysis) return null;
-            return (
-              <li key={panel.id} role="presentation">
-                <button
-                  role="tab"
-                  aria-selected={activePanel === panel.id}
-                  aria-controls={`panel-${panel.id}`}
-                  className={`header__nav-tab ${activePanel === panel.id ? 'header__nav-tab--active' : ''}`}
-                  onClick={() => onSelectPanel(panel.id)}
-                >
-                  <span className="header__nav-tab-full">{panel.label}</span>
-                  <span className="header__nav-tab-short">{panel.shortLabel}</span>
-                </button>
-              </li>
-            );
-          })}
+          {panels.map(panel => (
+            <li key={panel.id} role="presentation">
+              <button
+                role="tab"
+                aria-selected={activePanel === panel.id}
+                aria-controls={`panel-${panel.id}`}
+                className={`header__nav-tab ${activePanel === panel.id ? 'header__nav-tab--active' : ''}`}
+                onClick={() => onSelectPanel(panel.id)}
+              >
+                <span className="header__nav-tab-full">{panel.label}</span>
+                <span className="header__nav-tab-short">{panel.shortLabel}</span>
+              </button>
+            </li>
+          ))}
         </ul>
       </nav>
     </header>

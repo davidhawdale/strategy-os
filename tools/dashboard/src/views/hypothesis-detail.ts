@@ -1,4 +1,12 @@
-import type { HypothesisRegister, HypothesisId, HypothesisDetailView, GapAnalysis, GapRecord } from '../model/types';
+import type {
+  Hypothesis,
+  HypothesisRegister,
+  HypothesisId,
+  HypothesisDetailView,
+  GapAnalysis,
+  GapRecord,
+  ValueProposition,
+} from '../model/types';
 
 const LABELS: Record<HypothesisId, string> = {
   problem: 'Problem',
@@ -13,15 +21,17 @@ export function computeHypothesisDetail(
   gapAnalysis?: GapAnalysis
 ): HypothesisDetailView {
   const h = register.hypotheses[id];
+  const hypothesis = isHypothesis(h) ? h : undefined;
+  const vp = isValueProposition(h) ? h : undefined;
 
-  const possibilitySpace = h.possibilitySpace
+  const possibilitySpace = hypothesis?.possibilitySpace
     ? {
-        consideredCount: h.possibilitySpace.considered.length,
-        eliminatedCount: h.possibilitySpace.eliminated.length,
-        carriedCount: h.possibilitySpace.alternativesCarried.length,
-        entries: h.possibilitySpace.considered,
-        eliminations: h.possibilitySpace.eliminated,
-        carried: h.possibilitySpace.alternativesCarried,
+        consideredCount: hypothesis.possibilitySpace.considered.length,
+        eliminatedCount: hypothesis.possibilitySpace.eliminated.length,
+        carriedCount: hypothesis.possibilitySpace.alternativesCarried.length,
+        entries: hypothesis.possibilitySpace.considered,
+        eliminations: hypothesis.possibilitySpace.eliminated,
+        carried: hypothesis.possibilitySpace.alternativesCarried,
       }
     : undefined;
 
@@ -41,8 +51,6 @@ export function computeHypothesisDetail(
       })
     : undefined;
 
-  const vp = id === 'valueProposition' ? (h as import('../model/types').ValueProposition) : undefined;
-
   return {
     id,
     label: LABELS[id] ?? id,
@@ -52,27 +60,36 @@ export function computeHypothesisDetail(
     currentState: h.currentState,
     possibilitySpace,
     evidence: h.evidence,
-    researchSources: (h as any).researchSources,
+    researchSources: hypothesis?.researchSources ?? [],
     assumptions: h.assumptions,
-    killCondition: (h as any).killCondition,
+    killCondition: hypothesis?.killCondition,
     lastUpdated: h.lastUpdated,
     updateRationale: h.updateRationale,
     priorUpdates: h.priorUpdates,
-    triggerEvent: (h as any).triggerEvent,
-    budgetOwner: (h as any).budgetOwner,
-    currentSpend: (h as any).currentSpend,
-    observableFilters: (h as any).observableFilters,
-    accessPaths: (h as any).accessPaths,
-    painScoring: (h as any).painScoring,
-    painIntensity: (h as any).painIntensity,
-    frequency: (h as any).frequency,
-    whyNow: (h as any).whyNow,
-    workarounds: (h as any).workarounds,
+    triggerEvent: hypothesis?.triggerEvent,
+    budgetOwner: hypothesis?.budgetOwner,
+    currentSpend: hypothesis?.currentSpend,
+    observableFilters: hypothesis?.observableFilters,
+    accessPaths: hypothesis?.accessPaths,
+    painScoring: hypothesis?.painScoring,
+    painIntensity: hypothesis?.painIntensity,
+    frequency: hypothesis?.frequency,
+    whyNow: hypothesis?.whyNow,
+    workarounds: hypothesis?.workarounds,
     jobs: vp?.jobs,
-    costStructure: (h as any).costStructure,
-    channelStrategy: (h as any).channelStrategy,
-    modeThresholds: (h as any).modeThresholds,
-    scenarioAnalysis: (h as any).scenarioAnalysis,
+    costStructure: hypothesis?.costStructure,
+    channelStrategy: hypothesis?.channelStrategy,
+    modeThresholds: hypothesis?.modeThresholds,
+    scenarioAnalysis: hypothesis?.scenarioAnalysis,
+    clauseValidation: vp?.clauseValidation,
     relatedGaps: relatedGaps && relatedGaps.length > 0 ? relatedGaps : undefined,
   };
+}
+
+function isHypothesis(value: Hypothesis | ValueProposition): value is Hypothesis {
+  return 'id' in value;
+}
+
+function isValueProposition(value: Hypothesis | ValueProposition): value is ValueProposition {
+  return !('id' in value);
 }

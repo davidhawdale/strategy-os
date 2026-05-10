@@ -1,10 +1,11 @@
-import { parse, parseCombined } from '../parser/index';
+import { parse } from '../parser/index';
 import { parseGapAnalysis } from '../parser/gap-analysis';
 import type {
   ParseResult,
   HypothesisRegister,
   GapAnalysis,
   CombinedParseResult,
+  ParseWarning,
 } from '../model/types';
 
 export type LoadError =
@@ -164,7 +165,7 @@ export async function loadCombined(
   // Load gap analysis (optional)
   const gapFetch = await fetchText(gapAnalysisPath);
   let gapAnalysis: GapAnalysis | undefined;
-  let gapAnalysisWarnings = [];
+  let gapAnalysisWarnings: ParseWarning[] = [];
   let gapAnalysisParseCompleteness = 0;
 
   if (gapFetch._tag === 'Ok') {

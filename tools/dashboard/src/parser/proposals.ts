@@ -29,7 +29,7 @@ export function parseGrowthArchitecture(
     ? (archRaw.toUpperCase() as GrowthArchitectureType)
     : undefined;
 
-  const supportStateRaw = extractField(text, 'Support State');
+  const supportStateRaw = extractField(text, 'Support State')?.split('\n')[0].trim();
   const supportState = supportStateRaw && SUPPORT_STATES.has(supportStateRaw.toUpperCase())
     ? (supportStateRaw.toUpperCase() as SupportState)
     : undefined;
@@ -99,7 +99,7 @@ export function parseGTMPlan(
   const warnings: ParseWarning[] = [];
   const text = section.rawText;
 
-  const supportStateRaw = extractField(text, 'Support State');
+  const supportStateRaw = extractField(text, 'Support State')?.split('\n')[0].trim();
   const supportState = supportStateRaw && SUPPORT_STATES.has(supportStateRaw.toUpperCase())
     ? (supportStateRaw.toUpperCase() as SupportState)
     : undefined;

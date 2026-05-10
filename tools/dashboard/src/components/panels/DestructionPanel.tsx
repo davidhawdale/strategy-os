@@ -5,12 +5,14 @@ import { EvidenceConcentrationSection } from './sections/EvidenceConcentrationSe
 import { KillSignalAuditSection } from './sections/KillSignalAuditSection';
 import { PreMortemSection } from './sections/PreMortemSection';
 import { RedTeamResponseSection } from './sections/RedTeamResponseSection';
+import { renderOrderedSections } from './sections/renderOrderedSections';
 
 interface Props {
   view: DestructionView;
+  sectionOrder?: string[];
 }
 
-export function DestructionPanel({ view }: Props) {
+export function DestructionPanel({ view, sectionOrder }: Props) {
   if (!view.hasDestructionLog) {
     return (
       <section id="panel-destruction" role="tabpanel" aria-label="Destruction Findings" className="panel">
@@ -31,18 +33,14 @@ export function DestructionPanel({ view }: Props) {
         <p className="panel__subtitle">What did the destruction phase find?</p>
       </div>
 
-      {view.preMortem && (
-        <PreMortemSection text={view.preMortem} />
-      )}
-
-      {view.redTeamResponse && (
-        <RedTeamResponseSection text={view.redTeamResponse} />
-      )}
-
-      <ConstraintInversionsSection constraintInversions={view.constraintInversions} />
-      <EvidenceConcentrationSection evidenceConcentration={view.evidenceConcentration} />
-      <KillSignalAuditSection killSignalAudit={view.killSignalAudit} />
-      <ContradictionsSection contradictions={view.contradictions} />
+      {renderOrderedSections(sectionOrder, [
+        { id: 'preMortem', render: () => view.preMortem ? <PreMortemSection text={view.preMortem} /> : null },
+        { id: 'redTeamResponse', render: () => view.redTeamResponse ? <RedTeamResponseSection text={view.redTeamResponse} /> : null },
+        { id: 'constraintInversions', render: () => <ConstraintInversionsSection constraintInversions={view.constraintInversions} /> },
+        { id: 'evidenceConcentration', render: () => <EvidenceConcentrationSection evidenceConcentration={view.evidenceConcentration} /> },
+        { id: 'killSignalAudit', render: () => <KillSignalAuditSection killSignalAudit={view.killSignalAudit} /> },
+        { id: 'contradictions', render: () => <ContradictionsSection contradictions={view.contradictions} /> },
+      ])}
     </section>
   );
 }

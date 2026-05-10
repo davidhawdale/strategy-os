@@ -1,4 +1,4 @@
-import type { ExecutionQueueView, GapAnalysis, PendingDecision } from '../model/types';
+import type { ExecutionQueueView, GapAnalysis, PendingDecision, QueueWorkItem } from '../model/types';
 
 function deriveNarrative(raw: ExecutionQueueView, gapAnalysis: GapAnalysis): string {
   const parts: string[] = [];
@@ -63,15 +63,17 @@ function derivePendingDecisions(gapAnalysis: GapAnalysis): PendingDecision[] {
 
 export function computeQueueView(
   raw: ExecutionQueueView,
-  gapAnalysis?: GapAnalysis
+  gapAnalysis?: GapAnalysis,
+  workItems: QueueWorkItem[] = []
 ): ExecutionQueueView {
   if (!gapAnalysis) {
-    return { ...raw, pendingDecisions: [] };
+    return { ...raw, pendingDecisions: [], workItems };
   }
 
   return {
     ...raw,
     narrative: deriveNarrative(raw, gapAnalysis),
     pendingDecisions: derivePendingDecisions(gapAnalysis),
+    workItems,
   };
 }

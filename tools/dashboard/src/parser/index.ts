@@ -1,7 +1,6 @@
 import type {
   HypothesisRegister,
   Hypothesis,
-  HypothesisId,
   ValueProposition,
   ParseResult,
   ParseWarning,
@@ -12,14 +11,22 @@ import { splitSections, type SectionId } from './sections';
 import { parseMetadata } from './metadata';
 import { parseHypothesis, emptyHypothesis } from './hypothesis';
 import { parseSolutionDesign, emptySolutionDesign } from './solution';
+import {
+  parseGrowthArchitecture,
+  parseGTMPlan,
+  emptyGrowthArchitecture,
+  emptyGTMPlan,
+} from './proposals';
 import { parseDestructionLog } from './destruction';
 import { parseGapAnalysis } from './gap-analysis';
-import { parseValueProposition } from './value-proposition';
+import { parseValueProposition, emptyValueProposition } from './value-proposition';
 import { parseGapLedgerSection } from './gap-ledger';
 
 export { parseGapAnalysis } from './gap-analysis';
 
-const HYPOTHESIS_SECTIONS: { sectionId: SectionId; hypothesisId: HypothesisId }[] = [
+type CoreHypothesisId = 'problem' | 'segment' | 'unitEconomics';
+
+const HYPOTHESIS_SECTIONS: { sectionId: SectionId; hypothesisId: CoreHypothesisId }[] = [
   { sectionId: 'problem', hypothesisId: 'problem' },
   { sectionId: 'segment', hypothesisId: 'segment' },
   { sectionId: 'unitEconomics', hypothesisId: 'unitEconomics' },
@@ -116,8 +123,29 @@ export function parse(markdown: string): ParseResult {
     });
   }
 
-  // Step 4: Parse solution design
-  let solutionDesignProposal;
+  // Step 4: Parse proposals
+  let growthArchitectureProposal = emptyGrowthArchitecture();
+  const growthArchitectureSection = sections.get('growthArchitecture');
+  fieldsAttempted += 3; // architecture, supportState, requiredConditions
+
+  if (growthArchitectureSection) {
+    const { proposal, warnings: gaWarnings } = parseGrowthArchitecture(growthArchitectureSection);
+    growthArchitectureProposal = proposal;
+    warnings.push(...gaWarnings);
+
+    if (proposal.architecture) fieldsExtracted++;
+    if (proposal.supportState) fieldsExtracted++;
+    if (proposal.requiredConditions.length > 0) fieldsExtracted++;
+  } else {
+    warnings.push({
+      section: 'growthArchitecture',
+      field: 'section',
+      message: 'Growth Architecture section not found',
+      severity: 'info',
+    });
+  }
+
+  let solutionDesignProposal = emptySolutionDesign();
   const solutionSection = sections.get('solutionDesign');
   fieldsAttempted += 3; // featureMap, mvpScope, growthLoops
 
@@ -134,6 +162,28 @@ export function parse(markdown: string): ParseResult {
       section: 'solutionDesign',
       field: 'section',
       message: 'Solution Design section not found',
+      severity: 'info',
+    });
+  }
+
+  let gtmPlanProposal = emptyGTMPlan();
+  const gtmSection = sections.get('gtmPlan');
+  fieldsAttempted += 4; // channelSequence, messagingFramework, successCriteria, killCriteria
+
+  if (gtmSection) {
+    const { proposal, warnings: gtmWarnings } = parseGTMPlan(gtmSection);
+    gtmPlanProposal = proposal;
+    warnings.push(...gtmWarnings);
+
+    if (proposal.channelSequence.length > 0) fieldsExtracted++;
+    if (proposal.messagingFramework) fieldsExtracted++;
+    if (proposal.successCriteria.length > 0) fieldsExtracted++;
+    if (proposal.killCriteria.length > 0) fieldsExtracted++;
+  } else {
+    warnings.push({
+      section: 'gtmPlan',
+      field: 'section',
+      message: 'GTM Plan section not found',
       severity: 'info',
     });
   }
@@ -176,9 +226,9 @@ export function parse(markdown: string): ParseResult {
     metadata,
     hypotheses,
     proposals: {
-      growthArchitecture: emptyGrowthArchitecture(),
-      solutionDesign: solutionDesignProposal ?? emptySolutionDesign(),
-      gtmPlan: emptyGtmPlan(),
+      growthArchitecture: growthArchitectureProposal,
+      solutionDesign: solutionDesignProposal,
+      gtmPlan: gtmPlanProposal,
     },
     destructionLog,
     gapLedger,
@@ -230,28 +280,7 @@ function emptyRegister(): HypothesisRegister {
     proposals: {
       growthArchitecture: emptyGrowthArchitecture(),
       solutionDesign: emptySolutionDesign(),
-      gtmPlan: emptyGtmPlan(),
+      gtmPlan: emptyGTMPlan(),
     },
-  };
-}
-
-function emptyValueProposition(): ValueProposition {
-  return {
-    clauseValidation: [],
-    evidence: [],
-    assumptions: [],
-  };
-}
-
-function emptyGrowthArchitecture() {
-  return { requiredConditions: [], assumptions: [] };
-}
-
-function emptyGtmPlan() {
-  return {
-    channelSequence: [],
-    operationalConstraints: [],
-    successCriteria: [],
-    killCriteria: [],
   };
 }

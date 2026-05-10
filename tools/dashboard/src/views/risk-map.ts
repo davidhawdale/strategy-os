@@ -1,6 +1,6 @@
-import type { HypothesisRegister, HypothesisId, RiskMapView } from '../model/types';
+import type { Hypothesis, HypothesisRegister, HypothesisId, RiskMapView, ValueProposition } from '../model/types';
 
-const IDS: HypothesisId[] = ['problem', 'segment', 'unitEconomics'];
+const IDS: HypothesisId[] = ['problem', 'segment', 'unitEconomics', 'valueProposition'];
 
 export function computeRiskMap(register: HypothesisRegister): RiskMapView {
   const assumptions = IDS.flatMap(id => {
@@ -19,7 +19,7 @@ export function computeRiskMap(register: HypothesisRegister): RiskMapView {
       }
 
       return {
-        hypothesis: id,
+        source: id,
         claim: a.claim,
         tag: a.tag,
         tier: a.tier,
@@ -40,11 +40,15 @@ export function computeRiskMap(register: HypothesisRegister): RiskMapView {
   };
 
   const killConditions = IDS
-    .filter(id => register.hypotheses[id].killCondition)
+    .filter(id => hasKillCondition(register.hypotheses[id]))
     .map(id => ({
       hypothesis: id,
-      condition: register.hypotheses[id].killCondition!,
+      condition: (register.hypotheses[id] as Hypothesis).killCondition!,
     }));
 
   return { assumptions, byCriticality, killConditions };
+}
+
+function hasKillCondition(hypothesis: Hypothesis | ValueProposition): hypothesis is Hypothesis {
+  return 'killCondition' in hypothesis && !!hypothesis.killCondition;
 }

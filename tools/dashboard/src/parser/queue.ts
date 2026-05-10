@@ -1,4 +1,4 @@
-import type { ExecutionQueueView, QueueAction, BlockedPath } from '../model/types';
+import type { ExecutionQueueView, QueueAction, BlockedPath, PendingDecision, QueueWorkItem } from '../model/types';
 
 function extractBoldField(text: string, label: string): string | undefined {
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -12,6 +12,104 @@ function sectionAfter(markdown: string, heading: string): string {
   const after = markdown.slice(idx + heading.length);
   const nextH2 = after.search(/\n## /);
   return nextH2 === -1 ? after : after.slice(0, nextH2);
+}
+
+function sectionContent(markdown: string, heading: string): string | undefined {
+  const pattern = new RegExp(`^##\\s+${heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'im');
+  const match = markdown.match(pattern);
+  if (!match || match.index === undefined) return undefined;
+
+  const after = markdown.slice(match.index + match[0].length);
+  const nextHeading = after.search(/\n##\s+/);
+  const content = nextHeading === -1 ? after : after.slice(0, nextHeading);
+  const trimmed = content.trim();
+  return trimmed || undefined;
+}
+
+function firstParagraph(markdown: string | undefined): string | undefined {
+  if (!markdown) return undefined;
+  const paragraph = markdown
+    .split(/\n\s*\n/)
+    .map(part => part.trim())
+    .find(Boolean);
+  return paragraph?.replace(/\s+/g, ' ');
+}
+
+function bulletItems(markdown: string | undefined): string[] {
+  if (!markdown) return [];
+  return markdown
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.startsWith('- '))
+    .map(line => line.replace(/^-\s+/, '').trim())
+    .filter(Boolean);
+}
+
+function parseTitle(markdown: string, fileName: string): { id: string; title: string } {
+  const heading = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim();
+  const fromHeading = heading?.match(/^([A-Z]+-\d+)\s+[—-]\s+(.+)$/);
+  if (fromHeading) {
+    return { id: fromHeading[1], title: fromHeading[2].trim() };
+  }
+
+  const fromFile = fileName.match(/^([A-Z]+-\d+)/)?.[1];
+  return {
+    id: fromFile ?? fileName.replace(/\.md$/i, ''),
+    title: heading ?? fileName.replace(/\.md$/i, ''),
+  };
+}
+
+function normalizeStatus(status: string | undefined): string | undefined {
+  return status?.replace(/\*\*/g, '').trim();
+}
+
+export interface QueueFileInput {
+  fileName: string;
+  content: string;
+}
+
+export function parseQueueWorkItem(fileName: string, markdown: string): QueueWorkItem {
+  const { id, title } = parseTitle(markdown, fileName);
+  const kind = id.startsWith('E-') ? 'escalation' : 'task';
+  const decisionNeeded = firstParagraph(sectionContent(markdown, 'Decision needed'));
+  const objective = firstParagraph(sectionContent(markdown, 'Objective'));
+  const whatNeedsReconciling = firstParagraph(sectionContent(markdown, 'What needs reconciling'));
+  const expectedResponse = firstParagraph(sectionContent(markdown, 'Expected response'));
+  const expectedOutput = firstParagraph(sectionContent(markdown, 'Expected output'));
+  const preconditions = [
+    ...bulletItems(sectionContent(markdown, 'Pre-conditions before this task can start')),
+    ...bulletItems(sectionContent(markdown, 'Pre-conditions')),
+    ...bulletItems(sectionContent(markdown, 'Preconditions')),
+  ];
+
+  return {
+    id,
+    title,
+    fileName,
+    kind,
+    issued: extractBoldField(markdown, 'Issued'),
+    issuedBy: extractBoldField(markdown, 'Issued by'),
+    status: normalizeStatus(extractBoldField(markdown, 'Status')),
+    type: extractBoldField(markdown, 'Type'),
+    blastRadius: extractBoldField(markdown, 'Blast radius'),
+    reducesGap: extractBoldField(markdown, 'Reduces gap'),
+    actionType: extractBoldField(markdown, 'Action type'),
+    evidenceTarget: extractBoldField(markdown, 'Evidence target'),
+    blocks: extractBoldField(markdown, 'Blocks'),
+    summary: decisionNeeded ?? objective ?? whatNeedsReconciling,
+    decisionNeeded,
+    expectedResponse,
+    expectedOutput,
+    preconditions,
+  };
+}
+
+export function parseQueueWorkItems(files: QueueFileInput[]): QueueWorkItem[] {
+  return files
+    .filter(file => file.fileName.endsWith('.md'))
+    .filter(file => !file.fileName.startsWith('gap-definer-actions'))
+    .map(file => parseQueueWorkItem(file.fileName, file.content))
+    .sort((a, b) => a.id.localeCompare(b.id));
 }
 
 export function parseExecutionQueue(markdown: string): ExecutionQueueView {
@@ -119,6 +217,8 @@ export function parseExecutionQueue(markdown: string): ExecutionQueueView {
     return { path: plain.trim(), blocker: '' };
   }).filter(b => b.path.length > 0);
 
+  const pendingDecisions: PendingDecision[] = [];
+
   return {
     decisionState,
     passDate,
@@ -127,5 +227,7 @@ export function parseExecutionQueue(markdown: string): ExecutionQueueView {
     scaleReady,
     actions,
     blockedPaths,
+    pendingDecisions,
+    workItems: [],
   };
 }

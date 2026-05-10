@@ -1,6 +1,7 @@
 import type {
   ValueProposition,
   ConfidenceState,
+  ClauseValidation,
   ParseWarning,
 } from '../model/types';
 import type { Section } from './sections';
@@ -54,7 +55,7 @@ export function parseValueProposition(
 
   // Clause Validation table
   const tables = extractTablesFromNodes(section.nodes);
-  let clauseValidation = [];
+  let clauseValidation: ClauseValidation[] = [];
   const clauseTable = tables.find(t => {
     const rows = tableToRows(t);
     return rows.length > 1 && rows[0].some(h => /Clause/i.test(h)) && rows[0].some(h => /Status/i.test(h));

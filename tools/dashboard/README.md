@@ -1,73 +1,119 @@
-# React + TypeScript + Vite
+# StrategistOS Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This dashboard is a local technical surface for inspecting the StrategistOS
+markdown artifacts. It reads the strategy files, parses them into typed models,
+turns those models into view models, and renders them through thin panel shells
+and colocated section components.
 
-Currently, two official plugins are available:
+## Data Flow
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The main path is:
 
-## React Compiler
+1. Markdown artifacts live in the repository, mainly:
+   - `strategy/hypotheses.md`
+   - `strategy/gap-analysis.md`
+   - `execution/queue/gap-definer-actions.md`
+   - individual `execution/queue/*.md` work-item files
+2. Vite dev-server routes expose those files to the browser.
+3. `src/loader/` fetches the files.
+4. `src/parser/` parses markdown into typed register, gap-analysis, proposal,
+   and queue models.
+5. `src/views/` computes dashboard-specific view models.
+6. `src/dashboard/panelRegistry.tsx` defines the top-level panel order,
+   metadata, section ids, and render functions.
+7. `src/components/panels/` render page shells.
+8. `src/components/panels/sections/` render the actual dashboard blocks with
+   colocated CSS.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Keep business/data interpretation in parsers and view models where possible.
+Panels should mostly pass data to sections.
 
-## Expanding the ESLint configuration
+## Dev Server Routes
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The local Vite config adds development-only routes:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- `GET /hypotheses.md`: serves `strategy/hypotheses.md`.
+- `GET /gap-analysis.md`: serves `strategy/gap-analysis.md`.
+- `GET /gap-definer-actions.md`: serves
+  `execution/queue/gap-definer-actions.md`.
+- `GET /api/queue-files`: returns individual markdown files from
+  `execution/queue/`, excluding `gap-definer-actions.md`.
+- `GET /problem.md`: serves `strategy/problem.md`.
+- `POST /api/problem`: writes `strategy/problem.md`.
+- `POST /api/build`: shells out locally to
+  `claude -p "Run the stg-build-register skill."`.
+- `POST /api/reset`: resets local strategy files from templates and clears the
+  queue directory except `.gitkeep`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+These routes are local orchestration helpers, not a production API. The build
+and reset endpoints can modify files in the working tree.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Parser Diagnostics
+
+The header parse-health control opens a parser diagnostics drawer. It combines
+register and gap-analysis warnings into one technical view with:
+
+- source labels;
+- severity counts;
+- section and field details;
+- register and gap-analysis completeness.
+
+Diagnostics are intentionally outside the panel registry because they are a
+dashboard utility, not strategic content.
+
+## Layout Editor
+
+The header Layout control opens a local layout editor. It can reorder:
+
+- top-level navigable panels;
+- sections inside each top-level panel.
+
+The canonical default order still lives in `src/dashboard/panelRegistry.tsx`.
+Browser-specific overrides are saved in `localStorage` under:
+
+```text
+strategist-dashboard-layout:v1
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Reset clears the local override and restores registry order. Stale or unknown
+panel/section ids are ignored, and new known ids are appended safely.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Queue Visibility
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The Now panel combines the summary queue view with individual queue work items.
+Files in `execution/queue/` are parsed as read-only work items:
+
+- `T-*.md` files become task work items.
+- `E-*.md` files become escalation/decision work items.
+
+The dashboard does not edit queue files, mark them complete, or infer business
+status from them in this pass.
+
+## CSS Ownership
+
+CSS ownership is deliberately local:
+
+- `src/App.css`: app shell, header, shared panel primitives, shared headings,
+  badges, `EvidenceBar`, `DataTable`, text utilities, onboarding, and global
+  responsive shell rules.
+- Utility overlays: colocated CSS, such as `LayoutEditor.css` and
+  `ParserDiagnosticsDrawer.css`.
+- Panel shells: panel-specific CSS beside the panel where needed.
+- Sections: section-specific cards, lists, tables, and responsive rules beside
+  the section component.
+
+Avoid adding panel-specific blocks back into `App.css`.
+
+## Commands
+
+Run from `tools/dashboard`:
+
+```bash
+npm run dev
+npm test
+npm run build
+npm run preview
 ```
+
+Use `npm test` for parser/view/helper regression tests and `npm run build` for
+TypeScript plus production bundle verification.
