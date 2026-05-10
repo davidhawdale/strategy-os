@@ -3,11 +3,11 @@ import { useState } from 'react';
 type Mode = 'bootstrap' | 'venture' | 'extension';
 
 export interface RegisterSeed {
-  problem: string;
-  goals: string;
-  capabilities: string;
+  futureState: string;
+  currentReality: string;
+  strategicBet: string;
   mode: Mode;
-  otherConstraints: string;
+  validationStandard: string;
 }
 
 interface Props {
@@ -16,26 +16,27 @@ interface Props {
 }
 
 export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
-  const [problem, setProblem] = useState('');
-  const [goals, setGoals] = useState('');
-  const [capabilities, setCapabilities] = useState('');
+  const [futureState, setFutureState] = useState('');
+  const [currentReality, setCurrentReality] = useState('');
+  const [strategicBet, setStrategicBet] = useState('');
   const [mode, setMode] = useState<Mode | null>(null);
-  const [otherConstraints, setOtherConstraints] = useState('');
+  const [validationStandard, setValidationStandard] = useState('');
 
   const isReady =
-    problem.trim().length >= 10 &&
-    goals.trim().length >= 10 &&
-    capabilities.trim().length >= 10 &&
+    futureState.trim().length >= 10 &&
+    currentReality.trim().length >= 10 &&
+    strategicBet.trim().length >= 10 &&
+    validationStandard.trim().length >= 10 &&
     mode !== null;
 
   function handleSubmit() {
     if (!isReady || !mode) return;
     onGenerate({
-      problem: problem.trim(),
-      goals: goals.trim(),
-      capabilities: capabilities.trim(),
+      futureState: futureState.trim(),
+      currentReality: currentReality.trim(),
+      strategicBet: strategicBet.trim(),
       mode,
-      otherConstraints: otherConstraints.trim(),
+      validationStandard: validationStandard.trim(),
     });
   }
 
@@ -47,40 +48,40 @@ export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
         </div>
 
         <div className="onboarding-field">
-          <label className="onboarding-label" htmlFor="onboarding-problem">
-            1. What is the problem or opportunity?
+          <label className="onboarding-label" htmlFor="onboarding-future-state">
+            1. Future State
           </label>
-          <p className="onboarding-hint">Who, what, why, where, and when?</p>
+          <p className="onboarding-hint">What future do you want to explore making true?</p>
           <textarea
-            id="onboarding-problem"
+            id="onboarding-future-state"
             className="onboarding-textarea"
             rows={3}
-            value={problem}
-            onChange={e => setProblem(e.target.value)}
-            placeholder="e.g. The new checkout page (where) has caused a 20% drop in conversion rates (what) among mobile users (who) during the last month (when), leading to an estimated loss of $15,000 in monthly revenue (why)."
+            value={futureState}
+            onChange={e => setFutureState(e.target.value)}
+            placeholder="Describe the destination: what would exist, improve, or become possible if this strategy worked."
           />
         </div>
 
         <div className="onboarding-field">
-          <label className="onboarding-label" htmlFor="onboarding-goals">
-            2. What outcome would make this worth the effort?
+          <label className="onboarding-label" htmlFor="onboarding-current-reality">
+            2. Current Reality
           </label>
-          <p className="onboarding-hint">Revenue target, exit, community impact — whatever it is.</p>
+          <p className="onboarding-hint">What is true now that makes this worth investigating?</p>
           <textarea
-            id="onboarding-goals"
+            id="onboarding-current-reality"
             className="onboarding-textarea"
             rows={3}
-            value={goals}
-            onChange={e => setGoals(e.target.value)}
-            placeholder="e.g. 50 paying subscribers at £X/month within 6 months, with a clear path to 200..."
+            value={currentReality}
+            onChange={e => setCurrentReality(e.target.value)}
+            placeholder="Describe the situation, observation, gap, constraint, trend, or analogue that prompted the question."
           />
         </div>
 
         <div className="onboarding-field">
-          <label className="onboarding-label" htmlFor="onboarding-capabilities">
-            3. What can you build?
+          <label className="onboarding-label" htmlFor="onboarding-strategic-bet">
+            3. Strategic Bet
           </label>
-          <p className="onboarding-hint">Resources, timeline, and budget at your disposal.</p>
+          <p className="onboarding-hint">What belief or move are we testing?</p>
           <div className="onboarding-mode-toggle" role="group" aria-label="Mode">
             {(['bootstrap', 'venture', 'extension'] as Mode[]).map(m => (
               <button
@@ -94,27 +95,27 @@ export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
             ))}
           </div>
           <textarea
-            id="onboarding-capabilities"
+            id="onboarding-strategic-bet"
             className="onboarding-textarea"
             rows={3}
-            value={capabilities}
-            onChange={e => setCapabilities(e.target.value)}
-            placeholder="e.g. Solo founder, 6-month runway, £10k budget, full-stack developer, no existing distribution..."
+            value={strategicBet}
+            onChange={e => setStrategicBet(e.target.value)}
+            placeholder="Describe the initial product, market, model, expansion, or positioning bet you want the system to investigate."
           />
         </div>
 
         <div className="onboarding-field">
-          <label className="onboarding-label" htmlFor="onboarding-constraints">
-            4. Any other constraints or opportunities?
+          <label className="onboarding-label" htmlFor="onboarding-validation-standard">
+            4. Validation Standard
           </label>
-          <p className="onboarding-hint">Regulatory, geographic, strategic, or partnership factors.</p>
+          <p className="onboarding-hint">What would make this a good bet or a bad bet?</p>
           <textarea
-            id="onboarding-constraints"
+            id="onboarding-validation-standard"
             className="onboarding-textarea"
-            rows={2}
-            value={otherConstraints}
-            onChange={e => setOtherConstraints(e.target.value)}
-            placeholder="Optional — e.g. Must comply with UK data protection law; existing partnership with regional council..."
+            rows={3}
+            value={validationStandard}
+            onChange={e => setValidationStandard(e.target.value)}
+            placeholder="Describe what must be true, what evidence would build confidence, and what evidence would kill or change the strategy."
           />
         </div>
 

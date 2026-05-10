@@ -11,17 +11,17 @@ full hypothesis register.
 Date: YYYY-MM-DD
 Mode: BOOTSTRAP | VENTURE | EXTENSION
 
-## Problem or Opportunity
-{governor's problem text}
+## Future State
+{what future the governor wants to explore making true}
 
-## Goals
-{governor's goals text}
+## Current Reality
+{what is true now that makes this worth investigating}
 
-## Capabilities and Resources
-{governor's capabilities text}
+## Strategic Bet
+{the initial belief, product, market, model, expansion, or positioning move being tested}
 
-## Other Constraints
-{governor's constraints text, or "None"}
+## Validation Standard
+{what would make this a good bet or a bad bet}
 ```
 
 This format is the contract between the onboarding UI (writer) and this skill (reader).

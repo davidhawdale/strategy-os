@@ -30,24 +30,23 @@ export function useOnboardingState(fetchData: () => void) {
 
   const generate = useCallback(async (seed: RegisterSeed) => {
     const today = new Date().toISOString().slice(0, 10);
-    const constraints = seed.otherConstraints.trim() || 'None';
     const content = [
       '# Strategy Seed',
       '',
       `Date: ${today}`,
       `Mode: ${seed.mode.toUpperCase()}`,
       '',
-      '## Problem or Opportunity',
-      seed.problem,
+      '## Future State',
+      seed.futureState,
       '',
-      '## Goals',
-      seed.goals,
+      '## Current Reality',
+      seed.currentReality,
       '',
-      '## Capabilities and Resources',
-      seed.capabilities,
+      '## Strategic Bet',
+      seed.strategicBet,
       '',
-      '## Other Constraints',
-      constraints,
+      '## Validation Standard',
+      seed.validationStandard,
     ].join('\n');
 
     const problemRes = await fetch('/api/problem', {
