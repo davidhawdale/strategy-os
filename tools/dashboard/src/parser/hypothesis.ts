@@ -24,6 +24,8 @@ import {
   extractCurrentState,
   extractListItems,
   extractBlockAfterLabel,
+  extractDocumentBlock,
+  extractDocumentBlocks,
 } from './fields';
 import {
   parseCostStructureTable,
@@ -61,6 +63,8 @@ export function parseHypothesis(
   // Desired/Current State
   const desiredState = extractDesiredState(text);
   const currentState = extractCurrentState(text);
+  const desiredStateText = extractDocumentBlock(text, 'Desired State');
+  const currentStateText = extractDocumentBlock(text, 'Current State');
 
   // Structured sub-sections
   const possibilitySpace = extractPossibilitySpace(text);
@@ -76,6 +80,8 @@ export function parseHypothesis(
     confidence,
     desiredState,
     currentState,
+    desiredStateText,
+    currentStateText,
     possibilitySpace,
     evidence: evidenceResult.items,
     researchSources: sourcesResult.items,
@@ -105,6 +111,10 @@ export function parseHypothesis(
 }
 
 function parseProblemExtensions(text: string, hypothesis: Hypothesis): void {
+  hypothesis.documentBlocks = extractDocumentBlocks(text, {
+    problemScoring: 'Problem Scoring',
+  });
+
   const painRaw = extractField(text, 'Pain Intensity');
   if (painRaw && PAIN_INTENSITIES.has(painRaw.toUpperCase())) {
     hypothesis.painIntensity = painRaw.toUpperCase() as PainIntensity;
@@ -153,6 +163,10 @@ function parseProblemExtensions(text: string, hypothesis: Hypothesis): void {
 }
 
 function parseSegmentExtensions(section: Section, text: string, hypothesis: Hypothesis): void {
+  hypothesis.documentBlocks = extractDocumentBlocks(text, {
+    painScoring: 'Pain Scoring',
+  });
+
   hypothesis.triggerEvent = extractField(text, 'Trigger Event');
   hypothesis.budgetOwner = extractField(text, 'Budget Owner');
   hypothesis.currentSpend = extractField(text, 'Current Spend');
@@ -181,6 +195,11 @@ function parseUnitEconomicsExtensions(
   _warnings: ParseWarning[]
 ): void {
   const text = section.rawText;
+  hypothesis.documentBlocks = extractDocumentBlocks(text, {
+    pricingInputs: 'Pricing Inputs',
+    costStructure: 'Cost Structure',
+    calculatedMetrics: 'Calculated Metrics',
+  });
 
   // Revenue Model
   const modelType = extractField(text, 'Type');

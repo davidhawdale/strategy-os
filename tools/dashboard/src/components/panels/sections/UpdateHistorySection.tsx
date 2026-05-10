@@ -3,6 +3,7 @@ import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import './UpdateHistorySection.css';
 
 interface Props {
+  lastUpdated?: string;
   updateRationale?: string;
   priorUpdates?: UpdateEntry[];
 }
@@ -28,12 +29,18 @@ function renderUpdateText(text: string) {
   );
 }
 
-export function UpdateHistorySection({ updateRationale, priorUpdates }: Props) {
-  if (!updateRationale && (!priorUpdates || priorUpdates.length === 0)) return null;
+export function UpdateHistorySection({ lastUpdated, updateRationale, priorUpdates }: Props) {
+  if (!lastUpdated && !updateRationale && (!priorUpdates || priorUpdates.length === 0)) return null;
 
   return (
     <div className="detail-section">
       <h3 className="section-heading">Update History</h3>
+      {lastUpdated && (
+        <div className="update-entry">
+          <span className="update-entry__date">Last Updated</span>
+          {renderUpdateText(lastUpdated)}
+        </div>
+      )}
       {updateRationale && (() => {
         const m = updateRationale.match(/^(\d{4}-\d{2}-\d{2})\s+(CHALLENGE Pass \d+)\s*—\s*([\s\S]+)$/i);
         const date = m?.[1];

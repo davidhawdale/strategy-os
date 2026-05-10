@@ -2,8 +2,11 @@ import { describe, it, expect } from 'vitest';
 import {
   extractBlockAfterLabel,
   extractEvidenceItems,
+  extractResearchSources,
   extractAssumptions,
   extractPossibilitySpace,
+  extractDocumentBlock,
+  extractDocumentBlocks,
 } from '../fields';
 
 // ─── extractBlockAfterLabel ────────────────────────────────────────────────
@@ -39,6 +42,110 @@ describe('extractBlockAfterLabel', () => {
     const block = extractBlockAfterLabel(text, 'Assumptions');
     expect(block).toContain('some content');
     expect(block).not.toContain('other');
+  });
+});
+
+// ─── extractDocumentBlock ─────────────────────────────────────────────────
+
+describe('extractDocumentBlock', () => {
+  it('extracts a named H3 document block and stops at the next H3', () => {
+    const text = [
+      '### Pricing Inputs',
+      '',
+      '| Input | Range |',
+      '| --- | --- |',
+      '| ARPU | £40-£75 |',
+      '',
+      '### Channel Strategy',
+      '',
+      'other content',
+    ].join('\n');
+
+    expect(extractDocumentBlock(text, 'Pricing Inputs')).toContain('| ARPU | £40-£75 |');
+    expect(extractDocumentBlock(text, 'Pricing Inputs')).not.toContain('other content');
+  });
+
+  it('matches a heading prefix with a subtitle', () => {
+    const text = '### Calculated Metrics (range-based)\n\nmetric content';
+
+    expect(extractDocumentBlock(text, 'Calculated Metrics')).toBe('metric content');
+  });
+
+  it('extracts multiple document blocks by stable keys', () => {
+    const text = [
+      '### Clause-by-clause Tracing',
+      '',
+      'clause content',
+      '',
+      '### Competitive Landscape',
+      '',
+      'competitive content',
+    ].join('\n');
+
+    expect(extractDocumentBlocks(text, {
+      clauseTracing: 'Clause-by-clause Tracing',
+      competitiveLandscape: 'Competitive Landscape',
+    })).toEqual({
+      clauseTracing: 'clause content',
+      competitiveLandscape: 'competitive content',
+    });
+  });
+});
+
+// ─── extractResearchSources ────────────────────────────────────────────────
+
+describe('extractResearchSources', () => {
+  it('parses a typed canonical research source line', () => {
+    const text = [
+      '### Research Sources',
+      '',
+      '- [WEB_RESEARCH] [T1] 2026-05-09 -- [Scottish Borders Council](https://www.scotborders.gov.uk/): SBC area population ~115,000.',
+    ].join('\n');
+
+    const { items } = extractResearchSources(text, 'problem');
+
+    expect(items).toHaveLength(1);
+    expect(items[0]).toMatchObject({
+      type: 'WEB_RESEARCH',
+      tier: 'T1',
+      date: '2026-05-09',
+      name: 'Scottish Borders Council',
+      url: 'https://www.scotborders.gov.uk/',
+      note: 'SBC area population ~115,000.',
+    });
+  });
+
+  it('parses legacy untyped research source lines', () => {
+    const text = [
+      '### Research Sources',
+      '',
+      '- [T2] 2026-05-09 -- [Ofcom](https://www.ofcom.org.uk/): UK news consumption data.',
+    ].join('\n');
+
+    const { items } = extractResearchSources(text, 'problem');
+
+    expect(items[0]).toMatchObject({
+      tier: 'T2',
+      date: '2026-05-09',
+      name: 'Ofcom',
+      url: 'https://www.ofcom.org.uk/',
+      note: 'UK news consumption data.',
+    });
+    expect(items[0].type).toBeUndefined();
+  });
+
+  it('keeps malformed research source lines as plain descriptions', () => {
+    const text = [
+      '### Research Sources',
+      '',
+      '- Source without canonical metadata',
+    ].join('\n');
+
+    const { items } = extractResearchSources(text, 'problem');
+
+    expect(items).toEqual([
+      { raw: 'Source without canonical metadata', description: 'Source without canonical metadata' },
+    ]);
   });
 });
 

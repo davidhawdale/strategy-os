@@ -19,6 +19,15 @@
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.research-source-item__type {
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-muted);
 }
 
 .research-source-item__date {
@@ -26,18 +35,12 @@
   color: var(--color-on-surface-subtle);
 }
 
-.research-source-item__title,
 .research-source-item__detail {
   margin: 0;
   font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
 }
 
-.research-source-item__title {
-  color: var(--color-on-surface);
-}
-
 .research-source-item__detail {
-  margin-top: var(--space-1);
-  color: var(--color-on-surface-muted);
+  color: var(--color-on-surface);
 }

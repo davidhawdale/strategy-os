@@ -33,7 +33,7 @@ export function extractField(text: string, fieldName: string): string | undefine
   if (boldMatch) return boldMatch[1].trim();
 
   // H3 heading fallback: ### fieldName\ncontent
-  const h3Pattern = new RegExp(`^###\\s+${escaped}\\s*$`, 'im');
+  const h3Pattern = new RegExp(`^###\\s+${escaped}\\b.*`, 'im');
   const h3Match = text.match(h3Pattern);
   if (h3Match && h3Match.index !== undefined) {
     const rest = text.substring(h3Match.index + h3Match[0].length).replace(/^\n+/, '');
@@ -47,6 +47,43 @@ export function extractField(text: string, fieldName: string): string | undefine
 
 export function extractBoldField(text: string, fieldName: string): string | undefined {
   return extractField(text, fieldName);
+}
+
+export function extractDocumentBlock(text: string, headingName: string): string | undefined {
+  const lines = text.split('\n');
+  const target = headingName.toLowerCase();
+  const headingIndex = lines.findIndex(line => {
+    const heading = line.match(/^###\s+(.+)$/);
+    if (!heading) return false;
+    const headingText = heading[1].trim().toLowerCase();
+    if (!headingText.startsWith(target)) return false;
+    const next = headingText[target.length];
+    return next === undefined || !/[a-z0-9]/.test(next);
+  });
+  if (headingIndex < 0) return undefined;
+
+  const blockLines: string[] = [];
+  for (const line of lines.slice(headingIndex + 1)) {
+    if (/^###\s+/.test(line) || /^##\s+/.test(line) || /^---\s*$/.test(line)) break;
+    blockLines.push(line);
+  }
+
+  const block = blockLines.join('\n').trim();
+  return block || undefined;
+}
+
+export function extractDocumentBlocks(
+  text: string,
+  blocks: Record<string, string>,
+): Record<string, string> | undefined {
+  const result: Record<string, string> = {};
+
+  for (const [key, headingName] of Object.entries(blocks)) {
+    const block = extractDocumentBlock(text, headingName);
+    if (block) result[key] = block;
+  }
+
+  return Object.keys(result).length > 0 ? result : undefined;
 }
 
 export function extractPriorUpdates(text: string): UpdateEntry[] {
@@ -208,12 +245,18 @@ export function extractResearchSources(text: string, _sectionName: string): { it
 
     const raw = trimmed.replace(/^-\s*/, '');
 
-    const match = trimmed.match(
+    const typedMatch = trimmed.match(
+      /^-\s*\[(\w+(?:_\w+)*)\]\s*\[([T][123])\]\s*(\d{4}-\d{2}-\d{2})\s*--\s*(.*)/
+    );
+    const legacyMatch = trimmed.match(
       /^-\s*\[([T][123])\]\s*(\d{4}-\d{2}-\d{2})\s*--\s*(.*)/
     );
 
-    if (match) {
-      const [, tierStr, date, rest] = match;
+    if (typedMatch || legacyMatch) {
+      const typeStr = typedMatch?.[1];
+      const tierStr = typedMatch?.[2] ?? legacyMatch?.[1] ?? '';
+      const date = typedMatch?.[3] ?? legacyMatch?.[2];
+      const rest = typedMatch?.[4] ?? legacyMatch?.[3] ?? '';
       let url: string | undefined;
       let description: string;
 
@@ -238,6 +281,7 @@ export function extractResearchSources(text: string, _sectionName: string): { it
 
       items.push({
         raw,
+        type: typeStr && EVIDENCE_TYPES.has(typeStr) ? (typeStr as EvidenceType) : undefined,
         tier: TIERS.has(tierStr) ? (tierStr as EpistemicTier) : undefined,
         date,
         url,

@@ -14,6 +14,8 @@ import {
   extractDesiredState,
   extractCurrentState,
   extractBlockAfterLabel,
+  extractDocumentBlock,
+  extractDocumentBlocks,
 } from './fields';
 import { parseClauseValidationTable } from './tables';
 
@@ -72,6 +74,8 @@ export function parseValueProposition(
   // Desired/Current State
   const desiredState = extractDesiredState(text);
   const currentState = extractCurrentState(text);
+  const desiredStateText = extractDocumentBlock(text, 'Desired State');
+  const currentStateText = extractDocumentBlock(text, 'Current State');
 
   return {
     valueProposition: {
@@ -79,10 +83,17 @@ export function parseValueProposition(
       confidence,
       jobs,
       clauseValidation,
+      documentBlocks: extractDocumentBlocks(text, {
+        clauseTracing: 'Clause-by-clause Tracing',
+        competitiveLandscape: 'Competitive Landscape',
+        competitorResponseCapability: 'Competitor Response Capability',
+      }),
       evidence: evidenceResult.items,
       assumptions: assumptionsResult.items,
       desiredState,
       currentState,
+      desiredStateText,
+      currentStateText,
       lastUpdated,
       updateRationale,
       priorUpdates: priorUpdates.length > 0 ? priorUpdates : undefined,

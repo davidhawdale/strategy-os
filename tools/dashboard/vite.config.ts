@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import fs from 'fs'
 import { spawn } from 'child_process'
+import { resetStrategyWorkspace } from './dev/resetStrategy'
 
 const projectRoot = path.resolve(__dirname, '..', '..')
 
@@ -116,31 +117,29 @@ function resetStrategy(urlPath: string, root: string) {
           res.end('Method not allowed')
           return
         }
-        try {
-          const problemPath = path.join(root, 'strategy', 'problem.md')
-          if (fs.existsSync(problemPath)) fs.unlinkSync(problemPath)
 
-          fs.copyFileSync(
-            path.join(root, 'templates', 'hypotheses.md'),
-            path.join(root, 'strategy', 'hypotheses.md'),
-          )
-          fs.copyFileSync(
-            path.join(root, 'templates', 'gap-analysis.md'),
-            path.join(root, 'strategy', 'gap-analysis.md'),
-          )
+        const chunks: Buffer[] = []
+        req.on('data', (chunk: Buffer) => chunks.push(chunk))
+        req.on('end', () => {
+          try {
+            const body = Buffer.concat(chunks).toString('utf-8').trim()
+            const payload = body ? JSON.parse(body) as { archive?: unknown } : {}
+            const archive = payload.archive === true
+            const result = resetStrategyWorkspace(root, { archive })
 
-          const queueDir = path.join(root, 'execution', 'queue')
-          for (const file of fs.readdirSync(queueDir)) {
-            if (file !== '.gitkeep') fs.unlinkSync(path.join(queueDir, file))
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({
+              message: 'Reset complete',
+              archived: !!result.archive,
+              snapshotDir: result.archive?.snapshotDir,
+            }))
+          } catch (err) {
+            console.error('[reset] Failed:', err)
+            res.statusCode = 500
+            res.end('Reset failed')
           }
-
-          res.statusCode = 200
-          res.end('Reset complete')
-        } catch (err) {
-          console.error('[reset] Failed:', err)
-          res.statusCode = 500
-          res.end('Reset failed')
-        }
+        })
       })
     },
   }

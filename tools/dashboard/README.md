@@ -45,10 +45,13 @@ The local Vite config adds development-only routes:
 - `POST /api/build`: shells out locally to
   `claude -p "Run the stg-build-register skill."`.
 - `POST /api/reset`: resets local strategy files from templates and clears the
-  queue directory except `.gitkeep`.
+  queue directory except `.gitkeep`. Send `{ "archive": true }` to first copy
+  the current strategy and queue files into a timestamped
+  `archive/dashboard-snapshots/` folder.
 
 These routes are local orchestration helpers, not a production API. The build
-and reset endpoints can modify files in the working tree.
+and reset endpoints can modify files in the working tree. Archive snapshots are
+not served by the dashboard routes and are not parsed as live strategy content.
 
 ## Parser Diagnostics
 
@@ -102,8 +105,9 @@ structured `source`/`url` pair.
 ## Hypothesis Panels
 
 Problem, Segment, Unit Economics, and Value Proposition are top-level panels.
-They reuse the hypothesis detail renderer and can be reordered alongside the
-other panels in the Layout editor. Their sections are also locally reorderable.
+They reuse the hypothesis detail renderer, but each panel has its own section
+profile that follows the corresponding `hypotheses.md` structure. Their panels
+and sections are locally reorderable in the Layout editor.
 
 ## CSS Ownership
 

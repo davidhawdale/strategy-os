@@ -156,18 +156,53 @@ describe('dashboard layout model', () => {
       'evidence',
       'claim',
       'validationState',
-      'researchSources',
+      'possibilitySpace',
     ]);
   });
 
-  it('provides default section orders for promoted hypothesis panels', () => {
+  it('provides distinct default section orders for promoted hypothesis panels', () => {
     const defaultSections = getDefaultSectionOrders();
 
-    expect(defaultSections.problem).toContain('claim');
-    expect(defaultSections.problem).toContain('researchSources');
-    expect(defaultSections.segment).toContain('observableFilters');
-    expect(defaultSections.unitEconomics).toContain('costStructure');
-    expect(defaultSections.valueProposition).toContain('jobs');
+    expect(defaultSections.problem).toEqual([
+      'claim',
+      'validationState',
+      'possibilitySpace',
+      'evidence',
+      'researchSources',
+      'problemScoring',
+      'assumptions',
+      'killSignal',
+      'updateHistory',
+    ]);
+    expect(defaultSections.segment).toContain('painScoring');
+    expect(defaultSections.unitEconomics).toContain('pricingInputs');
+    expect(defaultSections.unitEconomics).toContain('calculatedMetrics');
+    expect(defaultSections.valueProposition).toContain('clauseTracing');
+    expect(defaultSections.valueProposition).toContain('competitorResponseCapability');
+  });
+
+  it('keeps unit economics-only sections out of problem and value proposition panels', () => {
+    const defaultSections = getDefaultSectionOrders();
+
+    expect(defaultSections.problem).not.toContain('modeThresholds');
+    expect(defaultSections.problem).not.toContain('costStructure');
+    expect(defaultSections.problem).not.toContain('jobs');
+    expect(defaultSections.valueProposition).not.toContain('costStructure');
+    expect(defaultSections.valueProposition).not.toContain('scenarioAnalysis');
+    expect(defaultSections.valueProposition).not.toContain('modeThresholds');
+  });
+
+  it('keeps unit economics structured around economics-specific sections', () => {
+    const defaultSections = getDefaultSectionOrders();
+
+    expect(defaultSections.unitEconomics).toEqual(expect.arrayContaining([
+      'pricingInputs',
+      'channelStrategy',
+      'costStructure',
+      'calculatedMetrics',
+      'scenarioAnalysis',
+      'modeThresholds',
+    ]));
   });
 
   it('resolves section order from defaults when there is no saved order', () => {

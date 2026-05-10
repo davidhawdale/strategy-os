@@ -22,9 +22,23 @@ const FULL_REGISTER = `# Hypothesis Register
 
 The problem claim.
 
+### Desired State
+
+Evidence that the problem matters enough to change behaviour.
+
+### Current State
+
+The problem is plausible but not directly validated.
+
 ### Evidence
 
 - [WEB_RESEARCH] [T1] 2026-05-10 -- [Source](https://example.com): Problem evidence.
+
+### Problem Scoring
+
+| Property | Score | Tier | Evidence basis |
+| -------- | ----- | ---- | -------------- |
+| Frequency | 4 | T2 | Daily pain |
 
 ### Assumptions
 
@@ -35,6 +49,10 @@ The problem claim.
 ### Kill Condition
 
 Problem kill signal.
+
+### Last Updated
+
+2026-05-10 — initial parser contract fixture.
 
 ## 2. Segment
 
@@ -48,6 +66,12 @@ The segment claim.
 
 - [WEB_RESEARCH] [T2] 2026-05-10 -- [Source](https://example.com): Segment evidence.
 
+### Pain Scoring
+
+| Segment | Pain score | Tier | Evidence |
+| ------- | ---------- | ---- | -------- |
+| Primary | 3 | T2 | Active workaround |
+
 ## 3. Unit Economics
 
 **Confidence State:** RESEARCHED
@@ -59,6 +83,30 @@ The unit economics claim.
 ### Evidence
 
 - [WEB_RESEARCH] [T2] 2026-05-10 -- [Source](https://example.com): Unit economics evidence.
+
+### Pricing Inputs
+
+| Input | Range | Tier | Source / basis |
+| ----- | ----- | ---- | -------------- |
+| ARPU blended | £40-£75 | T2 | Benchmark |
+
+### Cost Structure
+
+**Fixed (annual):**
+
+- Editorial: £120K – £225K
+- Tech & infrastructure: £20K – £50K
+
+**Variable:**
+
+- Payment processing 2-3% of revenue
+- AI inference per article: £0.20 – £2
+
+### Calculated Metrics (range-based)
+
+| Metric | Base | Tier |
+| ------ | ---- | ---- |
+| LTV:CAC | 5:1 | T2 |
 
 ## 4. Value Proposition
 
@@ -79,6 +127,22 @@ The value proposition claim.
 | Clause | Status | Tier | Evidence |
 | ------ | ------ | ---- | -------- |
 | Target customer clause | TESTED | T2 | Interview synthesis |
+
+### Clause-by-clause Tracing
+
+| Clause | Source | Tier |
+| ------ | ------ | ---- |
+| Target | Segment | T2 |
+
+### Competitive Landscape
+
+No direct competitor.
+
+### Competitor Response Capability
+
+| Competitor | Likely response |
+| ---------- | --------------- |
+| Incumbent | Watch and wait |
 
 ### Evidence
 
@@ -211,5 +275,34 @@ describe('parser contract', () => {
     expect(readiness.hypothesisSummary.find(h => h.id === 'valueProposition')?.label).toBe('Value Proposition');
     expect(detail.jobs?.functional).toBe('Save time.');
     expect(evidenceQuality.byHypothesis.find(h => h.id === 'valueProposition')?.totalEvidence).toBe(1);
+  });
+
+  it('preserves hypothesis-specific document blocks for distinct panel sections', () => {
+    const { register } = parse(FULL_REGISTER);
+    const problem = computeHypothesisDetail(register, 'problem');
+    const segment = computeHypothesisDetail(register, 'segment');
+    const unitEconomics = computeHypothesisDetail(register, 'unitEconomics');
+    const valueProposition = computeHypothesisDetail(register, 'valueProposition');
+
+    expect(problem.documentBlocks?.problemScoring).toContain('Frequency');
+    expect(segment.documentBlocks?.painScoring).toContain('Primary');
+    expect(unitEconomics.documentBlocks?.pricingInputs).toContain('ARPU blended');
+    expect(unitEconomics.documentBlocks?.costStructure).toContain('Fixed (annual)');
+    expect(unitEconomics.documentBlocks?.costStructure).toContain('Payment processing');
+    expect(unitEconomics.documentBlocks?.calculatedMetrics).toContain('LTV:CAC');
+    expect(valueProposition.documentBlocks?.clauseTracing).toContain('Target');
+    expect(valueProposition.documentBlocks?.competitiveLandscape).toContain('No direct competitor.');
+    expect(valueProposition.documentBlocks?.competitorResponseCapability).toContain('Incumbent');
+  });
+
+  it('preserves paragraph validation state and last updated for hypothesis detail sections', () => {
+    const { register } = parse(FULL_REGISTER);
+    const problem = computeHypothesisDetail(register, 'problem');
+
+    expect(problem.desiredState).toBeUndefined();
+    expect(problem.currentState).toBeUndefined();
+    expect(problem.desiredStateText).toBe('Evidence that the problem matters enough to change behaviour.');
+    expect(problem.currentStateText).toBe('The problem is plausible but not directly validated.');
+    expect(problem.lastUpdated).toBe('2026-05-10 — initial parser contract fixture.');
   });
 });

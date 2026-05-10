@@ -103,6 +103,8 @@ export interface Hypothesis {
   confidence?: ConfidenceState;
   desiredState?: DesiredState;
   currentState?: CurrentState;
+  desiredStateText?: string;
+  currentStateText?: string;
   possibilitySpace?: PossibilitySpace;
   evidence: EvidenceItem[];
   researchSources: ResearchSource[];
@@ -111,6 +113,7 @@ export interface Hypothesis {
   lastUpdated?: string;
   updateRationale?: string;
   priorUpdates?: UpdateEntry[];
+  documentBlocks?: Record<string, string>;
 
   // Problem-specific extensions
   painIntensity?: PainIntensity;
@@ -177,9 +180,12 @@ export interface ValueProposition {
   assumptions: Assumption[];
   desiredState?: DesiredState;
   currentState?: CurrentState;
+  desiredStateText?: string;
+  currentStateText?: string;
   lastUpdated?: string;
   updateRationale?: string;
   priorUpdates?: UpdateEntry[];
+  documentBlocks?: Record<string, string>;
 }
 
 export interface JobsToBeDone {
@@ -341,6 +347,7 @@ export interface EvidenceItem {
 
 export interface ResearchSource {
   raw: string;
+  type?: EvidenceType;
   tier?: EpistemicTier;
   date?: string;
   url?: string;
@@ -911,6 +918,8 @@ export interface HypothesisDetailView {
 
   desiredState?: DesiredState;
   currentState?: CurrentState;
+  desiredStateText?: string;
+  currentStateText?: string;
 
   possibilitySpace?: {
     consideredCount: number;
@@ -928,6 +937,7 @@ export interface HypothesisDetailView {
   lastUpdated?: string;
   updateRationale?: string;
   priorUpdates?: UpdateEntry[];
+  documentBlocks?: Record<string, string>;
 
   // Problem-specific
   painIntensity?: PainIntensity;

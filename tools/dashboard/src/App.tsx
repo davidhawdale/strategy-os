@@ -6,6 +6,7 @@ import { LayoutEditor } from './components/LayoutEditor';
 import { OnboardingDialog } from './components/OnboardingDialog';
 import { ParserDiagnosticsDrawer } from './components/ParserDiagnosticsDrawer';
 import { PanelErrorBoundary } from './components/PanelErrorBoundary';
+import { StartOverDialog } from './components/StartOverDialog';
 import { computeParseDiagnostics } from './views/diagnostics';
 import { renderDashboardPanel } from './dashboard/panelRegistry';
 import { useBuildPolling } from './hooks/useBuildPolling';
@@ -18,6 +19,7 @@ import './App.css';
 function App() {
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
+  const [startOverOpen, setStartOverOpen] = useState(false);
   const {
     state,
     fetchData,
@@ -105,6 +107,11 @@ function App() {
   const warningCount = loadedData.registerWarnings.length + loadedData.gapAnalysisWarnings.length;
   const diagnosticsView = computeParseDiagnostics(loadedData);
 
+  async function handleStartOver(archive: boolean) {
+    await handleReset(archive);
+    setStartOverOpen(false);
+  }
+
   return (
     <div className="app">
       {state._tag === 'Stale' && (
@@ -138,9 +145,16 @@ function App() {
         onRefresh={handleRefresh}
         onOpenDiagnostics={() => setDiagnosticsOpen(true)}
         onOpenLayoutEditor={() => setLayoutEditorOpen(true)}
-        onReset={handleReset}
+        onReset={() => setStartOverOpen(true)}
         hasGapAnalysis={!!loadedGapAnalysis}
       />
+
+      {startOverOpen && (
+        <StartOverDialog
+          onCancel={() => setStartOverOpen(false)}
+          onConfirm={handleStartOver}
+        />
+      )}
 
       {diagnosticsOpen && (
         <ParserDiagnosticsDrawer

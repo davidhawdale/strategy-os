@@ -21,6 +21,7 @@ import { computeGovernorEscalationsView } from '../views/escalations';
 import { computeDecisionDeadlinesView } from '../views/deadlines';
 import type { SectionOrderMap } from './layoutModel';
 import { resolveSectionOrder } from './layoutModel';
+import { HYPOTHESIS_SECTION_PROFILES } from './hypothesisSectionProfiles';
 
 export type DashboardPanelGroup = 'now' | 'hypothesis' | 'diagnose' | 'validate' | 'decide' | 'design';
 
@@ -60,22 +61,36 @@ interface DashboardPanelDefinition {
   render: (context: DashboardPanelRenderContext) => ReactNode;
 }
 
-const HYPOTHESIS_DETAIL_SECTIONS: DashboardPanelSection[] = [
-  { id: 'claim', label: 'Claim' },
-  { id: 'validationState', label: 'Validation State' },
-  { id: 'evidence', label: 'Evidence' },
-  { id: 'researchSources', label: 'Research Sources' },
-  { id: 'modeThresholds', label: 'Mode Thresholds' },
-  { id: 'scenarioAnalysis', label: 'Scenario Analysis' },
-  { id: 'costStructure', label: 'Cost Structure' },
-  { id: 'channelStrategy', label: 'Channel Strategy' },
-  { id: 'assumptions', label: 'Assumptions' },
-  { id: 'killSignal', label: 'Kill Signal' },
-  { id: 'possibilitySpace', label: 'Possibility Space' },
-  { id: 'jobs', label: 'Jobs' },
-  { id: 'observableFilters', label: 'Observable Filters' },
-  { id: 'updateHistory', label: 'Update History' },
-];
+const HYPOTHESIS_SECTION_LABELS: Record<string, string> = {
+  claim: 'Claim',
+  validationState: 'Validation State',
+  evidence: 'Evidence',
+  researchSources: 'Research Sources',
+  problemScoring: 'Problem Scoring',
+  painScoring: 'Pain Scoring',
+  pricingInputs: 'Pricing Inputs',
+  calculatedMetrics: 'Calculated Metrics',
+  clauseTracing: 'Clause Tracing',
+  competitiveLandscape: 'Competitive Landscape',
+  competitorResponseCapability: 'Competitor Response Capability',
+  modeThresholds: 'Mode Validation',
+  scenarioAnalysis: 'Scenario Analysis',
+  costStructure: 'Cost Structure',
+  channelStrategy: 'Channel Strategy',
+  assumptions: 'Assumptions',
+  killSignal: 'Kill Signal',
+  possibilitySpace: 'Possibility Space',
+  jobs: 'Jobs',
+  observableFilters: 'Observable Filters',
+  updateHistory: 'Update History',
+};
+
+function hypothesisSections(id: HypothesisId): DashboardPanelSection[] {
+  return HYPOTHESIS_SECTION_PROFILES[id].map(sectionId => ({
+    id: sectionId,
+    label: HYPOTHESIS_SECTION_LABELS[sectionId] ?? sectionId,
+  }));
+}
 
 function renderHypothesisPanel(
   id: HypothesisId,
@@ -88,6 +103,7 @@ function renderHypothesisPanel(
       view={computeHypothesisDetail(register, id, gapAnalysis)}
       panelId={id}
       sectionOrder={sectionOrders[id]}
+      sectionProfile={HYPOTHESIS_SECTION_PROFILES[id]}
     />
   );
 }
@@ -126,7 +142,7 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
       shortLabel: 'Problem',
       group: 'hypothesis',
       description: 'Problem hypothesis claim, evidence, assumptions, and validation state.',
-      sections: HYPOTHESIS_DETAIL_SECTIONS,
+      sections: hypothesisSections('problem'),
     },
     render: ({ register, gapAnalysis, sectionOrders }) => (
       renderHypothesisPanel('problem', register, gapAnalysis, sectionOrders)
@@ -139,7 +155,7 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
       shortLabel: 'Segment',
       group: 'hypothesis',
       description: 'Segment hypothesis filters, access paths, assumptions, and evidence.',
-      sections: HYPOTHESIS_DETAIL_SECTIONS,
+      sections: hypothesisSections('segment'),
     },
     render: ({ register, gapAnalysis, sectionOrders }) => (
       renderHypothesisPanel('segment', register, gapAnalysis, sectionOrders)
@@ -152,7 +168,7 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
       shortLabel: 'Economics',
       group: 'hypothesis',
       description: 'Revenue model, cost structure, channel strategy, scenarios, and evidence.',
-      sections: HYPOTHESIS_DETAIL_SECTIONS,
+      sections: hypothesisSections('unitEconomics'),
     },
     render: ({ register, gapAnalysis, sectionOrders }) => (
       renderHypothesisPanel('unitEconomics', register, gapAnalysis, sectionOrders)
@@ -165,7 +181,7 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
       shortLabel: 'Value Prop',
       group: 'hypothesis',
       description: 'Value proposition claim, jobs, validation state, assumptions, and evidence.',
-      sections: HYPOTHESIS_DETAIL_SECTIONS,
+      sections: hypothesisSections('valueProposition'),
     },
     render: ({ register, gapAnalysis, sectionOrders }) => (
       renderHypothesisPanel('valueProposition', register, gapAnalysis, sectionOrders)

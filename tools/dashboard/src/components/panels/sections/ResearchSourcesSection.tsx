@@ -18,29 +18,28 @@ export function ResearchSourcesSection({ researchSources }: Props) {
       </h3>
       <ul className="research-source-list">
         {researchSources.map((source, i) => {
-          const label = source.name ?? source.url ?? source.raw;
-          const detail = source.note ?? source.description;
+          const label = source.name ?? source.url ?? source.description ?? source.raw;
+          const detail = source.note ?? (!source.name && !source.url ? source.description : undefined);
 
           return (
             <li key={i} className="research-source-item">
               <div className="research-source-item__meta">
+                {source.type && <span className="research-source-item__type">{source.type.replace(/_/g, ' ')}</span>}
                 <TierBadge tier={source.tier} />
                 {source.date && <span className="research-source-item__date">{source.date}</span>}
               </div>
-              <p className="research-source-item__title">
+              <p className="research-source-item__detail">
                 {source.url ? (
-                  <a href={source.url} target="_blank" rel="noopener noreferrer" className="source-link">
-                    {label}
-                  </a>
+                  <>
+                    <a href={source.url} target="_blank" rel="noopener noreferrer" className="source-link">
+                      {label}
+                    </a>
+                    {detail && <>: <InlineMarkdownText text={detail} /></>}
+                  </>
                 ) : (
-                  <InlineMarkdownText text={label} />
+                  <InlineMarkdownText text={detail ?? label} />
                 )}
               </p>
-              {detail && (
-                <p className="research-source-item__detail">
-                  <InlineMarkdownText text={detail} />
-                </p>
-              )}
             </li>
           );
         })}

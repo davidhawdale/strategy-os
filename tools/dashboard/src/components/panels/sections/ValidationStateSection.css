@@ -11,6 +11,13 @@
   gap: var(--space-1);
 }
 
+.validation-state-text {
+  margin: var(--space-1) 0 0;
+  color: var(--color-on-surface);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
 .validation-met        { color: var(--color-success, #22c55e); }
 .validation-partial    { color: var(--color-warning, #f59e0b); }
 .validation-missing    { color: var(--color-on-surface-muted); }

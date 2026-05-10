@@ -11,14 +11,21 @@ export function useOnboardingState(fetchData: () => void) {
       .catch(() => {});
   }, []);
 
-  const resetStrategy = useCallback(async () => {
-    if (!window.confirm('Danger Will Robinson — this will delete problem.md, reset both strategy files, and clear the execution queue. Continue?')) return;
-    const res = await fetch('/api/reset', { method: 'POST' });
+  const resetStrategy = useCallback(async (archive: boolean) => {
+    const res = await fetch('/api/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ archive }),
+    });
     if (res.ok) {
       setOnboardingDismissed(false);
       setBuildTriggered(false);
       fetchData();
+      return;
     }
+
+    const message = await res.text().catch(() => 'Reset failed');
+    throw new Error(message || 'Reset failed');
   }, [fetchData]);
 
   const generate = useCallback(async (seed: RegisterSeed) => {
