@@ -109,7 +109,12 @@ function App() {
 
   async function handleStartOver(archive: boolean) {
     await handleReset(archive);
-    setStartOverOpen(false);
+    window.location.reload();
+  }
+
+  function handleDismissOnboarding() {
+    setOnboardingDismissed(true);
+    handleRefresh();
   }
 
   return (
@@ -130,7 +135,7 @@ function App() {
 
       {showOnboarding && (
         <OnboardingDialog
-          onDismiss={() => setOnboardingDismissed(true)}
+          onDismiss={handleDismissOnboarding}
           onGenerate={handleGenerate}
         />
       )}
