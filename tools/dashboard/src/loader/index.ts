@@ -191,6 +191,10 @@ export async function loadCombined(
     gapAnalysisWarnings,
     registerParseCompleteness: registerResult.parseCompleteness,
     gapAnalysisParseCompleteness,
+    sourcePaths: {
+      register: hypothesesPath,
+      gapAnalysis: gapAnalysis ? gapAnalysisPath : undefined,
+    },
   };
 
   return { _tag: 'Ok', data: combined };

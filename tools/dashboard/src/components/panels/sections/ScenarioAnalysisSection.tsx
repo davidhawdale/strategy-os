@@ -1,4 +1,5 @@
 import type { ScenarioAnalysis, ScenarioEntry } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import './ScenarioAnalysisSection.css';
 
 interface Props {
@@ -44,7 +45,7 @@ function ScenarioCard({ label, scenario }: { label: string; scenario: ScenarioEn
         </div>
       )}
       {scenario.narrative && (
-        <p className="scenario-card__narrative">{scenario.narrative}</p>
+        <p className="scenario-card__narrative"><InlineMarkdownText text={scenario.narrative} /></p>
       )}
     </div>
   );

@@ -6,6 +6,7 @@ import {
   createPanelOrderExportSnippet,
   loadDashboardLayout,
   loadPanelOrder,
+  moveOrderItem,
   movePanelOrderItem,
   moveSectionOrderItem,
   resolvePanelOrder,
@@ -14,7 +15,7 @@ import {
   saveDashboardLayout,
   savePanelOrder,
 } from '../layoutModel';
-import { getNavigationPanels } from '../panelRegistry';
+import { getDefaultNavigationPanelIds, getDefaultSectionOrders, getNavigationPanels } from '../panelRegistry';
 
 function createStorage(initial: Record<string, string> = {}) {
   const values = new Map(Object.entries(initial));
@@ -57,6 +58,16 @@ describe('dashboard layout model', () => {
     expect(movedUp).toEqual(['queue', 'escalations', 'gapLedger', 'deadlines']);
     expect(movedDown).toEqual(['queue', 'escalations', 'gapLedger', 'deadlines']);
     expect(defaultOrder).toEqual(['queue', 'gapLedger', 'escalations', 'deadlines']);
+  });
+
+  it('moves generic ordered items without mutating the original order', () => {
+    const order = ['header', 'actions', 'blockedPaths'];
+
+    expect(moveOrderItem(order, 'actions', 'up')).toEqual(['actions', 'header', 'blockedPaths']);
+    expect(moveOrderItem(order, 'actions', 'down')).toEqual(['header', 'blockedPaths', 'actions']);
+    expect(moveOrderItem(order, 'header', 'up')).toEqual(order);
+    expect(moveOrderItem(order, 'missing', 'down')).toEqual(order);
+    expect(order).toEqual(['header', 'actions', 'blockedPaths']);
   });
 
   it('stores, loads, and clears local layout order', () => {
@@ -103,6 +114,24 @@ describe('dashboard layout model', () => {
     expect(panelIds).toEqual(['queue', 'deadlines']);
   });
 
+  it('includes promoted hypothesis panels in the default navigation order', () => {
+    expect(getDefaultNavigationPanelIds()).toEqual([
+      'queue',
+      'problem',
+      'segment',
+      'unitEconomics',
+      'valueProposition',
+      'gapLedger',
+      'escalations',
+      'deadlines',
+      'readiness',
+      'evidence',
+      'risk',
+      'destruction',
+      'proposals',
+    ]);
+  });
+
   it('applies section order to navigation panel metadata', () => {
     const [queuePanel] = getNavigationPanels(true, ['queue'], {
       queue: ['actions', 'header'],
@@ -116,6 +145,29 @@ describe('dashboard layout model', () => {
       'pendingDecisions',
       'blockedPaths',
     ]);
+  });
+
+  it('applies section order to promoted hypothesis panel metadata', () => {
+    const [problemPanel] = getNavigationPanels(true, ['problem'], {
+      problem: ['evidence', 'claim'],
+    });
+
+    expect(problemPanel.sections?.map(section => section.id).slice(0, 4)).toEqual([
+      'evidence',
+      'claim',
+      'validationState',
+      'researchSources',
+    ]);
+  });
+
+  it('provides default section orders for promoted hypothesis panels', () => {
+    const defaultSections = getDefaultSectionOrders();
+
+    expect(defaultSections.problem).toContain('claim');
+    expect(defaultSections.problem).toContain('researchSources');
+    expect(defaultSections.segment).toContain('observableFilters');
+    expect(defaultSections.unitEconomics).toContain('costStructure');
+    expect(defaultSections.valueProposition).toContain('jobs');
   });
 
   it('resolves section order from defaults when there is no saved order', () => {

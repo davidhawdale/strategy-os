@@ -1,0 +1,19 @@
+.panel-error-boundary {
+  padding: var(--space-6);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-fails);
+  border-left: 4px solid var(--color-fails);
+  border-radius: var(--radius-md);
+}
+
+.panel-error-boundary h2 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+  color: var(--color-on-surface);
+}
+
+.panel-error-boundary p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-on-surface-muted);
+}

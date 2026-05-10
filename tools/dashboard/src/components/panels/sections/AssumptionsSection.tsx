@@ -1,5 +1,6 @@
 import type { Assumption } from '../../../model/types';
 import { BlastRadiusBadge } from '../../shared/BlastRadiusBadge';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { TierBadge } from '../../shared/TierBadge';
 import './AssumptionsSection.css';
 
@@ -32,16 +33,16 @@ export function AssumptionsSection({ assumptions }: Props) {
               {a.loadBearing && <span className="badge badge--load-bearing">Load-Bearing</span>}
               <TierBadge tier={a.tier} />
             </div>
-            <p className="assumption-item__claim">{a.claim}</p>
+            <p className="assumption-item__claim"><InlineMarkdownText text={a.claim} /></p>
             {a.falsification && (
-              <p className="assumption-item__detail"><strong>Falsification:</strong> {a.falsification}</p>
+              <p className="assumption-item__detail"><strong>Falsification:</strong> <InlineMarkdownText text={a.falsification} /></p>
             )}
             {a.validation && (
-              <p className="assumption-item__detail"><strong>Validation:</strong> {a.validation}</p>
+              <p className="assumption-item__detail"><strong>Validation:</strong> <InlineMarkdownText text={a.validation} /></p>
             )}
             {a.challenges && a.challenges.map((c, j) => (
               <p key={j} className="assumption-item__detail assumption-item__challenge">
-                <strong>Challenge {c.date}:</strong> {c.text}
+                <strong>Challenge {c.date}:</strong> <InlineMarkdownText text={c.text} />
               </p>
             ))}
           </li>

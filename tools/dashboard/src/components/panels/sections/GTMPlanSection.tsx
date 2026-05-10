@@ -1,4 +1,5 @@
 import type { ProposalsView } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { SupportStateBadge } from '../../shared/SupportStateBadge';
 import { CriteriaListSection } from './CriteriaListSection';
 import './GTMPlanSection.css';
@@ -37,7 +38,7 @@ export function GTMPlanSection({ gtmPlan }: Props) {
                       <tr key={i} className="data-table__row">
                         <td className="data-table__cell">{phase.phaseName}</td>
                         <td className="data-table__cell">{phase.channels.join(', ')}</td>
-                        <td className="data-table__cell">{phase.gateCondition ?? '-'}</td>
+                        <td className="data-table__cell"><InlineMarkdownText text={phase.gateCondition ?? '-'} /></td>
                         <td className="data-table__cell">{phase.durationEstimate ?? '-'}</td>
                       </tr>
                     ))}
@@ -51,12 +52,12 @@ export function GTMPlanSection({ gtmPlan }: Props) {
             <div className="gtm-messaging-section">
               <h4 className="proposal-subsection-heading">Messaging Framework</h4>
               {gtmPlan.messagingFramework.primaryMessage && (
-                <blockquote>{gtmPlan.messagingFramework.primaryMessage}</blockquote>
+                <blockquote><InlineMarkdownText text={gtmPlan.messagingFramework.primaryMessage} /></blockquote>
               )}
               {gtmPlan.messagingFramework.supportingMessages.length > 0 && (
                 <ul>
                   {gtmPlan.messagingFramework.supportingMessages.map((message, i) => (
-                    <li key={i}>{message}</li>
+                    <li key={i}><InlineMarkdownText text={message} /></li>
                   ))}
                 </ul>
               )}

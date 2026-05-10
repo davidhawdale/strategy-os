@@ -1,4 +1,5 @@
 import type { EvidenceItem } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { TierBadge } from '../../shared/TierBadge';
 import './EvidenceSection.css';
 
@@ -24,11 +25,11 @@ export function EvidenceSection({ evidence }: Props) {
             <p className="evidence-item__detail">
               {e.url ? (
                 <>
-                  <a href={e.url} target="_blank" rel="noopener noreferrer" className="evidence-item__source-link">{e.source}</a>
-                  {e.detail && <>: {e.detail}</>}
+                  <a href={e.url} target="_blank" rel="noopener noreferrer" className="source-link">{e.source}</a>
+                  {e.detail && <>: <InlineMarkdownText text={e.detail} /></>}
                 </>
               ) : (
-                e.detail
+                <InlineMarkdownText text={e.detail} />
               )}
             </p>
           </li>

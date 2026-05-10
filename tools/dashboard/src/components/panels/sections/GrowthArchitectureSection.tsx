@@ -1,4 +1,5 @@
 import type { ProposalsView } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { SupportStateBadge } from '../../shared/SupportStateBadge';
 import './GrowthArchitectureSection.css';
 
@@ -30,31 +31,31 @@ export function GrowthArchitectureSection({ growthArchitecture }: Props) {
               {growthArchitecture.rationale.selectionReason && (
                 <div className="growth-architecture-rationale__item">
                   <dt>Selection Reason</dt>
-                  <dd>{growthArchitecture.rationale.selectionReason}</dd>
+                  <dd><InlineMarkdownText text={growthArchitecture.rationale.selectionReason} /></dd>
                 </div>
               )}
               {growthArchitecture.rationale.acvImplication && (
                 <div className="growth-architecture-rationale__item">
                   <dt>ACV Implication</dt>
-                  <dd>{growthArchitecture.rationale.acvImplication}</dd>
+                  <dd><InlineMarkdownText text={growthArchitecture.rationale.acvImplication} /></dd>
                 </div>
               )}
               {growthArchitecture.rationale.buyerType && (
                 <div className="growth-architecture-rationale__item">
                   <dt>Buyer Type</dt>
-                  <dd>{growthArchitecture.rationale.buyerType}</dd>
+                  <dd><InlineMarkdownText text={growthArchitecture.rationale.buyerType} /></dd>
                 </div>
               )}
               {growthArchitecture.rationale.timeToValue && (
                 <div className="growth-architecture-rationale__item">
                   <dt>Time to Value</dt>
-                  <dd>{growthArchitecture.rationale.timeToValue}</dd>
+                  <dd><InlineMarkdownText text={growthArchitecture.rationale.timeToValue} /></dd>
                 </div>
               )}
               {growthArchitecture.rationale.collaborationRequirement && (
                 <div className="growth-architecture-rationale__item">
                   <dt>Collaboration Requirement</dt>
-                  <dd>{growthArchitecture.rationale.collaborationRequirement}</dd>
+                  <dd><InlineMarkdownText text={growthArchitecture.rationale.collaborationRequirement} /></dd>
                 </div>
               )}
             </dl>
@@ -65,7 +66,7 @@ export function GrowthArchitectureSection({ growthArchitecture }: Props) {
               <h4 className="proposal-subsection-heading">Required Conditions</h4>
               <ul className="growth-architecture-conditions__list">
                 {growthArchitecture.requiredConditions.map((condition, i) => (
-                  <li key={i}>{condition}</li>
+                  <li key={i}><InlineMarkdownText text={condition} /></li>
                 ))}
               </ul>
             </div>

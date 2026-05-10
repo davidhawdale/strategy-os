@@ -1,5 +1,6 @@
 import type { CostStructure } from '../../../model/types';
 import { DataTable } from '../../shared/DataTable';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { TierBadge } from '../../shared/TierBadge';
 import './CostStructureSection.css';
 
@@ -20,7 +21,7 @@ export function CostStructureSection({ costStructure }: Props) {
           { key: 'items', header: 'Items', render: r => r.items || '' },
           { key: 'monthly', header: 'Monthly', render: r => r.monthlyCostRange },
           { key: 'tier', header: 'Tier', render: r => <TierBadge tier={r.tier} /> },
-          { key: 'source', header: 'Source', render: r => r.source || '' },
+          { key: 'source', header: 'Source', render: r => <InlineMarkdownText text={r.source} /> },
         ]}
         data={costStructure.entries}
         compact

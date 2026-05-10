@@ -1,39 +1,14 @@
-export interface NarrativeTextPart {
-  kind: 'text';
-  text: string;
-}
+import { parseInlineMarkdownParts, type InlineMarkdownPart } from '../../../utils/inlineMarkdown';
 
-export interface NarrativeStrongPart {
-  kind: 'strong';
-  text: string;
-}
-
-export type NarrativeInlinePart = NarrativeTextPart | NarrativeStrongPart;
+export type { InlineMarkdownPart as NarrativeInlinePart };
 
 export type NarrativeBlock =
-  | { kind: 'labelled'; label: string; parts: NarrativeInlinePart[] }
-  | { kind: 'list'; items: NarrativeInlinePart[][] }
-  | { kind: 'paragraph'; parts: NarrativeInlinePart[] };
+  | { kind: 'labelled'; label: string; parts: InlineMarkdownPart[] }
+  | { kind: 'list'; items: InlineMarkdownPart[][] }
+  | { kind: 'paragraph'; parts: InlineMarkdownPart[] };
 
-export function renderInlineMarkdownParts(text: string): NarrativeInlinePart[] {
-  const parts: NarrativeInlinePart[] = [];
-  const pattern = /\*\*([^*]+)\*\*/g;
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-
-  while ((match = pattern.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({ kind: 'text', text: text.slice(lastIndex, match.index) });
-    }
-    parts.push({ kind: 'strong', text: match[1] });
-    lastIndex = pattern.lastIndex;
-  }
-
-  if (lastIndex < text.length) {
-    parts.push({ kind: 'text', text: text.slice(lastIndex) });
-  }
-
-  return parts;
+export function renderInlineMarkdownParts(text: string): InlineMarkdownPart[] {
+  return parseInlineMarkdownParts(text);
 }
 
 function normaliseListLine(line: string): string {

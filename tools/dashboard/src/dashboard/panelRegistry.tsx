@@ -22,7 +22,7 @@ import { computeDecisionDeadlinesView } from '../views/deadlines';
 import type { SectionOrderMap } from './layoutModel';
 import { resolveSectionOrder } from './layoutModel';
 
-export type DashboardPanelGroup = 'now' | 'diagnose' | 'validate' | 'decide' | 'design';
+export type DashboardPanelGroup = 'now' | 'hypothesis' | 'diagnose' | 'validate' | 'decide' | 'design';
 
 export interface DashboardPanelSection {
   id: string;
@@ -60,6 +60,38 @@ interface DashboardPanelDefinition {
   render: (context: DashboardPanelRenderContext) => ReactNode;
 }
 
+const HYPOTHESIS_DETAIL_SECTIONS: DashboardPanelSection[] = [
+  { id: 'claim', label: 'Claim' },
+  { id: 'validationState', label: 'Validation State' },
+  { id: 'evidence', label: 'Evidence' },
+  { id: 'researchSources', label: 'Research Sources' },
+  { id: 'modeThresholds', label: 'Mode Thresholds' },
+  { id: 'scenarioAnalysis', label: 'Scenario Analysis' },
+  { id: 'costStructure', label: 'Cost Structure' },
+  { id: 'channelStrategy', label: 'Channel Strategy' },
+  { id: 'assumptions', label: 'Assumptions' },
+  { id: 'killSignal', label: 'Kill Signal' },
+  { id: 'possibilitySpace', label: 'Possibility Space' },
+  { id: 'jobs', label: 'Jobs' },
+  { id: 'observableFilters', label: 'Observable Filters' },
+  { id: 'updateHistory', label: 'Update History' },
+];
+
+function renderHypothesisPanel(
+  id: HypothesisId,
+  register: HypothesisRegister,
+  gapAnalysis: GapAnalysis | undefined,
+  sectionOrders: SectionOrderMap,
+) {
+  return (
+    <HypothesisDetailPanel
+      view={computeHypothesisDetail(register, id, gapAnalysis)}
+      panelId={id}
+      sectionOrder={sectionOrders[id]}
+    />
+  );
+}
+
 // Change the order of this array to reshuffle the top-level dashboard.
 // Panels without navigation remain available for drill-down flows.
 export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
@@ -85,6 +117,58 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
         onSelectEscalations={gapAnalysis ? () => onSelectPanel('escalations') : undefined}
         sectionOrder={sectionOrders.queue}
       />
+    ),
+  },
+  {
+    id: 'problem',
+    navigation: {
+      label: 'Problem',
+      shortLabel: 'Problem',
+      group: 'hypothesis',
+      description: 'Problem hypothesis claim, evidence, assumptions, and validation state.',
+      sections: HYPOTHESIS_DETAIL_SECTIONS,
+    },
+    render: ({ register, gapAnalysis, sectionOrders }) => (
+      renderHypothesisPanel('problem', register, gapAnalysis, sectionOrders)
+    ),
+  },
+  {
+    id: 'segment',
+    navigation: {
+      label: 'Segment',
+      shortLabel: 'Segment',
+      group: 'hypothesis',
+      description: 'Segment hypothesis filters, access paths, assumptions, and evidence.',
+      sections: HYPOTHESIS_DETAIL_SECTIONS,
+    },
+    render: ({ register, gapAnalysis, sectionOrders }) => (
+      renderHypothesisPanel('segment', register, gapAnalysis, sectionOrders)
+    ),
+  },
+  {
+    id: 'unitEconomics',
+    navigation: {
+      label: 'Unit Economics',
+      shortLabel: 'Economics',
+      group: 'hypothesis',
+      description: 'Revenue model, cost structure, channel strategy, scenarios, and evidence.',
+      sections: HYPOTHESIS_DETAIL_SECTIONS,
+    },
+    render: ({ register, gapAnalysis, sectionOrders }) => (
+      renderHypothesisPanel('unitEconomics', register, gapAnalysis, sectionOrders)
+    ),
+  },
+  {
+    id: 'valueProposition',
+    navigation: {
+      label: 'Value Proposition',
+      shortLabel: 'Value Prop',
+      group: 'hypothesis',
+      description: 'Value proposition claim, jobs, validation state, assumptions, and evidence.',
+      sections: HYPOTHESIS_DETAIL_SECTIONS,
+    },
+    render: ({ register, gapAnalysis, sectionOrders }) => (
+      renderHypothesisPanel('valueProposition', register, gapAnalysis, sectionOrders)
     ),
   },
   {
@@ -151,10 +235,10 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
         { id: 'hypothesisGrid', label: 'Hypothesis Grid' },
       ],
     },
-    render: ({ register, gapAnalysis, sectionOrders, onSelectHypothesis }) => (
+    render: ({ register, gapAnalysis, sectionOrders, onSelectPanel }) => (
       <ReadinessPanel
         view={computeReadiness(register, gapAnalysis)}
-        onSelectHypothesis={onSelectHypothesis}
+        onSelectHypothesis={id => onSelectPanel(id)}
         sectionOrder={sectionOrders.readiness}
       />
     ),
@@ -237,6 +321,7 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
       selectedHypothesis ? (
         <HypothesisDetailPanel
           view={computeHypothesisDetail(register, selectedHypothesis, gapAnalysis)}
+          panelId="detail"
           onBack={onBack}
           onSelectPanel={onSelectPanel}
         />
@@ -295,5 +380,13 @@ export function getLayoutEditorPanels(order?: PanelId[], sectionOrders: SectionO
 }
 
 export function renderDashboardPanel(panelId: PanelId, context: DashboardPanelRenderContext): ReactNode {
-  return DASHBOARD_PANELS.find(panel => panel.id === panelId)?.render(context) ?? null;
+  const panel = DASHBOARD_PANELS.find(panel => panel.id === panelId);
+  if (!panel) {
+    if (import.meta.env.DEV) {
+      console.warn(`Unknown dashboard panel id: ${panelId}`);
+    }
+    return null;
+  }
+
+  return panel.render(context);
 }

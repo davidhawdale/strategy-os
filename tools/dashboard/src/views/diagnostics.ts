@@ -29,6 +29,10 @@ export interface ParseDiagnosticsView {
     gapAnalysis: number;
     overall: number;
   };
+  sourcePaths: {
+    register?: string;
+    gapAnalysis?: string;
+  };
 }
 
 function emptySummary(): DiagnosticSourceSummary {
@@ -83,5 +87,6 @@ export function computeParseDiagnostics(data: CombinedParseResult): ParseDiagnos
       gapAnalysis: gapAnalysisCompleteness,
       overall,
     },
+    sourcePaths: data.sourcePaths ?? {},
   };
 }

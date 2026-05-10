@@ -1,4 +1,5 @@
 import type { DesiredState, CurrentState } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import './ValidationStateSection.css';
 
 interface Props {
@@ -18,7 +19,7 @@ export function ValidationStateSection({ desiredState, currentState }: Props) {
             <div className="validation-zone">
               <h4 className="subsection-heading">SUPPORTED means</h4>
               <ul className="validation-list">
-                {desiredState.supportedMeans.map((s, i) => <li key={i}>{s}</li>)}
+                {desiredState.supportedMeans.map((s, i) => <li key={i}><InlineMarkdownText text={s} /></li>)}
               </ul>
             </div>
           )}
@@ -26,7 +27,7 @@ export function ValidationStateSection({ desiredState, currentState }: Props) {
             <div className="validation-zone">
               <h4 className="subsection-heading">BROKEN means</h4>
               <ul className="validation-list">
-                {desiredState.brokenMeans.map((s, i) => <li key={i}>{s}</li>)}
+                {desiredState.brokenMeans.map((s, i) => <li key={i}><InlineMarkdownText text={s} /></li>)}
               </ul>
             </div>
           )}
@@ -40,7 +41,7 @@ export function ValidationStateSection({ desiredState, currentState }: Props) {
             <div className="validation-zone">
               <h4 className="subsection-heading validation-met">Met</h4>
               <ul className="validation-list">
-                {currentState.met.map((s, i) => <li key={i}>{s}</li>)}
+                {currentState.met.map((s, i) => <li key={i}><InlineMarkdownText text={s} /></li>)}
               </ul>
             </div>
           )}
@@ -48,7 +49,7 @@ export function ValidationStateSection({ desiredState, currentState }: Props) {
             <div className="validation-zone">
               <h4 className="subsection-heading validation-partial">Partial</h4>
               <ul className="validation-list">
-                {currentState.partial.map((s, i) => <li key={i}>{s}</li>)}
+                {currentState.partial.map((s, i) => <li key={i}><InlineMarkdownText text={s} /></li>)}
               </ul>
             </div>
           )}
@@ -56,7 +57,7 @@ export function ValidationStateSection({ desiredState, currentState }: Props) {
             <div className="validation-zone">
               <h4 className="subsection-heading validation-missing">Missing</h4>
               <ul className="validation-list">
-                {currentState.missing.map((s, i) => <li key={i}>{s}</li>)}
+                {currentState.missing.map((s, i) => <li key={i}><InlineMarkdownText text={s} /></li>)}
               </ul>
             </div>
           )}
@@ -64,7 +65,7 @@ export function ValidationStateSection({ desiredState, currentState }: Props) {
             <div className="validation-zone">
               <h4 className="subsection-heading validation-contradicted">Contradicted</h4>
               <ul className="validation-list">
-                {currentState.contradicted.map((s, i) => <li key={i}>{s}</li>)}
+                {currentState.contradicted.map((s, i) => <li key={i}><InlineMarkdownText text={s} /></li>)}
               </ul>
             </div>
           )}

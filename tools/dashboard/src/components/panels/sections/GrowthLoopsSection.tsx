@@ -1,4 +1,5 @@
 import type { GrowthLoop } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { TierBadge } from '../../shared/TierBadge';
 import './GrowthLoopsSection.css';
 
@@ -19,7 +20,7 @@ export function GrowthLoopsSection({ growthLoops }: Props) {
               <h5>{loop.name}</h5>
               {loop.tier && <TierBadge tier={loop.tier} />}
             </div>
-            <p>{loop.mechanism}</p>
+            <p><InlineMarkdownText text={loop.mechanism} /></p>
           </div>
         ))}
       </div>

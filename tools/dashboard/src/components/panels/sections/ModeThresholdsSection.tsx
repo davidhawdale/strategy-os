@@ -1,4 +1,5 @@
 import type { ModeThreshold } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { TierBadge } from '../../shared/TierBadge';
 import { DataTable } from '../../shared/DataTable';
 import './ModeThresholdsSection.css';
@@ -12,6 +13,7 @@ export function ModeThresholdsSection({ modeThresholds }: Props) {
 
   const hasPassFail = modeThresholds.some(m => m.passFail && !m.tier);
   const hasTier = modeThresholds.some(m => m.tier);
+  const hasSource = modeThresholds.some(m => m.source);
 
   return (
     <div className="detail-section">
@@ -24,6 +26,7 @@ export function ModeThresholdsSection({ modeThresholds }: Props) {
           { key: 'estimate', header: 'Estimate',   render: r => r.estimate },
           ...(hasTier ? [{ key: 'tier', header: 'Tier', render: (r: ModeThreshold) => <TierBadge tier={r.tier} /> }] : []),
           ...(hasPassFail ? [{ key: 'passFail', header: 'Pass/Fail', render: (r: ModeThreshold) => r.passFail ?? '' }] : []),
+          ...(hasSource ? [{ key: 'source', header: 'Source', render: (r: ModeThreshold) => <InlineMarkdownText text={r.source} /> }] : []),
         ]}
         data={modeThresholds}
         compact

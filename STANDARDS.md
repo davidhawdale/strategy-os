@@ -16,6 +16,11 @@ If you have searched for a source and have the URL, record it. If a URL is
 not available, do not cite the source — find one that is linkable, or label
 the claim as T2/T3.
 
+Dashboard narrative and source renderers must display `[Name](URL)` citations as
+styled hyperlinks wherever they appear in source-bearing text. Plain-text URLs
+remain invalid source format and should not be introduced as a rendering
+fallback.
+
 ------------------------------------------------------------------------
 
 ## Evidence Entry Format
@@ -134,4 +139,3 @@ may add secondary targets separated by ` / ` (e.g. `"SOLUTION_DESIGN / GTM_PLAN"
 | BLOCKED     | Cannot progress — dependency or constraint                        |
 | DEFERRED    | Below the active focus cap (Focus Rule: max 3 active); re-evaluate next pass |
 | ESCALATED   | Requires governor decision; waiting for response                  |
-

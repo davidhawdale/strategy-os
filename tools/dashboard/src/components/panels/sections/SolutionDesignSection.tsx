@@ -1,5 +1,6 @@
 import type { ProposalsView } from '../../../model/types';
 import { DataTable } from '../../shared/DataTable';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { SupportStateBadge } from '../../shared/SupportStateBadge';
 import { CriteriaListSection } from './CriteriaListSection';
 import { FeatureMapSection } from './FeatureMapSection';
@@ -26,7 +27,7 @@ export function SolutionDesignSection({ solutionDesign }: Props) {
           {solutionDesign.positioningStatement && (
             <div className="solution-positioning">
               <h4 className="proposal-subsection-heading">Positioning</h4>
-              <blockquote>{solutionDesign.positioningStatement}</blockquote>
+              <blockquote><InlineMarkdownText text={solutionDesign.positioningStatement} /></blockquote>
             </div>
           )}
 
@@ -50,8 +51,8 @@ export function SolutionDesignSection({ solutionDesign }: Props) {
                 caption="Hypothesis constraints on solution"
                 columns={[
                   { key: 'from', header: 'From', render: r => r.fromHypothesis },
-                  { key: 'constraint', header: 'Constraint', render: r => r.constraint },
-                  { key: 'if', header: 'If Changes', render: r => r.ifChanges },
+                  { key: 'constraint', header: 'Constraint', render: r => <InlineMarkdownText text={r.constraint} /> },
+                  { key: 'if', header: 'If Changes', render: r => <InlineMarkdownText text={r.ifChanges} /> },
                 ]}
                 data={solutionDesign.constraints}
               />

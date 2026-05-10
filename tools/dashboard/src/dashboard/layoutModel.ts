@@ -56,16 +56,7 @@ export function resolveSectionOrders(
 }
 
 export function movePanelOrderItem(order: PanelId[], id: PanelId, direction: 'up' | 'down'): PanelId[] {
-  const index = order.indexOf(id);
-  if (index === -1) return [...order];
-
-  const targetIndex = direction === 'up' ? index - 1 : index + 1;
-  if (targetIndex < 0 || targetIndex >= order.length) return [...order];
-
-  const nextOrder = [...order];
-  const [item] = nextOrder.splice(index, 1);
-  nextOrder.splice(targetIndex, 0, item);
-  return nextOrder;
+  return moveOrderItem(order, id, direction);
 }
 
 export function moveSectionOrderItem(
@@ -79,11 +70,11 @@ export function moveSectionOrderItem(
 
   return {
     ...sectionOrders,
-    [panel]: moveStringOrderItem(currentOrder, section, direction),
+    [panel]: moveOrderItem(currentOrder, section, direction),
   };
 }
 
-function moveStringOrderItem(order: string[], id: string, direction: 'up' | 'down'): string[] {
+export function moveOrderItem<T>(order: T[], id: T, direction: 'up' | 'down'): T[] {
   const index = order.indexOf(id);
   if (index === -1) return [...order];
 

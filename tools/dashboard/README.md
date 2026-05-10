@@ -21,8 +21,10 @@ The main path is:
 5. `src/views/` computes dashboard-specific view models.
 6. `src/dashboard/panelRegistry.tsx` defines the top-level panel order,
    metadata, section ids, and render functions.
-7. `src/components/panels/` render page shells.
-8. `src/components/panels/sections/` render the actual dashboard blocks with
+7. `src/hooks/` owns dashboard orchestration concerns such as loading,
+   queue fetching, layout persistence, onboarding, and build polling.
+8. `src/components/panels/` render page shells.
+9. `src/components/panels/sections/` render the actual dashboard blocks with
    colocated CSS.
 
 Keep business/data interpretation in parsers and view models where possible.
@@ -54,6 +56,7 @@ The header parse-health control opens a parser diagnostics drawer. It combines
 register and gap-analysis warnings into one technical view with:
 
 - source labels;
+- parsed source paths when available;
 - severity counts;
 - section and field details;
 - register and gap-analysis completeness.
@@ -89,6 +92,19 @@ Files in `execution/queue/` are parsed as read-only work items:
 The dashboard does not edit queue files, mark them complete, or infer business
 status from them in this pass.
 
+## Rendering Conventions
+
+Small source-bearing text fragments should render through `InlineMarkdownText`
+so `[Name](URL)` citations become styled `.source-link` hyperlinks. Do not render
+source-bearing markdown strings directly unless the component already has a
+structured `source`/`url` pair.
+
+## Hypothesis Panels
+
+Problem, Segment, Unit Economics, and Value Proposition are top-level panels.
+They reuse the hypothesis detail renderer and can be reordered alongside the
+other panels in the Layout editor. Their sections are also locally reorderable.
+
 ## CSS Ownership
 
 CSS ownership is deliberately local:
@@ -98,6 +114,7 @@ CSS ownership is deliberately local:
   responsive shell rules.
 - Utility overlays: colocated CSS, such as `LayoutEditor.css` and
   `ParserDiagnosticsDrawer.css`.
+- Utility components: colocated CSS, such as `PanelErrorBoundary.css`.
 - Panel shells: panel-specific CSS beside the panel where needed.
 - Sections: section-specific cards, lists, tables, and responsive rules beside
   the section component.

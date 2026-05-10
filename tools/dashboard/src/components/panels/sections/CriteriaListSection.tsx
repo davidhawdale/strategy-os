@@ -1,3 +1,4 @@
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import './CriteriaListSection.css';
 
 type Tone = 'neutral' | 'success' | 'danger';
@@ -16,7 +17,7 @@ export function CriteriaListSection({ title, items, tone = 'neutral' }: Props) {
       <h4 className="proposal-subsection-heading">{title}</h4>
       <ul className="criteria-list">
         {items.map((item, i) => (
-          <li key={i}>{item}</li>
+          <li key={i}><InlineMarkdownText text={item} /></li>
         ))}
       </ul>
     </div>

@@ -57,6 +57,14 @@ describe('queue work item parser', () => {
     expect(item.preconditions).toEqual(['E-01 resolved.', 'E-02 resolved.']);
   });
 
+  it('keeps queue metadata fields to their own line when using shared field extraction', () => {
+    const item = parseQueueWorkItem('T-01-borders-fieldwork.md', TASK);
+
+    expect(item.issued).toBe('2026-05-09');
+    expect(item.issuedBy).toBe('Gap Definer');
+    expect(item.status).not.toContain('## Objective');
+  });
+
   it('parses escalation queue files', () => {
     const item = parseQueueWorkItem('E-01-deadlines-policy.md', ESCALATION);
 

@@ -50,6 +50,10 @@ export interface CombinedParseResult {
   gapAnalysisWarnings: ParseWarning[];
   registerParseCompleteness: number;
   gapAnalysisParseCompleteness: number;
+  sourcePaths?: {
+    register: string;
+    gapAnalysis?: string;
+  };
 }
 
 // ============================================================
@@ -960,6 +964,10 @@ export interface HypothesisDetailView {
 // ============================================================
 
 export type PanelId =
+  | 'problem'
+  | 'segment'
+  | 'unitEconomics'
+  | 'valueProposition'
   | 'readiness'
   | 'gapLedger'
   | 'evidence'
@@ -1066,7 +1074,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'SelectPanel':
           return { ...state, activePanel: event.panel, selectedHypothesis: undefined };
         case 'SelectHypothesis':
-          return { ...state, activePanel: 'detail', selectedHypothesis: event.id, previousPanel: state.activePanel };
+          return { ...state, activePanel: event.id, selectedHypothesis: undefined, previousPanel: state.activePanel };
         case 'Back':
           return { ...state, activePanel: state.previousPanel ?? DETAIL_FALLBACK_PANEL_ID, selectedHypothesis: undefined };
         case 'Refresh':
@@ -1096,7 +1104,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'SelectPanel':
           return { ...state, activePanel: event.panel, selectedHypothesis: undefined };
         case 'SelectHypothesis':
-          return { ...state, activePanel: 'detail', selectedHypothesis: event.id, previousPanel: state.activePanel };
+          return { ...state, activePanel: event.id, selectedHypothesis: undefined, previousPanel: state.activePanel };
         case 'Back':
           return { ...state, activePanel: state.previousPanel ?? DETAIL_FALLBACK_PANEL_ID, selectedHypothesis: undefined };
         default:

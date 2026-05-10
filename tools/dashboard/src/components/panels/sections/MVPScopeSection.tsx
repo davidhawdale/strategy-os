@@ -1,4 +1,5 @@
 import type { MVPScope } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import './MVPScopeSection.css';
 
 interface Props {
@@ -15,7 +16,7 @@ export function MVPScopeSection({ mvpScope }: Props) {
             <h5 className="mvp-scope-zone__label">Included</h5>
             <ul className="mvp-scope-list mvp-scope-list--included">
               {mvpScope.included.map((item, i) => (
-                <li key={i}>{item}</li>
+                <li key={i}><InlineMarkdownText text={item} /></li>
               ))}
             </ul>
           </div>
@@ -28,7 +29,7 @@ export function MVPScopeSection({ mvpScope }: Props) {
               {mvpScope.excluded.map((item, i) => (
                 <li key={i}>
                   <strong>{item.feature}</strong>
-                  {item.whyExcluded && <span>{item.whyExcluded}</span>}
+                  {item.whyExcluded && <span><InlineMarkdownText text={item.whyExcluded} /></span>}
                 </li>
               ))}
             </ul>
@@ -40,13 +41,13 @@ export function MVPScopeSection({ mvpScope }: Props) {
             {mvpScope.ahaMoment && (
               <p>
                 <strong>Aha moment</strong>
-                <span>{mvpScope.ahaMoment}</span>
+                <span><InlineMarkdownText text={mvpScope.ahaMoment} /></span>
               </p>
             )}
             {mvpScope.timeToValueTarget && (
               <p>
                 <strong>Time-to-value target</strong>
-                <span>{mvpScope.timeToValueTarget}</span>
+                <span><InlineMarkdownText text={mvpScope.timeToValueTarget} /></span>
               </p>
             )}
           </div>

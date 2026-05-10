@@ -1,4 +1,5 @@
 import type { UpdateEntry } from '../../../model/types';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import './UpdateHistorySection.css';
 
 interface Props {
@@ -22,8 +23,8 @@ function renderUpdateText(text: string) {
   }
   return segments.map((seg, i) =>
     seg.type === 'list'
-      ? <ul key={i} className="update-entry__list">{seg.lines.map((item, j) => <li key={j}>{item}</li>)}</ul>
-      : <p key={i} className="update-entry__text">{seg.lines.join(' ')}</p>
+      ? <ul key={i} className="update-entry__list">{seg.lines.map((item, j) => <li key={j}><InlineMarkdownText text={item} /></li>)}</ul>
+      : <p key={i} className="update-entry__text"><InlineMarkdownText text={seg.lines.join(' ')} /></p>
   );
 }
 

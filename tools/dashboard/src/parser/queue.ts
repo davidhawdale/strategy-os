@@ -1,9 +1,8 @@
 import type { ExecutionQueueView, QueueAction, BlockedPath, PendingDecision, QueueWorkItem } from '../model/types';
+import { extractBoldField } from './fields';
 
-function extractBoldField(text: string, label: string): string | undefined {
-  const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const m = text.match(new RegExp(`\\*\\*${escaped}:\\*\\*\\s*(.+)`, 'i'));
-  return m ? m[1].trim() : undefined;
+function extractQueueField(text: string, label: string): string | undefined {
+  return extractBoldField(text, label)?.split('\n')[0]?.trim();
 }
 
 function sectionAfter(markdown: string, heading: string): string {
@@ -87,15 +86,15 @@ export function parseQueueWorkItem(fileName: string, markdown: string): QueueWor
     title,
     fileName,
     kind,
-    issued: extractBoldField(markdown, 'Issued'),
-    issuedBy: extractBoldField(markdown, 'Issued by'),
-    status: normalizeStatus(extractBoldField(markdown, 'Status')),
-    type: extractBoldField(markdown, 'Type'),
-    blastRadius: extractBoldField(markdown, 'Blast radius'),
-    reducesGap: extractBoldField(markdown, 'Reduces gap'),
-    actionType: extractBoldField(markdown, 'Action type'),
-    evidenceTarget: extractBoldField(markdown, 'Evidence target'),
-    blocks: extractBoldField(markdown, 'Blocks'),
+    issued: extractQueueField(markdown, 'Issued'),
+    issuedBy: extractQueueField(markdown, 'Issued by'),
+    status: normalizeStatus(extractQueueField(markdown, 'Status')),
+    type: extractQueueField(markdown, 'Type'),
+    blastRadius: extractQueueField(markdown, 'Blast radius'),
+    reducesGap: extractQueueField(markdown, 'Reduces gap'),
+    actionType: extractQueueField(markdown, 'Action type'),
+    evidenceTarget: extractQueueField(markdown, 'Evidence target'),
+    blocks: extractQueueField(markdown, 'Blocks'),
     summary: decisionNeeded ?? objective ?? whatNeedsReconciling,
     decisionNeeded,
     expectedResponse,
@@ -116,19 +115,19 @@ export function parseExecutionQueue(markdown: string): ExecutionQueueView {
   // --- Header fields (preamble before first ---) ---
   const preamble = markdown.split(/\n---/)[0] ?? markdown;
 
-  const rawDate = extractBoldField(preamble, 'Date');
+  const rawDate = extractQueueField(preamble, 'Date');
   const passDate = rawDate?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
 
-  const rawPass = extractBoldField(preamble, 'Pass');
+  const rawPass = extractQueueField(preamble, 'Pass');
   const passNumber = rawPass ? parseInt(rawPass, 10) || undefined : undefined;
 
-  const rawSell = extractBoldField(preamble, 'Sell Ready');
+  const rawSell = extractQueueField(preamble, 'Sell Ready');
   const sellReady = rawSell?.toLowerCase().startsWith('true') ?? false;
 
-  const rawScale = extractBoldField(preamble, 'Scale Ready');
+  const rawScale = extractQueueField(preamble, 'Scale Ready');
   const scaleReady = rawScale?.toLowerCase().startsWith('true') ?? false;
 
-  const rawDecision = extractBoldField(preamble, 'Decision');
+  const rawDecision = extractQueueField(preamble, 'Decision');
   const decisionState = rawDecision
     ? rawDecision.split(/[\s——]/)[0].toUpperCase()
     : 'UNKNOWN';

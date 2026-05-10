@@ -1,5 +1,6 @@
 import type { ProposalsView } from '../../../model/types';
 import { DataTable } from '../../shared/DataTable';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { TierBadge } from '../../shared/TierBadge';
 import './FeatureMapSection.css';
 
@@ -31,7 +32,7 @@ export function FeatureMapSection({ featuresByPriority }: Props) {
             caption="MVP features"
             columns={[
               { key: 'feature', header: 'Feature', render: r => r.feature },
-              { key: 'problem', header: 'Solves', render: r => r.solvesProblem },
+              { key: 'problem', header: 'Solves', render: r => <InlineMarkdownText text={r.solvesProblem} /> },
               { key: 'job', header: 'Job', render: r => r.jobDimension ?? '' },
               { key: 'tier', header: 'Tier', render: r => <TierBadge tier={r.tier} /> },
             ]}
@@ -51,7 +52,7 @@ export function FeatureMapSection({ featuresByPriority }: Props) {
             caption="Post-MVP features"
             columns={[
               { key: 'feature', header: 'Feature', render: r => r.feature },
-              { key: 'problem', header: 'Solves', render: r => r.solvesProblem },
+              { key: 'problem', header: 'Solves', render: r => <InlineMarkdownText text={r.solvesProblem} /> },
               { key: 'job', header: 'Job', render: r => r.jobDimension ?? '' },
             ]}
             data={featuresByPriority.postMvp}
@@ -70,7 +71,7 @@ export function FeatureMapSection({ featuresByPriority }: Props) {
             caption="Future features"
             columns={[
               { key: 'feature', header: 'Feature', render: r => r.feature },
-              { key: 'problem', header: 'Solves', render: r => r.solvesProblem },
+              { key: 'problem', header: 'Solves', render: r => <InlineMarkdownText text={r.solvesProblem} /> },
             ]}
             data={featuresByPriority.future}
             compact

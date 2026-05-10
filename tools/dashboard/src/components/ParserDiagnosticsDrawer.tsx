@@ -69,6 +69,26 @@ export function ParserDiagnosticsDrawer({ view, onClose }: Props) {
             </div>
           </section>
 
+          {(view.sourcePaths.register || view.sourcePaths.gapAnalysis) && (
+            <section className="diagnostics-drawer__sources" aria-label="Parsed source files">
+              <h3>Sources</h3>
+              <dl>
+                {view.sourcePaths.register && (
+                  <>
+                    <dt>Register</dt>
+                    <dd>{view.sourcePaths.register}</dd>
+                  </>
+                )}
+                {view.sourcePaths.gapAnalysis && (
+                  <>
+                    <dt>Gap analysis</dt>
+                    <dd>{view.sourcePaths.gapAnalysis}</dd>
+                  </>
+                )}
+              </dl>
+            </section>
+          )}
+
           {view.counts.total === 0 ? (
             <div className="diagnostics-drawer__empty" role="status">
               <h3>No parser diagnostics</h3>

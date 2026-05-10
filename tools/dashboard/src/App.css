@@ -623,6 +623,14 @@
 .text-passes { color: var(--color-passes); font-weight: var(--weight-semibold); }
 .text-warning { color: var(--color-warning); font-weight: var(--weight-semibold); }
 .text-fails { color: var(--color-fails); font-weight: var(--weight-semibold); }
+.source-link {
+  color: var(--color-confidence-researched);
+  text-decoration: none;
+  font-weight: var(--weight-medium);
+}
+.source-link:hover {
+  text-decoration: underline;
+}
 .sr-only {
   position: absolute;
   width: 1px; height: 1px;

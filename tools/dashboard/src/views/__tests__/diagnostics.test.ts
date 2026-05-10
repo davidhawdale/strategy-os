@@ -47,6 +47,31 @@ describe('computeParseDiagnostics', () => {
     expect(view.completeness.overall).toBe(1);
   });
 
+  it('surfaces parser source paths when the loader provides them', () => {
+    const view = computeParseDiagnostics(makeCombined({
+      sourcePaths: {
+        register: '/hypotheses.md',
+        gapAnalysis: '/gap-analysis.md',
+      },
+    }));
+
+    expect(view.sourcePaths).toEqual({
+      register: '/hypotheses.md',
+      gapAnalysis: '/gap-analysis.md',
+    });
+  });
+
+  it('keeps gap-analysis source path empty when gap analysis is absent', () => {
+    const view = computeParseDiagnostics(makeCombined({
+      sourcePaths: {
+        register: '/hypotheses.md',
+      },
+    }));
+
+    expect(view.sourcePaths.gapAnalysis).toBeUndefined();
+    expect(view.completeness.gapAnalysis).toBe(0);
+  });
+
   it('combines register and gap analysis warnings with source labels', () => {
     const view = computeParseDiagnostics(makeCombined({
       registerWarnings: [

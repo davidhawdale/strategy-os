@@ -1,5 +1,6 @@
 import type { DestructionView } from '../../../model/types';
 import { DataTable } from '../../shared/DataTable';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import './EvidenceConcentrationSection.css';
 
 interface Props {
@@ -15,7 +16,7 @@ export function EvidenceConcentrationSection({ evidenceConcentration }: Props) {
       <DataTable
         caption="Evidence concentration analysis"
         columns={[
-          { key: 'source', header: 'Source', render: r => r.source },
+          { key: 'source', header: 'Source', render: r => <InlineMarkdownText text={r.source} /> },
           { key: 'supports', header: 'Hypotheses Supported', render: r => r.hypothesesSupported },
           {
             key: 'risk',

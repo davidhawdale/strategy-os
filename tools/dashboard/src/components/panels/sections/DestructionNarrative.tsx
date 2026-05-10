@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { parseDestructionNarrative, type NarrativeInlinePart } from './destructionNarrativeModel';
+import { renderInlineMarkdownParts } from '../../shared/InlineMarkdownText';
 
 type Accent = 'warning' | 'danger';
 
@@ -11,11 +12,7 @@ interface Props {
 }
 
 function renderParts(parts: NarrativeInlinePart[]): ReactNode[] {
-  return parts.map((part, i) => (
-    part.kind === 'strong'
-      ? <strong key={i}>{part.text}</strong>
-      : part.text
-  ));
+  return renderInlineMarkdownParts(parts);
 }
 
 export function DestructionNarrative({ text, className, itemClassName, accent }: Props) {

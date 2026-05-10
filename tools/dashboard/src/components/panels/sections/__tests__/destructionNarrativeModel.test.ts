@@ -18,6 +18,29 @@ describe('renderInlineMarkdownParts', () => {
       { kind: 'text', text: 'Plain narrative.' },
     ]);
   });
+
+  it('tokenizes markdown citation links', () => {
+    expect(renderInlineMarkdownParts('[National World](https://nationalworld.com/) responds.')).toEqual([
+      { kind: 'link', label: 'National World', url: 'https://nationalworld.com/' },
+      { kind: 'text', text: ' responds.' },
+    ]);
+  });
+
+  it('preserves text around multiple citation links', () => {
+    expect(renderInlineMarkdownParts('Sources: [A](https://a.example/) and [B](https://b.example/).')).toEqual([
+      { kind: 'text', text: 'Sources: ' },
+      { kind: 'link', label: 'A', url: 'https://a.example/' },
+      { kind: 'text', text: ' and ' },
+      { kind: 'link', label: 'B', url: 'https://b.example/' },
+      { kind: 'text', text: '.' },
+    ]);
+  });
+
+  it('leaves malformed links as text', () => {
+    expect(renderInlineMarkdownParts('[National World](not-a-url) responds.')).toEqual([
+      { kind: 'text', text: '[National World](not-a-url) responds.' },
+    ]);
+  });
 });
 
 describe('parseDestructionNarrative', () => {
@@ -46,6 +69,54 @@ describe('parseDestructionNarrative', () => {
         parts: [
           { kind: 'strong', text: 'National World' },
           { kind: 'text', text: ' responds quickly.' },
+        ],
+      },
+    ]);
+  });
+
+  it('handles bold and citation links in the same labelled block', () => {
+    expect(parseDestructionNarrative('**Incumbent:** **National World** via [The Southern Reporter](https://www.thesouthernreporter.co.uk/).')).toEqual([
+      {
+        kind: 'labelled',
+        label: 'Incumbent',
+        parts: [
+          { kind: 'strong', text: 'National World' },
+          { kind: 'text', text: ' via ' },
+          { kind: 'link', label: 'The Southern Reporter', url: 'https://www.thesouthernreporter.co.uk/' },
+          { kind: 'text', text: '.' },
+        ],
+      },
+    ]);
+  });
+
+  it('parses red-team incumbent citation blocks', () => {
+    const narrative = [
+      '**Incumbent:** [National World](https://nationalworld.com/) — publisher of [The Southern Reporter](https://www.thesouthernreporter.co.uk/), [Border Telegraph](https://www.bordertelegraph.com/), and [Hawick News](https://www.hawick-news.co.uk/).',
+      '',
+      '**Secondary incumbent:** [DC Thomson](https://www.dcthomson.co.uk/).',
+    ].join('\n');
+
+    expect(parseDestructionNarrative(narrative)).toEqual([
+      {
+        kind: 'labelled',
+        label: 'Incumbent',
+        parts: [
+          { kind: 'link', label: 'National World', url: 'https://nationalworld.com/' },
+          { kind: 'text', text: ' — publisher of ' },
+          { kind: 'link', label: 'The Southern Reporter', url: 'https://www.thesouthernreporter.co.uk/' },
+          { kind: 'text', text: ', ' },
+          { kind: 'link', label: 'Border Telegraph', url: 'https://www.bordertelegraph.com/' },
+          { kind: 'text', text: ', and ' },
+          { kind: 'link', label: 'Hawick News', url: 'https://www.hawick-news.co.uk/' },
+          { kind: 'text', text: '.' },
+        ],
+      },
+      {
+        kind: 'labelled',
+        label: 'Secondary incumbent',
+        parts: [
+          { kind: 'link', label: 'DC Thomson', url: 'https://www.dcthomson.co.uk/' },
+          { kind: 'text', text: '.' },
         ],
       },
     ]);

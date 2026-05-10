@@ -4,7 +4,7 @@ This note captures Codex's review of the `tools/` dashboard so the ideas can be
 worked through separately from the live dashboard implementation.
 
 Last updated: 2026-05-10, after queue work-item visibility, README replacement,
-and the Gap Ledger status deduplication fix.
+the Gap Ledger status deduplication fix, and Claude review cross-check.
 
 ## Summary
 
@@ -175,6 +175,48 @@ material should converge now that the technical surfaces are visible.
 - Avoid duplicating standards in UI copy. Evidence tier meanings should come
   from one canonical source or mirror `STANDARDS.md` very deliberately.
 
+## External Review Notes
+
+Claude's dashboard review is useful as an outside technical check, but it should
+be treated as advisory input rather than a replacement roadmap. The current
+Codex direction remains: command-centre first, parser/view correctness, thin
+panels, reorderable sections, clear CSS ownership, and local technical
+utilities.
+
+Accepted near-term items:
+
+- Replace duplicate queue field extraction with the shared parser field helper.
+- Add a development warning if an unknown panel id is requested.
+- Simplify duplicate layout move helpers.
+- Add a panel-level error boundary so one panel failure does not take down the
+  whole dashboard.
+- Continue extracting `App.tsx` orchestration into focused hooks.
+- Harden local Vite dev routes before wider/team use.
+
+Accepted medium-term quality tracks:
+
+- Add broader view-model tests for readiness, risk, evidence, deadlines,
+  escalations, destruction, proposals, and detail.
+- Add more parser fixture tests for the main register and gap-analysis sections.
+
+Deferred for now:
+
+- Type-safe per-panel section-id unions. Useful, but likely too much type churn
+  while section order is still being explored.
+- Broad section component render tests. Better to add these once the section
+  patterns settle or if a React test environment is introduced.
+- A shared `SectionShell`. This could reduce repetition, but would create a
+  large mechanical refactor while current colocated sections are still serving
+  us well.
+- Uniform section prop naming. Nice polish, but not worth touching dozens of
+  files by itself.
+
+Closed/stale from Claude's review:
+
+- Section-order wiring across panels is already closed. Queue, Gap Ledger,
+  Escalations, Deadlines, Readiness, Evidence, Risk, Destruction, and Proposals
+  all receive `sectionOrder` and render reorderable sections.
+
 ## Recommended Improvement Tracks
 
 ### Command Centre Shape
@@ -220,6 +262,18 @@ Possible hooks:
 - `useOnboardingState()`
 - `useBuildPolling()`
 - `useDashboardLayout()`
+
+### Small Correctness And Resilience Cleanup
+
+Before larger reshuffling, take a small technical cleanup pass:
+
+- replace duplicate queue field extraction with the shared parser helper;
+- warn in development for unknown panel ids;
+- deduplicate layout movement helpers;
+- add a panel-level error boundary.
+
+These are small enough to do without changing dashboard behavior, and they make
+later layout work easier to trust.
 
 ### UI Abstraction
 
@@ -268,6 +322,8 @@ ownership rules.
 - Keep the gap status distribution deduplication regression test intact.
 - Keep focused tests around parse diagnostics grouping and counts intact.
 - Add layout/editor tests when changing panel or section order persistence.
+- Add view-model tests before broadening dashboard behavior.
+- Add parser fixture tests when changing markdown contract support.
 
 ## Assumptions
 
