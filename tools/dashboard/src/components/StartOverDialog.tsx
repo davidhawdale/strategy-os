@@ -6,19 +6,46 @@ interface Props {
   onConfirm: (archive: boolean) => Promise<void>;
 }
 
+const MIN_SUBMIT_DISPLAY_MS = 3000;
+
+function delay(ms: number) {
+  return new Promise(resolve => window.setTimeout(resolve, ms));
+}
+
 export function StartOverDialog({ onCancel, onConfirm }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function handleConfirm(archive: boolean) {
+    if (isSubmitting) return;
+
     setIsSubmitting(true);
+    setSubmitMessage(archive
+      ? 'Archiving current strategy before reset...'
+      : 'Resetting workspace...');
     setError(null);
     try {
+      await delay(MIN_SUBMIT_DISPLAY_MS);
       await onConfirm(archive);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Reset failed');
       setIsSubmitting(false);
+      setSubmitMessage(null);
     }
+  }
+
+  if (isSubmitting && submitMessage) {
+    return (
+      <div className="start-over-dialog" role="dialog" aria-modal="true" aria-labelledby="start-over-progress-title">
+        <div className="start-over-dialog__panel start-over-dialog__panel--status">
+          <p className="start-over-dialog__eyebrow">Start Over</p>
+          <h2 className="start-over-dialog__title" id="start-over-progress-title">
+            {submitMessage}
+          </h2>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -33,6 +60,12 @@ export function StartOverDialog({ onCancel, onConfirm }: Props) {
           This will reset the strategy files from templates and clear the execution queue.
           You can archive the current files first as a timestamped snapshot.
         </p>
+
+        {submitMessage && (
+          <p className="start-over-dialog__progress" role="status" aria-live="polite">
+            {submitMessage}
+          </p>
+        )}
 
         {error && (
           <p className="start-over-dialog__error" role="alert">
