@@ -7,6 +7,7 @@ import { OnboardingDialog } from './components/OnboardingDialog';
 import { ParserDiagnosticsDrawer } from './components/ParserDiagnosticsDrawer';
 import { PanelErrorBoundary } from './components/PanelErrorBoundary';
 import { StartOverDialog } from './components/StartOverDialog';
+import { TermHelpProvider } from './term-help/TermHelpContext';
 import { computeParseDiagnostics } from './views/diagnostics';
 import { renderDashboardPanel } from './dashboard/panelRegistry';
 import { useBuildPolling } from './hooks/useBuildPolling';
@@ -106,6 +107,8 @@ function App() {
 
   const warningCount = loadedData.registerWarnings.length + loadedData.gapAnalysisWarnings.length;
   const diagnosticsView = computeParseDiagnostics(loadedData);
+  const hasActiveNavigationPanel = navigationPanels.some(panel => panel.id === activePanel);
+  const renderedPanel = activePanel === 'detail' || hasActiveNavigationPanel ? activePanel : 'governorBrief';
 
   async function handleStartOver(archive: boolean) {
     await handleReset(archive);
@@ -118,7 +121,8 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <TermHelpProvider>
+      <div className="app">
       {state._tag === 'Stale' && (
         <div className="stale-banner" role="alert">
           Showing cached data. Refresh failed: {state.error}
@@ -144,7 +148,7 @@ function App() {
         metadata={register.metadata}
         parseCompleteness={parseCompleteness}
         warningCount={warningCount}
-        activePanel={activePanel}
+        activePanel={renderedPanel}
         panels={navigationPanels}
         onSelectPanel={handleSelectPanel}
         onRefresh={handleRefresh}
@@ -181,8 +185,8 @@ function App() {
       )}
 
       <main className="app__main">
-        <PanelErrorBoundary key={activePanel}>
-          {renderDashboardPanel(activePanel, {
+        <PanelErrorBoundary key={renderedPanel}>
+          {renderDashboardPanel(renderedPanel, {
             register,
             gapAnalysis: loadedGapAnalysis,
             queueView,
@@ -194,7 +198,8 @@ function App() {
           })}
         </PanelErrorBoundary>
       </main>
-    </div>
+      </div>
+    </TermHelpProvider>
   );
 }
 

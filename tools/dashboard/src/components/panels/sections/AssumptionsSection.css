@@ -23,8 +23,8 @@
 }
 
 .assumption-item__tag {
-  font-size: 10px;
-  font-weight: var(--weight-bold);
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
   letter-spacing: 0.06em;
   color: var(--color-on-surface-muted);
   padding: 1px var(--space-1);
@@ -33,14 +33,16 @@
 }
 
 .assumption-item__claim {
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
   color: var(--color-on-surface);
   margin: 0;
   line-height: var(--leading-relaxed);
 }
 
 .assumption-item__detail {
-  font-size: var(--text-xs);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: var(--color-on-surface-muted);
   margin: var(--space-1) 0 0;
   line-height: var(--leading-relaxed);
@@ -51,8 +53,8 @@
 }
 
 .assumption-status {
-  font-size: var(--text-xs);
-  font-weight: 600;
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
   padding: 2px 6px;
   border-radius: 3px;
   text-transform: uppercase;

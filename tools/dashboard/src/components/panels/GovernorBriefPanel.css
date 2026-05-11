@@ -1,0 +1,737 @@
+.governor-brief-panel {
+  --brief-text: #1f2937;
+  --brief-muted: #667085;
+  --brief-subtle: #98a2b3;
+  --brief-border: #e5e7eb;
+  --brief-surface: #ffffff;
+  --brief-page: #f8fafc;
+
+  --brief-nogo: #dc2626;
+  --brief-nogo-bg: #fee2e2;
+  --brief-nogo-border: #fca5a5;
+  --brief-go: #16a34a;
+  --brief-go-bg: #dcfce7;
+  --brief-go-border: #86efac;
+  --brief-conditional: #d97706;
+  --brief-conditional-bg: #fef3c7;
+  --brief-conditional-border: #fcd34d;
+
+  --brief-fatal: #dc2626;
+  --brief-fatal-bg: #fff5f5;
+
+  color: var(--brief-text);
+}
+
+/* ── Header ── */
+
+.governor-brief-panel__header {
+  margin-bottom: var(--space-8);
+}
+
+.governor-brief-panel__title {
+  margin: 0;
+  color: var(--brief-text);
+  font-family: var(--font-display);
+  font-size: var(--dashboard-type-display-title);
+  font-weight: var(--dashboard-type-display-title-weight);
+  letter-spacing: 0;
+  line-height: var(--leading-tight);
+}
+
+.governor-brief-panel__subtitle {
+  margin: var(--space-2) 0 0;
+  color: var(--brief-muted);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-normal);
+}
+
+/* ── Gate decision banner ── */
+
+.governor-brief__gate {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--brief-border);
+  margin-bottom: var(--space-6);
+}
+
+.governor-brief__gate--nogo {
+  background: var(--brief-nogo-bg);
+  border-color: var(--brief-nogo-border);
+}
+
+.governor-brief__gate--go {
+  background: var(--brief-go-bg);
+  border-color: var(--brief-go-border);
+}
+
+.governor-brief__gate--conditional {
+  background: var(--brief-conditional-bg);
+  border-color: var(--brief-conditional-border);
+}
+
+.governor-brief__gate-badge {
+  flex-shrink: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--dashboard-type-label);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.governor-brief__gate--nogo .governor-brief__gate-badge {
+  background: var(--brief-nogo);
+  color: #fff;
+}
+
+.governor-brief__gate--go .governor-brief__gate-badge {
+  background: var(--brief-go);
+  color: #fff;
+}
+
+.governor-brief__gate--conditional .governor-brief__gate-badge {
+  background: var(--brief-conditional);
+  color: #fff;
+}
+
+.governor-brief__gate-reasons {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.governor-brief__gate-reason {
+  font-size: var(--dashboard-type-body-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--brief-text);
+}
+
+/* ── Section headers ── */
+
+.governor-brief__section {
+  margin-bottom: var(--space-8);
+}
+
+.governor-brief__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--brief-border);
+}
+
+.governor-brief__section-title {
+  margin: 0;
+  font-size: var(--dashboard-type-card-title);
+  font-weight: var(--dashboard-type-card-title-weight);
+  color: var(--brief-text);
+}
+
+.governor-brief__section-link {
+  font-size: var(--dashboard-type-body-sm);
+  font-weight: 500;
+  color: var(--brief-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  transition: color 0.15s;
+}
+
+.governor-brief__section-link:hover {
+  color: var(--brief-text);
+}
+
+.governor-brief__seed-card {
+  margin-bottom: var(--space-8);
+  padding: var(--space-5);
+  background: #eef4ff;
+  border: 1px solid #c7dbff;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+
+.governor-brief__seed-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.governor-brief__seed-title {
+  margin: 0;
+  color: var(--brief-text);
+  font-family: var(--font-display);
+  font-size: var(--dashboard-type-card-title);
+  font-weight: var(--dashboard-type-card-title-weight);
+  line-height: var(--leading-tight);
+}
+
+.governor-brief__seed-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.governor-brief__seed-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: #475467;
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-normal);
+}
+
+.governor-brief__seed-meta-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #344054;
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
+}
+
+.governor-brief__seed-meta-label {
+  font-weight: var(--dashboard-type-section-label-weight);
+}
+
+.governor-brief__seed-mode {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  background: #4f46e5;
+  border-radius: var(--radius-xl);
+  color: #ffffff;
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.governor-brief__seed-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.governor-brief__seed-panel {
+  min-height: 160px;
+  padding: var(--space-4);
+  background: var(--brief-surface);
+  border: 1px solid #d5e3ff;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.governor-brief__seed-panel-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+  color: #667085;
+  font-size: var(--dashboard-type-section-label);
+  font-weight: var(--dashboard-type-section-label-weight);
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+}
+
+.governor-brief__seed-panel-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.governor-brief__seed-panel-icon--blue {
+  color: #2563eb;
+}
+
+.governor-brief__seed-panel-icon--amber {
+  color: #d97706;
+}
+
+.governor-brief__seed-panel-icon--green {
+  color: #16a34a;
+}
+
+.governor-brief__seed-panel-icon--purple {
+  color: #9333ea;
+}
+
+.governor-brief__seed-panel-text {
+  margin: 0;
+  color: #344054;
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
+  line-height: var(--leading-relaxed);
+}
+
+.governor-brief__strategy-seed {
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--brief-surface);
+  border: 1px solid var(--brief-border);
+  border-radius: var(--radius-md);
+  color: var(--brief-text);
+  font-family: var(--font-sans);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-relaxed);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.governor-brief__research-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: disc;
+}
+
+.governor-brief__research-item {
+  padding: 0 0 var(--space-2) var(--space-4);
+}
+
+.governor-brief__research-summary {
+  margin: 0;
+  color: var(--brief-text);
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
+  line-height: var(--leading-relaxed);
+}
+
+.governor-brief__research-summary strong {
+  font-weight: 900;
+}
+
+.governor-brief__research-source-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border: 1px solid var(--brief-border);
+  border-radius: var(--radius-xl);
+  background: var(--brief-page);
+  color: var(--brief-muted);
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.governor-brief__research-toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #2563eb;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: var(--leading-normal);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.governor-brief__research-toggle:hover {
+  color: #1d4ed8;
+}
+
+.governor-brief__research-sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.governor-brief__research-source {
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--brief-border);
+}
+
+.governor-brief__research-source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.governor-brief__research-source-kind {
+  color: var(--brief-subtle);
+  font-size: var(--dashboard-type-meta);
+  font-weight: var(--dashboard-type-meta-weight);
+}
+
+.governor-brief__research-source-text {
+  margin: 0;
+  color: var(--brief-text);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-relaxed);
+}
+
+.governor-brief__sources-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.governor-brief__sources-dialog {
+  width: min(760px, 100%);
+  max-height: min(80vh, 720px);
+  overflow: auto;
+  padding: var(--space-5);
+  border: 1px solid var(--brief-border);
+  border-radius: var(--radius-xl);
+  background: var(--brief-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.governor-brief__sources-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.governor-brief__sources-dialog-heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.governor-brief__sources-dialog-eyebrow {
+  margin: 0;
+  color: var(--brief-muted);
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.governor-brief__sources-dialog-title {
+  margin: 0;
+  color: var(--brief-text);
+  font-family: var(--font-display);
+  font-size: var(--dashboard-type-card-title);
+  font-weight: var(--dashboard-type-card-title-weight);
+  line-height: var(--leading-tight);
+}
+
+.governor-brief__sources-dialog-label {
+  margin: 0;
+  color: var(--brief-muted);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-relaxed);
+}
+
+.governor-brief__sources-dialog-close {
+  min-height: 36px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--brief-border);
+  border-radius: var(--radius-md);
+  background: var(--brief-surface);
+  color: var(--brief-muted);
+  font-size: var(--dashboard-type-meta);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.governor-brief__sources-dialog-close:hover {
+  border-color: #cbd5e1;
+  background: var(--brief-page);
+  color: var(--brief-text);
+}
+
+.governor-brief__sources-dialog .governor-brief__research-source:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* ── Strategy shape ── */
+
+.governor-brief__shape-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.governor-brief__shape-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--brief-surface);
+  border: 1px solid var(--brief-border);
+  border-radius: var(--radius-md);
+}
+
+.governor-brief__shape-label {
+  flex-shrink: 0;
+  min-width: 120px;
+  font-size: var(--dashboard-type-label);
+  font-weight: 600;
+  color: var(--brief-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-top: 2px;
+}
+
+.governor-brief__shape-body {
+  flex: 1;
+}
+
+.governor-brief__shape-claim {
+  margin: 0 0 var(--space-2);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-snug);
+  color: var(--brief-text);
+}
+
+.governor-brief__alternatives {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.governor-brief__alt-pill {
+  padding: 2px var(--space-2);
+  background: var(--brief-page);
+  border: 1px solid var(--brief-border);
+  border-radius: var(--radius-full);
+  font-size: var(--dashboard-type-label);
+  color: var(--brief-muted);
+}
+
+/* ── Elimination table ── */
+
+.governor-brief__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--dashboard-type-body-sm);
+}
+
+.governor-brief__table th {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 2px solid var(--brief-border);
+  font-size: var(--dashboard-type-label);
+  font-weight: 600;
+  color: var(--brief-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.governor-brief__table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--brief-border);
+  line-height: var(--leading-relaxed);
+  vertical-align: top;
+  color: var(--brief-text);
+}
+
+.governor-brief__table tr:last-child td {
+  border-bottom: none;
+}
+
+  .governor-brief__table td:first-child {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+@media (max-width: 900px) {
+  .governor-brief__seed-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .governor-brief__seed-meta {
+    justify-content: flex-start;
+  }
+
+  .governor-brief__seed-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .governor-brief__sources-overlay {
+    padding: var(--space-4);
+  }
+
+  .governor-brief__sources-dialog {
+    max-height: 86vh;
+    padding: var(--space-4);
+  }
+
+  .governor-brief__sources-dialog-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ── Fragility ── */
+
+.governor-brief__pre-mortem {
+  padding: var(--space-4);
+  background: var(--brief-page);
+  border-left: 3px solid var(--brief-subtle);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: var(--dashboard-type-body-md);
+  line-height: var(--leading-relaxed);
+  color: var(--brief-text);
+  margin-bottom: var(--space-4);
+}
+
+.governor-brief__inversions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.governor-brief__inversion {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--brief-fatal-bg);
+  border: 1px solid var(--brief-nogo-border);
+  border-radius: var(--radius-md);
+}
+
+.governor-brief__inversion-badge {
+  flex-shrink: 0;
+  padding: 1px var(--space-2);
+  background: var(--brief-fatal);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: var(--dashboard-type-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.governor-brief__inversion-body {
+  flex: 1;
+}
+
+.governor-brief__inversion-assumption {
+  margin: 0 0 var(--space-1);
+  font-size: var(--dashboard-type-body-sm);
+  font-weight: 600;
+  color: var(--brief-text);
+}
+
+.governor-brief__inversion-consequence {
+  margin: 0;
+  font-size: var(--dashboard-type-body-sm);
+  color: var(--brief-muted);
+  line-height: var(--leading-relaxed);
+}
+
+/* ── Link lists (escalations + gaps) ── */
+
+.governor-brief__link-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.governor-brief__link-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--brief-surface);
+  border: 1px solid var(--brief-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+}
+
+.governor-brief__link-item:hover {
+  border-color: var(--brief-subtle);
+  background: var(--brief-page);
+}
+
+.governor-brief__link-item-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.governor-brief__link-item-id {
+  flex-shrink: 0;
+  font-size: var(--dashboard-type-label);
+  font-weight: 700;
+  color: var(--brief-muted);
+  font-family: var(--font-mono, monospace);
+}
+
+.governor-brief__link-item-title {
+  font-size: var(--dashboard-type-body-md);
+  color: var(--brief-text);
+  line-height: var(--leading-snug);
+}
+
+.governor-brief__link-item-meta {
+  flex-shrink: 0;
+  font-size: var(--dashboard-type-label);
+  color: var(--brief-subtle);
+}
+
+.governor-brief__link-arrow {
+  flex-shrink: 0;
+  color: var(--brief-subtle);
+  font-size: 14px;
+}
+
+/* ── Empty states ── */
+
+.governor-brief__empty {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--brief-muted);
+  background: var(--brief-page);
+  border: 1px solid var(--brief-border);
+  border-radius: var(--radius-md);
+  font-size: var(--dashboard-type-body-sm);
+}

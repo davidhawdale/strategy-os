@@ -1,0 +1,122 @@
+{
+  "artifact": "build-pass-complete",
+  "version": 1,
+  "updated": "2026-05-11",
+  "whatWasResearched": [
+    {
+      "label": "Scottish Borders demographics",
+      "hypotheses": ["problem", "segment"],
+      "sources": [
+        {
+          "hypothesisId": "problem",
+          "sourceKinds": ["research"],
+          "matchNameIncludes": ["Scottish Borders Council research and data"],
+          "limit": 1
+        },
+        {
+          "hypothesisId": "segment",
+          "sourceKinds": ["evidence"],
+          "matchNameIncludes": ["demographic profile", "mid-2024 estimates", "localities", "Digital Inclusion Index"],
+          "limit": 4
+        }
+      ]
+    },
+    {
+      "label": "Competitive landscape",
+      "hypotheses": ["problem", "valueProposition"],
+      "sources": [
+        {
+          "hypothesisId": "problem",
+          "sourceKinds": ["evidence", "research"],
+          "matchNameIncludes": ["Border Telegraph", "Southern Reporter", "media.info"],
+          "limit": 3
+        },
+        {
+          "hypothesisId": "valueProposition",
+          "sourceKinds": ["evidence"],
+          "matchNameIncludes": ["Border Telegraph", "Southern Reporter"],
+          "limit": 2
+        }
+      ]
+    },
+    {
+      "label": "Press and Journal model",
+      "hypotheses": ["problem", "valueProposition", "unitEconomics"],
+      "sources": [
+        {
+          "hypothesisId": "problem",
+          "sourceKinds": ["research"],
+          "matchNameIncludes": ["DC Thomson digital subscribers", "DC Thomson community focus"],
+          "limit": 2
+        },
+        {
+          "hypothesisId": "valueProposition",
+          "sourceKinds": ["evidence"],
+          "matchNameIncludes": ["Press and Journal", "DC Thomson revenue 2024"],
+          "limit": 2
+        },
+        {
+          "hypothesisId": "unitEconomics",
+          "sourceKinds": ["research"],
+          "matchNameIncludes": ["DC Thomson revenue 2024"],
+          "limit": 1
+        }
+      ]
+    },
+    {
+      "label": "UK regional press context",
+      "hypotheses": ["problem", "unitEconomics"],
+      "sources": [
+        {
+          "hypothesisId": "problem",
+          "sourceKinds": ["evidence", "research"],
+          "matchNameIncludes": ["local newspaper closures", "regional daily ABCs H1 2025", "regional ABCs H1 2025"],
+          "limit": 2
+        },
+        {
+          "hypothesisId": "unitEconomics",
+          "sourceKinds": ["evidence", "research"],
+          "matchNameIncludes": ["IBISWorld", "regional daily ABCs"],
+          "limit": 2
+        }
+      ]
+    },
+    {
+      "label": "Transferability analogs",
+      "hypotheses": ["problem", "valueProposition", "unitEconomics"],
+      "sources": [
+        {
+          "hypothesisId": "problem",
+          "sourceKinds": ["evidence"],
+          "matchNameIncludes": ["Poynter", "Mill Media"],
+          "limit": 1
+        },
+        {
+          "hypothesisId": "valueProposition",
+          "sourceKinds": ["evidence"],
+          "matchNameIncludes": ["Poynter", "Mill Media"],
+          "limit": 1
+        },
+        {
+          "hypothesisId": "unitEconomics",
+          "sourceKinds": ["evidence"],
+          "matchNameIncludes": ["Poynter", "Mill Media"],
+          "limit": 1
+        }
+      ]
+    },
+    {
+      "label": "Local advertising",
+      "hypotheses": ["unitEconomics"],
+      "sources": [
+        {
+          "hypothesisId": "unitEconomics",
+          "sourceKinds": ["evidence", "research"],
+          "matchNameIncludes": ["PromoMedia", "Promo Media", "CommunityAd"],
+          "matchUrlIncludes": ["promo-media", "communityad"],
+          "limit": 3
+        }
+      ]
+    }
+  ]
+}

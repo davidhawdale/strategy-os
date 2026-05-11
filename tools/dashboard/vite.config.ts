@@ -7,14 +7,14 @@ import { resetStrategyWorkspace } from './dev/resetStrategy'
 
 const projectRoot = path.resolve(__dirname, '..', '..')
 
-function serveStrategyFile(urlPath: string, filePath: string) {
+function serveStrategyFile(urlPath: string, filePath: string, contentType = 'text/markdown') {
   return {
     name: `serve-strategy-${urlPath.replace(/\W/g, '-')}`,
     configureServer(server: import('vite').ViteDevServer) {
       server.middlewares.use(urlPath, (_req, res) => {
         try {
           const content = fs.readFileSync(filePath, 'utf-8')
-          res.setHeader('Content-Type', 'text/markdown')
+          res.setHeader('Content-Type', contentType)
           res.end(content)
         } catch {
           res.statusCode = 404
@@ -150,9 +150,16 @@ export default defineConfig({
     react(),
     serveStrategyFile('/hypotheses.md', path.join(projectRoot, 'strategy', 'hypotheses.md')),
     serveStrategyFile('/gap-analysis.md', path.join(projectRoot, 'strategy', 'gap-analysis.md')),
+    serveStrategyFile('/TERM_HELP.md', path.join(projectRoot, 'TERM_HELP.md')),
     serveStrategyFile('/gap-definer-actions.md', path.join(projectRoot, 'execution', 'queue', 'gap-definer-actions.md')),
     serveQueueFiles('/api/queue-files', path.join(projectRoot, 'execution', 'queue')),
     serveStrategyFile('/problem.md', path.join(projectRoot, 'strategy', 'problem.md')),
+    serveStrategyFile('/build-pass-complete.md', path.join(projectRoot, 'strategy', 'build-pass-complete.md')),
+    serveStrategyFile(
+      '/build-pass-complete.provenance.json',
+      path.join(projectRoot, 'strategy', 'build-pass-complete.provenance.json'),
+      'application/json'
+    ),
     writeStrategyFile('/api/problem', path.join(projectRoot, 'strategy', 'problem.md')),
     triggerBuild('/api/build', projectRoot),
     resetStrategy('/api/reset', projectRoot),

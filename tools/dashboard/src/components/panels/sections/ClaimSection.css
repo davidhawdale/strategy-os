@@ -1,5 +1,6 @@
 .claim-block {
-  font-size: var(--text-base);
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
   font-style: italic;
   color: var(--color-on-surface);
   line-height: var(--leading-relaxed);

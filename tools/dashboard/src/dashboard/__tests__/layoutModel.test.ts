@@ -27,25 +27,23 @@ function createStorage(initial: Record<string, string> = {}) {
 }
 
 describe('dashboard layout model', () => {
-  const defaultOrder: PanelId[] = ['queue', 'gapLedger', 'escalations', 'deadlines'];
+  const defaultOrder: PanelId[] = ['gapLedger', 'escalations', 'deadlines'];
 
   it('uses the default order when no saved order exists', () => {
     expect(resolvePanelOrder(defaultOrder, null)).toEqual(defaultOrder);
   });
 
   it('uses saved order for known panel ids', () => {
-    expect(resolvePanelOrder(defaultOrder, ['deadlines', 'queue', 'gapLedger', 'escalations'])).toEqual([
+    expect(resolvePanelOrder(defaultOrder, ['deadlines', 'gapLedger', 'escalations'])).toEqual([
       'deadlines',
-      'queue',
       'gapLedger',
       'escalations',
     ]);
   });
 
   it('ignores unknown panel ids and appends missing known ids', () => {
-    expect(resolvePanelOrder(defaultOrder, ['risk', 'deadlines', 'queue'])).toEqual([
+    expect(resolvePanelOrder(defaultOrder, ['risk', 'deadlines'])).toEqual([
       'deadlines',
-      'queue',
       'gapLedger',
       'escalations',
     ]);
@@ -55,9 +53,9 @@ describe('dashboard layout model', () => {
     const movedUp = movePanelOrderItem(defaultOrder, 'escalations', 'up');
     const movedDown = movePanelOrderItem(defaultOrder, 'gapLedger', 'down');
 
-    expect(movedUp).toEqual(['queue', 'escalations', 'gapLedger', 'deadlines']);
-    expect(movedDown).toEqual(['queue', 'escalations', 'gapLedger', 'deadlines']);
-    expect(defaultOrder).toEqual(['queue', 'gapLedger', 'escalations', 'deadlines']);
+    expect(movedUp).toEqual(['escalations', 'gapLedger', 'deadlines']);
+    expect(movedDown).toEqual(['escalations', 'gapLedger', 'deadlines']);
+    expect(defaultOrder).toEqual(['gapLedger', 'escalations', 'deadlines']);
   });
 
   it('moves generic ordered items without mutating the original order', () => {
@@ -72,9 +70,9 @@ describe('dashboard layout model', () => {
 
   it('stores, loads, and clears local layout order', () => {
     const storage = createStorage();
-    savePanelOrder(storage, ['deadlines', 'queue']);
+    savePanelOrder(storage, ['deadlines', 'gapLedger']);
 
-    expect(loadPanelOrder(storage)).toEqual(['deadlines', 'queue']);
+    expect(loadPanelOrder(storage)).toEqual(['deadlines', 'gapLedger']);
 
     clearPanelOrder(storage);
     expect(loadPanelOrder(storage)).toBeNull();
@@ -83,17 +81,17 @@ describe('dashboard layout model', () => {
   it('stores and loads section order alongside panel order', () => {
     const storage = createStorage();
     saveDashboardLayout(storage, {
-      panelOrder: ['deadlines', 'queue'],
+      panelOrder: ['deadlines', 'gapLedger'],
       sectionOrders: {
-        queue: ['actions', 'header'],
+        gapLedger: ['fullGapRecords', 'summary'],
         deadlines: ['forcedDispositions', 'summary'],
       },
     });
 
     expect(loadDashboardLayout(storage)).toEqual({
-      panelOrder: ['deadlines', 'queue'],
+      panelOrder: ['deadlines', 'gapLedger'],
       sectionOrders: {
-        queue: ['actions', 'header'],
+        gapLedger: ['fullGapRecords', 'summary'],
         deadlines: ['forcedDispositions', 'summary'],
       },
     });
@@ -101,23 +99,22 @@ describe('dashboard layout model', () => {
 
   it('returns null for invalid saved layout payloads', () => {
     const storage = createStorage({
-      [DASHBOARD_LAYOUT_STORAGE_KEY]: JSON.stringify({ version: 2, panelOrder: ['queue'] }),
+      [DASHBOARD_LAYOUT_STORAGE_KEY]: JSON.stringify({ version: 2, panelOrder: ['gapLedger'] }),
     });
 
     expect(loadPanelOrder(storage)).toBeNull();
   });
 
   it('filters gap-analysis-only panels from resolved navigation', () => {
-    const panelsWithoutGapAnalysis = getNavigationPanels(false, ['escalations', 'queue', 'deadlines']);
+    const panelsWithoutGapAnalysis = getNavigationPanels(false, ['escalations', 'deadlines']);
     const panelIds = panelsWithoutGapAnalysis.map(panel => panel.id);
 
-    expect(panelIds).toEqual(['queue', 'deadlines']);
+    expect(panelIds).toEqual(['escalations', 'deadlines']);
   });
 
   it('includes promoted hypothesis panels in the default navigation order', () => {
     expect(getDefaultNavigationPanelIds()).toEqual([
-      'overview',
-      'queue',
+      'governorBrief',
       'problem',
       'segment',
       'unitEconomics',
@@ -133,28 +130,16 @@ describe('dashboard layout model', () => {
     ]);
   });
 
-  it('provides default section order for the overview panel', () => {
-    expect(getDefaultSectionOrders().overview).toEqual([
-      'state',
-      'journey',
-      'hypotheses',
-      'researchUnlocks',
-      'nextMoves',
-    ]);
-  });
-
   it('applies section order to navigation panel metadata', () => {
-    const [queuePanel] = getNavigationPanels(true, ['queue'], {
-      queue: ['actions', 'header'],
+    const [gapLedgerPanel] = getNavigationPanels(true, ['gapLedger'], {
+      gapLedger: ['fullGapRecords', 'summary'],
     });
 
-    expect(queuePanel.sections?.map(section => section.id)).toEqual([
-      'actions',
-      'header',
-      'narrative',
-      'workItems',
-      'pendingDecisions',
-      'blockedPaths',
+    expect(gapLedgerPanel.sections?.map(section => section.id)).toEqual([
+      'fullGapRecords',
+      'summary',
+      'gateDecision',
+      'rankedGaps',
     ]);
   });
 
@@ -237,10 +222,10 @@ describe('dashboard layout model', () => {
 
   it('resolves all section orders by panel', () => {
     expect(resolveSectionOrders(
-      { queue: ['header', 'actions'], risk: ['summary', 'killSignals'] },
-      { queue: ['actions'] },
+      { gapLedger: ['summary', 'rankedGaps'], risk: ['summary', 'killSignals'] },
+      { gapLedger: ['rankedGaps'] },
     )).toEqual({
-      queue: ['actions', 'header'],
+      gapLedger: ['rankedGaps', 'summary'],
       risk: ['summary', 'killSignals'],
     });
   });
@@ -248,48 +233,48 @@ describe('dashboard layout model', () => {
   it('moves a section only within its panel', () => {
     const moved = moveSectionOrderItem(
       {
-        queue: ['header', 'actions', 'blockedPaths'],
+        gapLedger: ['summary', 'fullGapRecords', 'rankedGaps'],
         risk: ['summary', 'killSignals'],
       },
-      'queue',
-      'actions',
+      'gapLedger',
+      'fullGapRecords',
       'up',
     );
 
     expect(moved).toEqual({
-      queue: ['actions', 'header', 'blockedPaths'],
+      gapLedger: ['fullGapRecords', 'summary', 'rankedGaps'],
       risk: ['summary', 'killSignals'],
     });
   });
 
   it('loads old panel-only saved layouts safely', () => {
     const storage = createStorage({
-      [DASHBOARD_LAYOUT_STORAGE_KEY]: JSON.stringify({ version: 1, panelOrder: ['queue', 'risk'] }),
+      [DASHBOARD_LAYOUT_STORAGE_KEY]: JSON.stringify({ version: 1, panelOrder: ['gapLedger', 'risk'] }),
     });
 
     expect(loadDashboardLayout(storage)).toEqual({
-      panelOrder: ['queue', 'risk'],
+      panelOrder: ['gapLedger', 'risk'],
       sectionOrders: undefined,
     });
   });
 
   it('exports the current order as a source-friendly snippet', () => {
-    expect(createPanelOrderExportSnippet(['queue', 'risk'])).toBe([
+    expect(createPanelOrderExportSnippet(['gapLedger', 'risk'])).toBe([
       'const PANEL_ORDER = [',
-      "  'queue',",
+      "  'gapLedger',",
       "  'risk',",
       '];',
     ].join('\n'));
   });
 
   it('exports panel and section order as a source-friendly snippet', () => {
-    expect(createPanelOrderExportSnippet(['queue'], { queue: ['actions', 'header'] })).toBe([
+    expect(createPanelOrderExportSnippet(['gapLedger'], { gapLedger: ['fullGapRecords', 'summary'] })).toBe([
       'const PANEL_ORDER = [',
-      "  'queue',",
+      "  'gapLedger',",
       '];',
       '',
       'const SECTION_ORDERS = {',
-      "  queue: ['actions', 'header'],",
+      "  gapLedger: ['fullGapRecords', 'summary'],",
       '};',
     ].join('\n'));
   });

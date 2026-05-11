@@ -1,5 +1,7 @@
 import type { RiskMapView } from '../../../model/types';
 import { BlastRadiusBadge } from '../../shared/BlastRadiusBadge';
+import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
+import { TermHelp } from '../../shared/TermHelp';
 import { TierBadge } from '../../shared/TierBadge';
 import './RiskAssumptionGroupsSection.css';
 
@@ -40,20 +42,25 @@ export function RiskAssumptionGroupsSection({ assumptions }: Props) {
                       {getSourceLabel(assumption)}
                     </span>
                     <div className="risk-item__badges">
-                      <TierBadge tier={assumption.tier} />
-                      <BlastRadiusBadge radius={assumption.blastRadius} />
-                      {assumption.loadBearing && <span className="badge badge--load-bearing">Load-Bearing</span>}
+                      <TierBadge tier={assumption.tier} termHelp />
+                      <BlastRadiusBadge radius={assumption.blastRadius} termHelp />
+                      {assumption.loadBearing && (
+                        <>
+                          <span className="badge badge--load-bearing">Load-Bearing</span>
+                          <TermHelp termKey="load-bearing" />
+                        </>
+                      )}
                     </div>
                   </div>
-                  <p className="risk-item__claim">{assumption.claim}</p>
+                  <p className="risk-item__claim"><InlineMarkdownText text={assumption.claim} /></p>
                   {assumption.falsification && (
                     <div className="risk-item__detail">
-                      <strong>Falsification:</strong> {assumption.falsification}
+                      <strong>Falsification:</strong> <InlineMarkdownText text={assumption.falsification} />
                     </div>
                   )}
                   {assumption.validation && (
                     <div className="risk-item__detail">
-                      <strong>Validation:</strong> {assumption.validation}
+                      <strong>Validation:</strong> <InlineMarkdownText text={assumption.validation} />
                     </div>
                   )}
                 </li>

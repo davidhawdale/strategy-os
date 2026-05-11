@@ -1,0 +1,84 @@
+.escalations-panel {
+  --escalations-text: #1f2937;
+  --escalations-muted: #667085;
+  --escalations-subtle: #98a2b3;
+  --escalations-border: #e5e7eb;
+  --escalations-surface: #ffffff;
+  --escalations-page: #f8fafc;
+  --escalations-open: #dc2626;
+  --escalations-open-bg: #fee2e2;
+  --escalations-approved: #16a34a;
+  --escalations-approved-bg: #dcfce7;
+  color: var(--escalations-text);
+}
+
+.escalations-panel__header {
+  margin-bottom: var(--space-8);
+}
+
+.escalations-panel__title {
+  margin: 0;
+  color: var(--escalations-text);
+  font-family: var(--font-display);
+  font-size: var(--dashboard-type-display-title);
+  font-weight: var(--dashboard-type-display-title-weight);
+  letter-spacing: 0;
+  line-height: var(--leading-tight);
+}
+
+.escalations-panel__subtitle {
+  margin: var(--space-2) 0 0;
+  color: var(--escalations-muted);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-normal);
+}
+
+.escalations-panel__summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.escalations-panel__summary-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--escalations-muted);
+  font-size: var(--dashboard-type-summary);
+  font-weight: var(--dashboard-type-summary-weight);
+}
+
+.escalations-panel__summary-dot {
+  width: 9px;
+  height: 9px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.escalations-panel__summary-item--open {
+  color: var(--escalations-open);
+}
+
+.escalations-panel__summary-item--approved {
+  color: var(--escalations-approved);
+}
+
+.escalations-empty {
+  padding: var(--space-12) var(--space-6);
+  color: var(--escalations-muted);
+  background: var(--escalations-surface);
+  border: 1px solid var(--escalations-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.escalations-empty__message {
+  margin: 0;
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-relaxed);
+}

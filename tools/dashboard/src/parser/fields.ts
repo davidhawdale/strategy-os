@@ -20,9 +20,21 @@ const EVIDENCE_TYPES: Set<string> = new Set([
 ]);
 
 const TIERS: Set<string> = new Set(['T1', 'T2', 'T3']);
-const TAGS: Set<string> = new Set(['K', 'B', 'O']);
 const BLAST_RADII: Set<string> = new Set(['LOW', 'MEDIUM', 'HIGH']);
 const ASSUMPTION_STATUSES: Set<string> = new Set(['OPEN', 'TESTING', 'RESOLVED_TRUE', 'RESOLVED_FALSE', 'ESCALATED']);
+
+function normaliseAssumptionTag(value: string): EpistemicTag | undefined {
+  const raw = value.trim().toLowerCase();
+  if (raw === 'b' || raw === 'belief') return 'B';
+  if (raw === 'k' || raw === 'knowledge') return 'K';
+  if (raw === 'o' || raw === 'observation') return 'O';
+  return undefined;
+}
+
+function normaliseAssumptionStatus(value: string): AssumptionStatus | undefined {
+  const status = value.trim().toUpperCase().replace(/\s+/g, '_');
+  return ASSUMPTION_STATUSES.has(status) ? (status as AssumptionStatus) : undefined;
+}
 
 export function extractField(text: string, fieldName: string): string | undefined {
   const escaped = fieldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -322,9 +334,7 @@ function parseTableAssumptions(block: string, _sectionName: string): { items: As
     const claim = get(cols.claim);
     if (!claim || claim.startsWith('-')) continue;
 
-    const classRaw = get(cols.classification).toLowerCase();
-    const tag: EpistemicTag | undefined =
-      classRaw === 'belief' ? 'B' : classRaw === 'knowledge' ? 'K' : classRaw === 'observation' ? 'O' : undefined;
+    const tag = normaliseAssumptionTag(get(cols.classification));
 
     const tierRaw = get(cols.tier).toUpperCase();
     const tier = TIERS.has(tierRaw) ? (tierRaw as EpistemicTier) : undefined;
@@ -337,8 +347,7 @@ function parseTableAssumptions(block: string, _sectionName: string): { items: As
     const falsification = get(cols.falsification) || undefined;
     const validation    = get(cols.validation) || undefined;
 
-    const statusRaw = get(cols.status).toUpperCase().replace(/\s+/g, '_');
-    const status = ASSUMPTION_STATUSES.has(statusRaw) ? (statusRaw as AssumptionStatus) : undefined;
+    const status = normaliseAssumptionStatus(get(cols.status));
 
     items.push({ raw: tableLines[i].trim(), tag, tier, claim, loadBearing, blastRadius, falsification, validation, status });
   }
@@ -377,34 +386,37 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
     }
   }
 
+  function applyContinuation(line: string): boolean {
+    if (!currentAssumption) return false;
+
+    const continuation = line.match(/^(?:-?\s*>|-)\s*(Falsification|Validation|Status):\s*(.*)$/i);
+    if (continuation) {
+      const [, fieldType, value] = continuation;
+      const fieldLower = fieldType.toLowerCase();
+      if (fieldLower === 'falsification') {
+        currentAssumption.falsification = value.trim();
+      } else if (fieldLower === 'validation') {
+        currentAssumption.validation = value.trim();
+      } else if (fieldLower === 'status') {
+        currentAssumption.status = normaliseAssumptionStatus(value);
+      }
+      return true;
+    }
+
+    const challengeMatch = line.match(/^(?:-?\s*>|-)\s*CHALLENGE\s+(\d{4}-\d{2}-\d{2})\s*:\s*(.+)$/i);
+    if (challengeMatch) {
+      if (!currentAssumption.challenges) currentAssumption.challenges = [];
+      currentAssumption.challenges.push({ date: challengeMatch[1], text: challengeMatch[2].trim() });
+      return true;
+    }
+
+    return false;
+  }
+
   for (const line of lines) {
     const trimmed = line.trim();
 
-    // Continuation lines for falsification/validation/status
-    if (trimmed.startsWith('->') || trimmed.startsWith('- >')) {
-      if (currentAssumption) {
-        const contMatch = trimmed.match(/^-?>\s*(Falsification|Validation|Status):\s*(.+)/i);
-        if (contMatch) {
-          const [, fieldType, value] = contMatch;
-          const fieldLower = fieldType.toLowerCase();
-          if (fieldLower === 'falsification') {
-            currentAssumption.falsification = value.trim();
-          } else if (fieldLower === 'validation') {
-            currentAssumption.validation = value.trim();
-          } else if (fieldLower === 'status') {
-            const statusUpper = value.trim().toUpperCase();
-            if (ASSUMPTION_STATUSES.has(statusUpper)) {
-              currentAssumption.status = statusUpper as AssumptionStatus;
-            }
-          }
-        } else {
-          const challengeMatch = trimmed.match(/^-?>\s*CHALLENGE\s+(\d{4}-\d{2}-\d{2})\s*:\s*(.+)/i);
-          if (challengeMatch) {
-            if (!currentAssumption.challenges) currentAssumption.challenges = [];
-            currentAssumption.challenges.push({ date: challengeMatch[1], text: challengeMatch[2].trim() });
-          }
-        }
-      }
+    if (applyContinuation(trimmed)) {
       continue;
     }
 
@@ -417,7 +429,7 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
 
     // Try: [TAG] [TIER] claim [LOAD-BEARING] [BLAST:LEVEL]
     const match = trimmed.match(
-      /^-\s*\[([KBO])\]\s*\[([T][123])\]\s*(.+)/
+      /^-\s*\[(K|B|O|Knowledge|Belief|Observation)\]\s*\[([T][123])\]\s*(.+)/i
     );
 
     if (match) {
@@ -437,8 +449,8 @@ export function extractAssumptions(text: string, sectionName: string): { items: 
 
       currentAssumption = {
         raw,
-        tag: TAGS.has(tagStr) ? (tagStr as EpistemicTag) : undefined,
-        tier: TIERS.has(tierStr) ? (tierStr as EpistemicTier) : undefined,
+        tag: normaliseAssumptionTag(tagStr),
+        tier: TIERS.has(tierStr.toUpperCase()) ? (tierStr.toUpperCase() as EpistemicTier) : undefined,
         claim,
         loadBearing,
         blastRadius,

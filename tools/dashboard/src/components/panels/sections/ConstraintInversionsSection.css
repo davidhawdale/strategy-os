@@ -10,8 +10,8 @@
 }
 
 .inversion-summary__item {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-bold);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   font-family: var(--font-mono);
 }
 

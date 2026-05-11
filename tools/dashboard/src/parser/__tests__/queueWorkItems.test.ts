@@ -30,6 +30,8 @@ const ESCALATION = `# E-01 — Decision deadlines policy
 **Type:** Governor escalation (VALUES)
 **Issued:** 2026-05-09
 **Issued by:** Gap Definer
+**Raised by:** Strategist
+**Date:** 2026-05-10
 **Blast radius:** MEDIUM
 **Status:** OPEN
 
@@ -37,9 +39,64 @@ const ESCALATION = `# E-01 — Decision deadlines policy
 
 What deadline does the governor set for fieldwork completion?
 
+## Why system cannot decide
+
+This requires a governor resource decision.
+
+## Options
+
+- **A. Set a firm deadline** — creates forcing function. Recommended.
+- **B. Leave open** — preserves flexibility.
+
+## What is at stake
+
+Fieldwork may drift without a deadline.
+
+## Recommendation
+
+Option A.
+
 ## Expected response
 
 A bound deadline for each task.
+`;
+
+const RECOMMENDATION_ONLY_ESCALATION = `# E-02 — Shared services data
+
+**Type:** Governor escalation (DATA)
+**Status:** OPEN
+
+## Decision needed
+
+Which internal route should gather the numbers first?
+
+## Options
+
+- **A. Request finance and ad ops data.**
+- **B. Use proxy benchmarks and revisit later.**
+
+## Recommendation
+
+Option A. This is the highest leverage internal ask.
+`;
+
+const NO_OPTION_RECOMMENDATION_ESCALATION = `# E-03 — Portfolio tolerance
+
+**Type:** Governor escalation (VALUES)
+**Status:** OPEN
+
+## Decision needed
+
+What success floor should govern this title?
+
+## Options
+
+- **A. Accept small-but-positive.**
+- **B. Require larger scale.**
+
+## Recommendation
+
+Governor decision — Strategist holds no view on portfolio strategy.
 `;
 
 describe('queue work item parser', () => {
@@ -73,7 +130,26 @@ describe('queue work item parser', () => {
     expect(item.title).toBe('Decision deadlines policy');
     expect(item.type).toBe('Governor escalation (VALUES)');
     expect(item.blastRadius).toBe('MEDIUM');
+    expect(item.raisedBy).toBe('Strategist');
+    expect(item.date).toBe('2026-05-10');
     expect(item.decisionNeeded).toBe('What deadline does the governor set for fieldwork completion?');
+    expect(item.whySystemCannotDecide).toBe('This requires a governor resource decision.');
+    expect(item.options).toEqual([
+      {
+        label: 'A',
+        text: 'Set a firm deadline',
+        consequence: 'creates forcing function.',
+        recommended: true,
+      },
+      {
+        label: 'B',
+        text: 'Leave open',
+        consequence: 'preserves flexibility.',
+        recommended: false,
+      },
+    ]);
+    expect(item.whatIsAtStake).toBe('Fieldwork may drift without a deadline.');
+    expect(item.recommendation).toBe('Option A.');
     expect(item.expectedResponse).toBe('A bound deadline for each task.');
   });
 
@@ -85,5 +161,30 @@ describe('queue work item parser', () => {
     ]);
 
     expect(items.map(item => item.id)).toEqual(['E-01', 'T-01']);
+  });
+
+  it('marks a recommended option from the recommendation section when the option line is not tagged inline', () => {
+    const item = parseQueueWorkItem('E-02-shared-services.md', RECOMMENDATION_ONLY_ESCALATION);
+
+    expect(item.options).toEqual([
+      {
+        label: 'A',
+        text: 'Request finance and ad ops data.',
+        consequence: undefined,
+        recommended: true,
+      },
+      {
+        label: 'B',
+        text: 'Use proxy benchmarks and revisit later.',
+        consequence: undefined,
+        recommended: false,
+      },
+    ]);
+  });
+
+  it('does not mark an option as recommended when the recommendation names no option', () => {
+    const item = parseQueueWorkItem('E-03-portfolio-tolerance.md', NO_OPTION_RECOMMENDATION_ESCALATION);
+
+    expect((item.options ?? []).map(option => option.recommended)).toEqual([false, false]);
   });
 });

@@ -1,4 +1,5 @@
 import type { EvidenceItem } from '../../../model/types';
+import { HelpedLabel } from '../../shared/HelpedLabel';
 import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { TierBadge } from '../../shared/TierBadge';
 import './EvidenceSection.css';
@@ -11,7 +12,7 @@ export function EvidenceSection({ evidence }: Props) {
   return (
     <div className="detail-section">
       <h3 className="section-heading">
-        Evidence
+        <HelpedLabel termKey="evidence">Evidence</HelpedLabel>
         <span className="section-heading__count">{evidence.length}</span>
       </h3>
       <ul className="evidence-list">
@@ -19,7 +20,7 @@ export function EvidenceSection({ evidence }: Props) {
           <li key={i} className="evidence-item">
             <div className="evidence-item__meta">
               {e.type && <span className="evidence-item__type">{e.type.replace(/_/g, ' ')}</span>}
-              <TierBadge tier={e.tier} />
+              <TierBadge tier={e.tier} termHelp />
               {e.date && <span className="evidence-item__date">{e.date}</span>}
             </div>
             <p className="evidence-item__detail">

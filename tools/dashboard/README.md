@@ -86,8 +86,8 @@ panel/section ids are ignored, and new known ids are appended safely.
 
 ## Queue Visibility
 
-The Now panel combines the summary queue view with individual queue work items.
-Files in `execution/queue/` are parsed as read-only work items:
+Queue-derived signals still feed the dashboard even without a dedicated queue
+page. Files in `execution/queue/` are parsed as read-only work items:
 
 - `T-*.md` files become task work items.
 - `E-*.md` files become escalation/decision work items.
@@ -124,6 +124,36 @@ CSS ownership is deliberately local:
   the section component.
 
 Avoid adding panel-specific blocks back into `App.css`.
+
+## Typography
+
+The dashboard now has a shared semantic typography layer in `src/App.css`,
+backed by the base type tokens in `src/tokens/design-tokens.ts`. Escalations
+was the originating reference page, and its hierarchy now defines the shared
+dashboard standard.
+
+Shared dashboard type roles:
+
+- `display title` — 30px / 700
+- `card title` — 24px / 800
+- `body large` — 18px / 400
+- `body medium` — 18px / 500
+- `section label` — 18px / 700
+- `summary line` — 18px / 600
+- `meta` — 13px / 500
+- `pill / micro label` — 14px / 700
+
+These roles live as shared dashboard variables in `src/App.css` and are
+consumed panel by panel as pages are migrated.
+
+When applying this system elsewhere, prefer:
+
+- main explanatory copy → `body large`
+- emphasized option or summary lines → `body medium`
+- card or record titles → `card title`
+- section introducers / labels → `section label`
+- source/date/status metadata → `meta`
+- pills and uppercase microcopy → `pill / micro label`
 
 ## Commands
 

@@ -4,8 +4,8 @@
 }
 
 .risk-group__heading {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-bold);
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin: 0 0 var(--space-3);
@@ -20,8 +20,8 @@
 .risk-group__heading--low { color: var(--color-risk-low); }
 
 .risk-group__count {
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
+  font-size: var(--dashboard-type-meta);
+  font-weight: var(--dashboard-type-meta-weight);
   color: var(--color-on-surface-subtle);
   background: var(--color-surface-sunken);
   padding: 1px var(--space-2);
@@ -60,8 +60,8 @@
 }
 
 .risk-item__hypothesis {
-  font-size: var(--text-xs);
-  font-weight: var(--weight-semibold);
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
   color: var(--color-on-surface-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -75,14 +75,16 @@
 }
 
 .risk-item__claim {
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
   color: var(--color-on-surface);
   margin: 0;
   line-height: var(--leading-relaxed);
 }
 
 .risk-item__detail {
-  font-size: var(--text-xs);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: var(--color-on-surface-muted);
   margin-top: var(--space-2);
   line-height: var(--leading-relaxed);

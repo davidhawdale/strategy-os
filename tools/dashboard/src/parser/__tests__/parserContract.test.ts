@@ -265,6 +265,37 @@ describe('parser contract', () => {
     expect(riskMap.assumptions[0]).not.toHaveProperty('hypothesis');
   });
 
+  it('classifies full-word list assumptions as critical risk when load-bearing T3 high-blast', () => {
+    const { register } = parse(`# Hypothesis Register
+
+## 1. Problem
+
+### Assumptions
+
+- [Belief] [T3] Problem assumption with **markdown**. [LOAD-BEARING] [BLAST:HIGH]
+  - Falsification: <30% say **yes**.
+  - Validation: Run [survey](https://example.com).
+`);
+    const riskMap = computeRiskMap(register);
+
+    expect(register.hypotheses.problem.assumptions).toHaveLength(1);
+    expect(register.hypotheses.problem.assumptions[0]).toMatchObject({
+      tag: 'B',
+      tier: 'T3',
+      claim: 'Problem assumption with **markdown**',
+      loadBearing: true,
+      blastRadius: 'HIGH',
+      falsification: '<30% say **yes**.',
+      validation: 'Run [survey](https://example.com).',
+    });
+    expect(riskMap.byCriticality.critical).toBe(1);
+    expect(riskMap.assumptions[0]).toMatchObject({
+      source: 'problem',
+      riskLevel: 'critical',
+      claim: 'Problem assumption with **markdown**',
+    });
+  });
+
   it('allows value proposition to flow through dashboard view models', () => {
     const { register } = parse(FULL_REGISTER);
 

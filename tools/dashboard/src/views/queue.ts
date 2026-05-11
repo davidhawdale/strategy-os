@@ -43,22 +43,16 @@ function deriveNarrative(raw: ExecutionQueueView, gapAnalysis: GapAnalysis): str
   return parts.join(' ');
 }
 
-function derivePendingDecisions(gapAnalysis: GapAnalysis): PendingDecision[] {
-  return gapAnalysis.governorEscalations
-    .filter(e => e.status === 'OPEN')
-    .map(e => {
-      // Extract an ID from the title (pattern: "E-01" or "E-01 (G-02)")
-      const idMatch = e.title.match(/E-\d+/);
-      const id = idMatch ? idMatch[0] : '';
-      // Strip the ID prefix from the title for display
-      const displayTitle = e.title.replace(/^E-\d+\s*[\-—(]?\s*/, '').replace(/\)\s*$/, '').trim();
-      return {
-        id,
-        title: displayTitle || e.title,
-        whatIsAtStake: e.whatIsAtStake,
-        isOverdue: false,
-      };
-    });
+function derivePendingDecisions(workItems: QueueWorkItem[]): PendingDecision[] {
+  return workItems
+    .filter(item => item.kind === 'escalation')
+    .filter(item => !item.status || !item.status.toUpperCase().includes('RESOLVED'))
+    .map(item => ({
+      id: item.id,
+      title: item.title,
+      whatIsAtStake: item.whatIsAtStake,
+      isOverdue: false,
+    }));
 }
 
 export function computeQueueView(
@@ -67,13 +61,13 @@ export function computeQueueView(
   workItems: QueueWorkItem[] = []
 ): ExecutionQueueView {
   if (!gapAnalysis) {
-    return { ...raw, pendingDecisions: [], workItems };
+    return { ...raw, pendingDecisions: derivePendingDecisions(workItems), workItems };
   }
 
   return {
     ...raw,
     narrative: deriveNarrative(raw, gapAnalysis),
-    pendingDecisions: derivePendingDecisions(gapAnalysis),
+    pendingDecisions: derivePendingDecisions(workItems),
     workItems,
   };
 }

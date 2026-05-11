@@ -1,17 +1,38 @@
-import type { Escalation } from '../../../model/types';
-import { BlastRadiusBadge } from '../../shared/BlastRadiusBadge';
+import type { GovernorEscalationCard } from '../../../model/types';
 import './EscalationCardSection.css';
 
 interface Props {
-  escalation: Escalation;
+  escalation: GovernorEscalationCard;
 }
 
-function DecisionTypeBadge({ type }: { type?: Escalation['decisionType'] }) {
-  if (!type) return null;
-  return <span className={`decision-type decision-type--${type.toLowerCase()}`}>{type}</span>;
+function renderSourceMeta(escalation: GovernorEscalationCard) {
+  const items = [
+    escalation.sourceFileName && ['Source', escalation.sourceFileName],
+    escalation.raisedBy && ['Raised by', escalation.raisedBy],
+    escalation.date && ['Date', escalation.date],
+  ].filter(Boolean) as string[][];
+
+  if (items.length === 0) return null;
+
+  return (
+    <dl className="escalation-source-meta">
+      {items.map(([label, value]) => (
+        <div key={label} className="escalation-source-meta__item">
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function statusLabel(status: GovernorEscalationCard['status']) {
+  return status === 'RESOLVED' ? 'Approved' : 'Decision Needed';
 }
 
 export function EscalationCardSection({ escalation }: Props) {
+  const hasRecommendedOption = escalation.options.some(option => option.recommended);
+
   return (
     <article
       className={`escalation-card escalation-card--${escalation.status.toLowerCase()}`}
@@ -21,68 +42,68 @@ export function EscalationCardSection({ escalation }: Props) {
         <div className="escalation-card__title-row">
           <h3 className="escalation-card__title">{escalation.title}</h3>
           <span className={`escalation-status escalation-status--${escalation.status.toLowerCase()}`}>
-            {escalation.status}
+            {statusLabel(escalation.status)}
           </span>
         </div>
-        <div className="escalation-card__badges">
-          {escalation.decisionType && <DecisionTypeBadge type={escalation.decisionType} />}
-          {escalation.blastRadius && <BlastRadiusBadge radius={escalation.blastRadius} />}
-        </div>
+        {renderSourceMeta(escalation)}
       </div>
 
       <div className="escalation-card__body">
-        <div className="escalation-card__field">
-          <span className="escalation-card__field-label">Decision Needed</span>
+        <section className="escalation-card__section">
+          <span className="escalation-card__field-label">Decision Context</span>
           <p className="escalation-card__field-value">{escalation.decisionNeeded}</p>
-        </div>
+        </section>
 
         {escalation.whySystemCannotDecide && (
-          <div className="escalation-card__field">
+          <section className="escalation-card__section escalation-card__section--cannot-decide">
             <span className="escalation-card__field-label">Why System Cannot Decide</span>
             <p className="escalation-card__field-value">{escalation.whySystemCannotDecide}</p>
-          </div>
+          </section>
         )}
 
         {escalation.options.length > 0 && (
-          <div className="escalation-card__options">
-            <span className="escalation-card__field-label">Options</span>
+          <section className="escalation-card__section escalation-card__options">
+            <span className="escalation-card__field-label">System Options</span>
             <ul className="escalation-options-list">
               {escalation.options.map((opt, i) => (
-                <li key={i} className="escalation-options-list__item">
-                  <span className="escalation-options-list__label">{opt.label}:</span>
-                  <span className="escalation-options-list__option">{opt.option}</span>
-                  <span className="escalation-options-list__consequence">
-                    {'\u2192'} {opt.consequence}
-                  </span>
+                <li
+                  key={i}
+                  className={`escalation-options-list__item ${
+                    opt.recommended ? 'escalation-options-list__item--recommended' : ''
+                  }`}
+                >
+                  {opt.label && <span className="escalation-options-list__label">{opt.label}</span>}
+                  <div className="escalation-options-list__content">
+                    <span className="escalation-options-list__option">{opt.text}</span>
+                    {opt.recommended && <span className="escalation-options-list__recommended">Recommended</span>}
+                    {opt.consequence && (
+                      <span className="escalation-options-list__consequence">
+                        {'\u2192'} {opt.consequence}
+                      </span>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
         )}
 
-        {escalation.systemRecommendation && (
-          <div className="escalation-card__field">
-            <span className="escalation-card__field-label">System Recommendation</span>
+        {!hasRecommendedOption && escalation.systemRecommendation && (
+          <section className="escalation-card__section escalation-card__section--recommendation">
+            <span className="escalation-card__field-label">No Recommendation</span>
             <p className="escalation-card__field-value escalation-card__field-value--recommendation">
               {escalation.systemRecommendation}
             </p>
-          </div>
+          </section>
         )}
 
         {escalation.whatIsAtStake && (
-          <div className="escalation-card__field">
+          <section className="escalation-card__section">
             <span className="escalation-card__field-label">What Is at Stake</span>
-            <p className="escalation-card__field-value escalation-card__field-value--stake">
+            <p className="escalation-card__field-value">
               {escalation.whatIsAtStake}
             </p>
-          </div>
-        )}
-
-        {escalation.queueFileNote && (
-          <div className="escalation-queue-note">
-            <span className="escalation-card__field-label">See queue files</span>
-            <p className="escalation-queue-note__text">{escalation.queueFileNote}</p>
-          </div>
+          </section>
         )}
       </div>
     </article>

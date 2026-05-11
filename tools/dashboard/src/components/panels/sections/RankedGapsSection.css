@@ -4,8 +4,8 @@
 }
 
 .gap-ledger__section-title {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--color-on-surface-muted);
@@ -14,7 +14,8 @@
 
 .gap-ledger__empty {
   color: var(--color-on-surface-muted);
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   text-align: center;
   padding: var(--space-8);
 }

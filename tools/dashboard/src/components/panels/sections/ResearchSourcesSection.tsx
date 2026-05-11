@@ -1,4 +1,5 @@
 import type { ResearchSource } from '../../../model/types';
+import { HelpedLabel } from '../../shared/HelpedLabel';
 import { InlineMarkdownText } from '../../shared/InlineMarkdownText';
 import { TierBadge } from '../../shared/TierBadge';
 import './ResearchSourcesSection.css';
@@ -13,7 +14,7 @@ export function ResearchSourcesSection({ researchSources }: Props) {
   return (
     <div className="detail-section">
       <h3 className="section-heading">
-        Research Sources
+        <HelpedLabel termKey="research-sources">Research Sources</HelpedLabel>
         <span className="section-heading__count">{researchSources.length}</span>
       </h3>
       <ul className="research-source-list">
@@ -25,7 +26,7 @@ export function ResearchSourcesSection({ researchSources }: Props) {
             <li key={i} className="research-source-item">
               <div className="research-source-item__meta">
                 {source.type && <span className="research-source-item__type">{source.type.replace(/_/g, ' ')}</span>}
-                <TierBadge tier={source.tier} />
+                <TierBadge tier={source.tier} termHelp />
                 {source.date && <span className="research-source-item__date">{source.date}</span>}
               </div>
               <p className="research-source-item__detail">

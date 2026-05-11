@@ -11,7 +11,8 @@
 .document-block-section__paragraph {
   margin: 0;
   color: var(--color-on-surface);
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
   line-height: var(--leading-relaxed);
 }
 
@@ -19,7 +20,8 @@
   margin: 0;
   padding-left: var(--space-5);
   color: var(--color-on-surface);
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
   line-height: var(--leading-relaxed);
 }
 

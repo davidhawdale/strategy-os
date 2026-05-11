@@ -44,8 +44,8 @@ const queueView: ExecutionQueueView = {
 };
 
 describe('renderDashboardPanel', () => {
-  it('renders the overview panel and includes it in layout metadata', () => {
-    const result = renderDashboardPanel('overview', {
+  it('renders the governor brief panel and includes it in layout metadata', () => {
+    const result = renderDashboardPanel('governorBrief', {
       register: data.register,
       queueView,
       sectionOrders: getDefaultSectionOrders(),
@@ -55,14 +55,16 @@ describe('renderDashboardPanel', () => {
     });
 
     expect(result).not.toBeNull();
-    expect(getDefaultNavigationPanelIds()[0]).toBe('overview');
-    expect(getDefaultSectionOrders().overview).toEqual([
-      'state',
-      'journey',
-      'hypotheses',
-      'researchUnlocks',
-      'nextMoves',
+    expect(getDefaultNavigationPanelIds()[0]).toBe('governorBrief');
+    expect(getDefaultSectionOrders().governorBrief).toEqual([
+      'strategySeed',
+      'escalations',
+      'gaps',
     ]);
+  });
+
+  it('does not include the removed queue panel in navigation defaults', () => {
+    expect(getDefaultNavigationPanelIds()).not.toContain('queue');
   });
 
   it('warns in development when an unknown panel id is requested', () => {

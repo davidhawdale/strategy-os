@@ -892,9 +892,28 @@ export interface DecisionDeadlinesView {
 }
 
 export interface GovernorEscalationsView {
-  openEscalations: Escalation[];
-  resolvedEscalations: Escalation[];
+  openEscalations: GovernorEscalationCard[];
+  resolvedEscalations: GovernorEscalationCard[];
   totalOpen: number;
+}
+
+export interface GovernorEscalationCard {
+  id?: string;
+  title: string;
+  status: 'OPEN' | 'RESOLVED';
+  decisionType?: Escalation['decisionType'];
+  type?: string;
+  blastRadius?: BlastRadius;
+  blastRadiusRaw?: string;
+  decisionNeeded: string;
+  whySystemCannotDecide?: string;
+  options: QueueEscalationOption[];
+  systemRecommendation?: string;
+  whatIsAtStake?: string;
+  queueFileNote?: string;
+  sourceFileName?: string;
+  raisedBy?: string;
+  date?: string;
 }
 
 export interface EvidenceInventoryView {
@@ -1011,7 +1030,7 @@ export interface HypothesisDetailView {
 // ============================================================
 
 export type PanelId =
-  | 'overview'
+  | 'governorBrief'
   | 'problem'
   | 'segment'
   | 'unitEconomics'
@@ -1024,8 +1043,7 @@ export type PanelId =
   | 'proposals'
   | 'escalations'
   | 'detail'
-  | 'deadlines'
-  | 'queue';
+  | 'deadlines';
 
 // ============================================================
 // Execution Queue
@@ -1063,6 +1081,8 @@ export interface QueueWorkItem {
   kind: QueueWorkItemKind;
   issued?: string;
   issuedBy?: string;
+  raisedBy?: string;
+  date?: string;
   status?: string;
   type?: string;
   blastRadius?: string;
@@ -1072,9 +1092,20 @@ export interface QueueWorkItem {
   blocks?: string;
   summary?: string;
   decisionNeeded?: string;
+  whySystemCannotDecide?: string;
+  options?: QueueEscalationOption[];
+  whatIsAtStake?: string;
+  recommendation?: string;
   expectedResponse?: string;
   expectedOutput?: string;
   preconditions: string[];
+}
+
+export interface QueueEscalationOption {
+  label?: string;
+  text: string;
+  consequence?: string;
+  recommended: boolean;
 }
 
 export interface ExecutionQueueView {
@@ -1098,7 +1129,7 @@ export type AppState =
 
 export type AppEvent =
   | { _tag: 'FetchStart' }
-  | { _tag: 'FetchSuccess'; data: CombinedParseResult }
+  | { _tag: 'FetchSuccess'; data: CombinedParseResult; activePanel?: PanelId }
   | { _tag: 'FetchError'; message: string }
   | { _tag: 'SelectPanel'; panel: PanelId }
   | { _tag: 'SelectHypothesis'; id: HypothesisId }
@@ -1110,7 +1141,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
     case 'Loading':
       switch (event._tag) {
         case 'FetchSuccess':
-          return { _tag: 'Loaded', data: event.data, activePanel: DEFAULT_PANEL_ID };
+          return { _tag: 'Loaded', data: event.data, activePanel: event.activePanel ?? DEFAULT_PANEL_ID };
         case 'FetchError':
           return { _tag: 'Error', message: event.message };
         default:
@@ -1138,7 +1169,7 @@ export function transition(state: AppState, event: AppEvent): AppState {
         case 'FetchStart':
           return { _tag: 'Loading' };
         case 'FetchSuccess':
-          return { _tag: 'Loaded', data: event.data, activePanel: DEFAULT_PANEL_ID };
+          return { _tag: 'Loaded', data: event.data, activePanel: event.activePanel ?? DEFAULT_PANEL_ID };
         default:
           return state;
       }

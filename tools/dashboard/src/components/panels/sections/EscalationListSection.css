@@ -1,42 +1,13 @@
 .escalations-section {
-  margin-bottom: var(--space-8);
   width: 100%;
 }
 
-.escalations-section--resolved .escalations-section__title {
-  color: var(--color-on-surface-muted);
-}
-
-.escalations-section__title {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-on-surface-muted);
-  margin: 0 0 var(--space-4);
-}
-
-.escalations-section__count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 var(--space-2);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full, 9999px);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  color: var(--color-on-surface-muted);
-  line-height: 1;
+.escalations-section + .escalations-section {
+  margin-top: var(--space-5);
 }
 
 .escalations-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }

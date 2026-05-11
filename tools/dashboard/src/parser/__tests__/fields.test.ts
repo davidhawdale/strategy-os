@@ -200,6 +200,18 @@ describe('extractAssumptions', () => {
 | A3 | Observation    | T1   | FB groups are active     | Yes          | Low    | Groups have <100 posts| Manual count        | TESTING       |
 `;
 
+  const LIST_BLOCK = `
+### Assumptions
+
+- [Belief] [T3] Pain is real and ongoing. [LOAD-BEARING] [BLAST:HIGH]
+  - Falsification: <30% say they want it.
+  - Validation: Resident survey.
+  - Status: OPEN
+  - CHALLENGE 2026-05-10: Survey sample may be biased.
+- [Knowledge] [T1] Weekly cadence is late. [BLAST:LOW]
+- [Observation] [T2] Facebook groups are active. [LOAD-BEARING] [BLAST:MEDIUM]
+`;
+
   it('parses a markdown table into assumption items', () => {
     const { items } = extractAssumptions(TABLE_BLOCK, 'Test');
     expect(items).toHaveLength(3);
@@ -243,6 +255,34 @@ describe('extractAssumptions', () => {
     const { items } = extractAssumptions(TABLE_BLOCK, 'Test');
     expect(items[0].falsification).toBe('<30% say they want it');
     expect(items[0].validation).toBe('Resident survey');
+  });
+
+  it('parses full-word list assumptions without treating nested details as assumptions', () => {
+    const { items, warnings } = extractAssumptions(LIST_BLOCK, 'Test');
+
+    expect(warnings).toHaveLength(0);
+    expect(items).toHaveLength(3);
+    expect(items[0]).toMatchObject({
+      tag: 'B',
+      tier: 'T3',
+      claim: 'Pain is real and ongoing',
+      loadBearing: true,
+      blastRadius: 'HIGH',
+      falsification: '<30% say they want it.',
+      validation: 'Resident survey.',
+      status: 'OPEN',
+    });
+    expect(items[0].challenges).toEqual([
+      { date: '2026-05-10', text: 'Survey sample may be biased.' },
+    ]);
+  });
+
+  it('maps full-word list assumption classifications to tags', () => {
+    const { items } = extractAssumptions(LIST_BLOCK, 'Test');
+
+    expect(items[0].tag).toBe('B');
+    expect(items[1].tag).toBe('K');
+    expect(items[2].tag).toBe('O');
   });
 
   it('returns empty for no assumptions section', () => {

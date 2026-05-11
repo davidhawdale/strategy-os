@@ -23,21 +23,23 @@
 }
 
 .research-source-item__type {
-  font-size: 10px;
-  font-weight: var(--weight-semibold);
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-on-surface-muted);
 }
 
 .research-source-item__date {
-  font-size: 10px;
+  font-size: var(--dashboard-type-meta);
+  font-weight: var(--dashboard-type-meta-weight);
   color: var(--color-on-surface-subtle);
 }
 
 .research-source-item__detail {
   margin: 0;
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
   line-height: var(--leading-relaxed);
 }
 

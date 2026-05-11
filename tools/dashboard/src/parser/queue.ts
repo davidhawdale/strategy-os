@@ -1,4 +1,4 @@
-import type { ExecutionQueueView, QueueAction, BlockedPath, PendingDecision, QueueWorkItem } from '../model/types';
+import type { ExecutionQueueView, QueueAction, BlockedPath, PendingDecision, QueueEscalationOption, QueueWorkItem } from '../model/types';
 import { extractBoldField } from './fields';
 
 function extractQueueField(text: string, label: string): string | undefined {
@@ -44,6 +44,80 @@ function bulletItems(markdown: string | undefined): string[] {
     .filter(Boolean);
 }
 
+function normalizeSectionText(markdown: string | undefined): string | undefined {
+  if (!markdown) return undefined;
+  const normalized = markdown
+    .trim()
+    .replace(/\*\*/g, '')
+    .replace(/\s+/g, ' ');
+  return normalized || undefined;
+}
+
+function stripRecommended(text: string): { text: string; recommended: boolean } {
+  const recommended = /\brecommended\b/i.test(text);
+  const cleaned = text
+    .replace(/\s*\*{0,2}Recommended\.?\*{0,2}\s*$/i, '')
+    .replace(/\s*\(?recommended\)?\.?\s*$/i, '')
+    .trim();
+  return { text: cleaned, recommended };
+}
+
+function parseEscalationOptions(markdown: string | undefined): QueueEscalationOption[] {
+  if (!markdown) return [];
+
+  return markdown
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.startsWith('- '))
+    .flatMap(line => {
+      const raw = line.replace(/^-\s+/, '').trim();
+      const labelMatch = raw.match(/^\*\*?([A-Z])[\.:]\s+(.+?)\*\*?\s*(?:[—-]\s*(.+))?$/);
+      const plainMatch = raw.match(/^([A-Z])[\.:]\s*(.+?)(?:\s+[—-]\s*(.+))?$/);
+      const match = labelMatch ?? plainMatch;
+
+      if (!match) {
+        const { text, recommended } = stripRecommended(raw.replace(/\*\*/g, ''));
+        return text ? [{ text, recommended }] : [];
+      }
+
+      const { text: optionText, recommended: optionRecommended } = stripRecommended(match[2].replace(/\*\*/g, ''));
+      const { text: consequenceText, recommended: consequenceRecommended } = stripRecommended((match[3] ?? '').replace(/\*\*/g, ''));
+
+      return [{
+        label: match[1],
+        text: optionText,
+        consequence: consequenceText || undefined,
+        recommended: optionRecommended || consequenceRecommended,
+      }];
+    });
+}
+
+function recommendedOptionLabel(recommendation: string | undefined): string | undefined {
+  if (!recommendation) return undefined;
+
+  const normalized = recommendation.replace(/\*\*/g, '').trim();
+  const optionMatch = normalized.match(/\bOption\s+([A-Z])\b/i);
+  if (optionMatch) return optionMatch[1].toUpperCase();
+
+  const labelMatch = normalized.match(/^([A-Z])[\.:]\b/);
+  if (labelMatch) return labelMatch[1].toUpperCase();
+
+  return undefined;
+}
+
+function applyRecommendationToOptions(
+  options: QueueEscalationOption[],
+  recommendation: string | undefined,
+): QueueEscalationOption[] {
+  const recommendedLabel = recommendedOptionLabel(recommendation);
+  if (!recommendedLabel) return options;
+
+  return options.map(option => ({
+    ...option,
+    recommended: option.recommended || option.label?.toUpperCase() === recommendedLabel,
+  }));
+}
+
 function parseTitle(markdown: string, fileName: string): { id: string; title: string } {
   const heading = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim();
   const fromHeading = heading?.match(/^([A-Z]+-\d+)\s+[—-]\s+(.+)$/);
@@ -75,6 +149,13 @@ export function parseQueueWorkItem(fileName: string, markdown: string): QueueWor
   const whatNeedsReconciling = firstParagraph(sectionContent(markdown, 'What needs reconciling'));
   const expectedResponse = firstParagraph(sectionContent(markdown, 'Expected response'));
   const expectedOutput = firstParagraph(sectionContent(markdown, 'Expected output'));
+  const whySystemCannotDecide = normalizeSectionText(sectionContent(markdown, 'Why system cannot decide'));
+  const whatIsAtStake = normalizeSectionText(sectionContent(markdown, 'What is at stake'));
+  const recommendation = normalizeSectionText(sectionContent(markdown, 'Recommendation'));
+  const options = applyRecommendationToOptions(
+    parseEscalationOptions(sectionContent(markdown, 'Options')),
+    recommendation,
+  );
   const preconditions = [
     ...bulletItems(sectionContent(markdown, 'Pre-conditions before this task can start')),
     ...bulletItems(sectionContent(markdown, 'Pre-conditions')),
@@ -88,6 +169,8 @@ export function parseQueueWorkItem(fileName: string, markdown: string): QueueWor
     kind,
     issued: extractQueueField(markdown, 'Issued'),
     issuedBy: extractQueueField(markdown, 'Issued by'),
+    raisedBy: extractQueueField(markdown, 'Raised by'),
+    date: extractQueueField(markdown, 'Date'),
     status: normalizeStatus(extractQueueField(markdown, 'Status')),
     type: extractQueueField(markdown, 'Type'),
     blastRadius: extractQueueField(markdown, 'Blast radius'),
@@ -97,6 +180,10 @@ export function parseQueueWorkItem(fileName: string, markdown: string): QueueWor
     blocks: extractQueueField(markdown, 'Blocks'),
     summary: decisionNeeded ?? objective ?? whatNeedsReconciling,
     decisionNeeded,
+    whySystemCannotDecide,
+    options,
+    whatIsAtStake,
+    recommendation,
     expectedResponse,
     expectedOutput,
     preconditions,

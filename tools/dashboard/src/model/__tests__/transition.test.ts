@@ -34,6 +34,18 @@ const data = {
 } satisfies CombinedParseResult;
 
 describe('dashboard state transition', () => {
+  it('uses the provided active panel on initial fetch success', () => {
+    const next = transition(
+      { _tag: 'Loading' },
+      { _tag: 'FetchSuccess', data, activePanel: 'segment' },
+    );
+
+    expect(next).toMatchObject({
+      _tag: 'Loaded',
+      activePanel: 'segment',
+    });
+  });
+
   it('routes hypothesis selection to the promoted top-level hypothesis panel', () => {
     const next = transition(
       { _tag: 'Loaded', data, activePanel: 'readiness' },

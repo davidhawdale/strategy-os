@@ -12,10 +12,27 @@
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: var(--leading-normal);
+  --dashboard-shell-max-width: 1680px;
+  --dashboard-type-display-title: 1.875rem;
+  --dashboard-type-display-title-weight: 700;
+  --dashboard-type-card-title: 1.5rem;
+  --dashboard-type-card-title-weight: 800;
+  --dashboard-type-body-lg: 1.125rem;
+  --dashboard-type-body-lg-weight: 400;
+  --dashboard-type-body-md: 1.125rem;
+  --dashboard-type-body-md-weight: 500;
+  --dashboard-type-section-label: 1.125rem;
+  --dashboard-type-section-label-weight: 700;
+  --dashboard-type-summary: 1.125rem;
+  --dashboard-type-summary-weight: 600;
+  --dashboard-type-meta: 0.8125rem;
+  --dashboard-type-meta-weight: 500;
+  --dashboard-type-label: 0.875rem;
+  --dashboard-type-label-weight: 700;
 }
 
 .app__main {
-  max-width: 1280px;
+  max-width: var(--dashboard-shell-max-width);
   margin: 0 auto;
   padding: var(--space-6) var(--space-6) var(--space-16);
 }
@@ -148,7 +165,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-4) var(--space-6);
-  max-width: 1280px;
+  max-width: var(--dashboard-shell-max-width);
   margin: 0 auto;
   gap: var(--space-4);
 }
@@ -306,7 +323,7 @@
 
 .header__nav {
   border-top: 1px solid var(--color-border);
-  max-width: 1280px;
+  max-width: var(--dashboard-shell-max-width);
   margin: 0 auto;
   padding: 0 var(--space-6);
 }
@@ -415,8 +432,8 @@
 /* === Section Headings === */
 
 .section-heading {
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
+  font-size: var(--dashboard-type-section-label);
+  font-weight: var(--dashboard-type-section-label-weight);
   color: var(--color-on-surface);
   margin: var(--space-8) 0 var(--space-4);
   display: flex;
@@ -435,10 +452,66 @@
 }
 
 .subsection-heading {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
   color: var(--color-on-surface);
   margin: var(--space-4) 0 var(--space-2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* === Dashboard Typography === */
+
+.dashboard-type-display-title {
+  font-size: var(--dashboard-type-display-title);
+  font-weight: var(--dashboard-type-display-title-weight);
+  line-height: var(--leading-tight);
+}
+
+.dashboard-type-card-title {
+  font-size: var(--dashboard-type-card-title);
+  font-weight: var(--dashboard-type-card-title-weight);
+  line-height: var(--leading-tight);
+}
+
+.dashboard-type-body-lg {
+  font-size: var(--dashboard-type-body-lg);
+  font-weight: var(--dashboard-type-body-lg-weight);
+  line-height: var(--leading-relaxed);
+}
+
+.dashboard-type-body-md {
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
+  line-height: var(--leading-normal);
+}
+
+.dashboard-type-section-label {
+  font-size: var(--dashboard-type-section-label);
+  font-weight: var(--dashboard-type-section-label-weight);
+  line-height: var(--leading-tight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dashboard-type-summary {
+  font-size: var(--dashboard-type-summary);
+  font-weight: var(--dashboard-type-summary-weight);
+  line-height: var(--leading-normal);
+}
+
+.dashboard-type-meta {
+  font-size: var(--dashboard-type-meta);
+  font-weight: var(--dashboard-type-meta-weight);
+  line-height: var(--leading-normal);
+}
+
+.dashboard-type-label {
+  font-size: var(--dashboard-type-label);
+  font-weight: var(--dashboard-type-label-weight);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* === Badges === */

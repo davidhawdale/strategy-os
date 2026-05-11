@@ -244,7 +244,11 @@ Run gap-enforcing-decisions skill:
 ### PASS 5: Issue Queue
 1. Write top-3 actions to execution queue.
 2. Write only gap-reduction tasks and escalations.
-3. Update `strategy/gap-analysis.md` with full detail.
+3. Update `strategy/gap-analysis.md` with full detail of gap records,
+   destruction outcomes, decision rule application, and readiness state.
+   Governor escalations go to `execution/queue/` only (E-files). In
+   gap-analysis.md, record escalations as an index table (ID, topic,
+   type, status) with a pointer to the queue — no duplicated content.
 4. Update hypothesis register summary sections (8: Destruction Log,
    9: Gap Ledger).
 5. **Run gap-write-pass-summary skill.** Write `strategy/gap-definer-pass-complete.md`.

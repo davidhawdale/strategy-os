@@ -366,43 +366,16 @@ Inversion summary: of 8 inverted assumptions, **2 are strategy-killing** (reside
 
 ## 9. Governor Escalations
 
-### Escalation: E-01 — Borders fieldwork mandate (resident + SME)
-- Decision Type: JUDGMENT + values + resource allocation
-- Blast Radius: HIGH
-- Decision Needed: Authorise and fund ground-truth fieldwork (residents + SMEs) before any pilot spend is committed.
-- Why System Cannot Decide: Cannot generate T1 evidence autonomously; values + budget decision belongs to governor.
-- Options:
-  - A: Full fieldwork (~£15K–£40K + 8–12 weeks) → resolves G-01, G-02, G-03 in one programme. **Recommended.**
-  - B: Light-touch survey only (~£5K, 4 weeks) → resolves G-03 partially; G-01/G-02 remain T3.
-  - C: Skip fieldwork; pilot directly → defers risk by collapsing it into execution; high capital exposure.
-- System Recommendation: A.
-- What Is at Stake: Three HIGH-blast T3 assumptions remain unvalidated. Without A, no advance to sell_ready is possible.
-- Status: OPEN.
+Three escalations are open and blocking sell_ready.
+Full decision documents (options, recommendations, consequences) are in execution/queue/.
 
-### Escalation: E-02 — DCT shared-services cost allocation and cross-promo data
-- Decision Type: JUDGMENT (internal-data ask)
-- Blast Radius: HIGH
-- Decision Needed: Obtain DCT internal data on shared-service marginal cost, cross-promo CPM/conversion, and any P&J Borders-area subscriber baseline.
-- Why System Cannot Decide: Data lives inside DCT and is unavailable externally.
-- Options:
-  - A: Request from DCT finance, ad ops, subs teams. **Recommended.**
-  - B: Proceed with industry proxies; flag for CHALLENGE mode update later.
-- System Recommendation: A.
-- What Is at Stake: If shared services do not scale to sub-15K, UE1 hybrid collapses to UE2 newsletter — different solution shape.
-- Status: OPEN.
+| ID   | Topic                               | Type              | Status |
+|------|-------------------------------------|-------------------|--------|
+| E-01 | Borders fieldwork mandate           | JUDGMENT + VALUES | OPEN   |
+| E-02 | DCT shared-services cost allocation | JUDGMENT          | OPEN   |
+| E-03 | Portfolio tolerance for sub-scale   | VALUES only       | OPEN   |
 
-### Escalation: E-03 — DCT portfolio tolerance for sub-scale title
-- Decision Type: VALUES
-- Blast Radius: HIGH
-- Decision Needed: Confirm DCT's tolerance for a title whose realistic ceiling may be 6–8K paying subscribers.
-- Why System Cannot Decide: Portfolio strategy is a governor / DCT leadership values decision.
-- Options:
-  - A: Accept small-but-contribution-positive as success → current kill thresholds hold.
-  - B: Require P&J-scale ambitions (15K+) → register changes needed (segment broader than Borders; VP changes; UE re-cast).
-  - C: Treat as defensive/civic-purpose play → different success criteria altogether.
-- System Recommendation: none (governor-only).
-- What Is at Stake: Calibration of every kill threshold in §4 and §7.
-- Status: OPEN.
+All three must be resolved before any spend is authorised.
 
 ---
 

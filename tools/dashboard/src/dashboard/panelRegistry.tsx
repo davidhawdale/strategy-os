@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { GapAnalysis, HypothesisId, HypothesisRegister, PanelId, ExecutionQueueView } from '../model/types';
-import { OverviewPanel } from '../components/panels/OverviewPanel';
 import { ReadinessPanel } from '../components/panels/ReadinessPanel';
 import { EvidencePanel } from '../components/panels/EvidencePanel';
 import { RiskPanel } from '../components/panels/RiskPanel';
@@ -10,7 +9,6 @@ import { HypothesisDetailPanel } from '../components/panels/HypothesisDetailPane
 import { GapLedgerPanel } from '../components/panels/GapLedgerPanel';
 import { EscalationsPanel } from '../components/panels/EscalationsPanel';
 import { DeadlinesPanel } from '../components/panels/DeadlinesPanel';
-import { QueuePanel } from '../components/panels/QueuePanel';
 import { computeReadiness } from '../views/readiness';
 import { computeEvidenceQuality } from '../views/evidence-quality';
 import { computeRiskMap } from '../views/risk-map';
@@ -20,7 +18,8 @@ import { computeHypothesisDetail } from '../views/hypothesis-detail';
 import { computeGapLedgerView } from '../views/gap-ledger';
 import { computeGovernorEscalationsView } from '../views/escalations';
 import { computeDecisionDeadlinesView } from '../views/deadlines';
-import { computeOverviewJourneyView } from '../views/overview-journey';
+import { computeGovernorBriefView } from '../views/governor-brief';
+import { GovernorBriefPanel } from '../components/panels/GovernorBriefPanel';
 import type { SectionOrderMap } from './layoutModel';
 import { resolveSectionOrder } from './layoutModel';
 import { HYPOTHESIS_SECTION_PROFILES } from './hypothesisSectionProfiles';
@@ -114,48 +113,23 @@ function renderHypothesisPanel(
 // Panels without navigation remain available for drill-down flows.
 export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
   {
-    id: 'overview',
+    id: 'governorBrief',
     navigation: {
-      label: 'Overview',
-      shortLabel: 'Overview',
+      label: 'Governor Brief',
+      shortLabel: 'Brief',
       group: 'now',
-      description: 'Layered state of play, journey progress, research unlocks, and next moves.',
+      description: 'Blocking escalations and top-ranked gaps requiring governor attention.',
       sections: [
-        { id: 'state', label: 'Current State' },
-        { id: 'journey', label: 'Journey' },
-        { id: 'hypotheses', label: 'Hypotheses' },
-        { id: 'researchUnlocks', label: 'Research Unlocks' },
-        { id: 'nextMoves', label: 'Next Moves' },
+        { id: 'strategySeed', label: 'Strategy Seed' },
+        { id: 'escalations', label: 'Blocking Escalations' },
+        { id: 'gaps', label: 'Top Gaps' },
       ],
     },
-    render: ({ register, gapAnalysis, queueView, sectionOrders }) => (
-      <OverviewPanel
-        view={computeOverviewJourneyView(register, gapAnalysis, queueView)}
-        sectionOrder={sectionOrders.overview}
-      />
-    ),
-  },
-  {
-    id: 'queue',
-    navigation: {
-      label: 'Now',
-      shortLabel: 'Now',
-      group: 'now',
-      description: 'Current execution queue, action priorities, blockers, and pending decisions.',
-      sections: [
-        { id: 'header', label: 'Header' },
-        { id: 'narrative', label: 'Narrative' },
-        { id: 'actions', label: 'Actions' },
-        { id: 'workItems', label: 'Queue Files' },
-        { id: 'pendingDecisions', label: 'Pending Decisions' },
-        { id: 'blockedPaths', label: 'Blocked Paths' },
-      ],
-    },
-    render: ({ queueView, gapAnalysis, sectionOrders, onSelectPanel }) => (
-      <QueuePanel
-        view={queueView}
-        onSelectEscalations={gapAnalysis ? () => onSelectPanel('escalations') : undefined}
-        sectionOrder={sectionOrders.queue}
+    render: ({ register, gapAnalysis, queueView, sectionOrders, onSelectPanel }) => (
+      <GovernorBriefPanel
+        view={computeGovernorBriefView(register, gapAnalysis, queueView)}
+        sectionOrder={sectionOrders.governorBrief}
+        onSelectPanel={onSelectPanel}
       />
     ),
   },
@@ -241,9 +215,11 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
         { id: 'resolvedEscalations', label: 'Resolved Escalations' },
       ],
     },
-    requiresGapAnalysis: true,
-    render: ({ gapAnalysis, sectionOrders }) => (
-      <EscalationsPanel view={computeGovernorEscalationsView(gapAnalysis)} sectionOrder={sectionOrders.escalations} />
+    render: ({ queueView, sectionOrders }) => (
+      <EscalationsPanel
+        view={computeGovernorEscalationsView(queueView)}
+        sectionOrder={sectionOrders.escalations}
+      />
     ),
   },
   {
