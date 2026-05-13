@@ -396,15 +396,16 @@
 
 .panel__title {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-bold);
+  font-size: var(--dashboard-type-display-title);
+  font-weight: var(--dashboard-type-display-title-weight);
   letter-spacing: -0.02em;
   margin: 0 0 var(--space-1);
   color: var(--color-on-surface);
 }
 
 .panel__subtitle {
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: var(--color-on-surface-muted);
   margin: 0;
 }
@@ -432,8 +433,8 @@
 /* === Section Headings === */
 
 .section-heading {
-  font-size: var(--dashboard-type-section-label);
-  font-weight: var(--dashboard-type-section-label-weight);
+  font-size: var(--dashboard-type-card-title);
+  font-weight: var(--dashboard-type-card-title-weight);
   color: var(--color-on-surface);
   margin: var(--space-8) 0 var(--space-4);
   display: flex;
@@ -565,47 +566,47 @@
 
 /* Tiers */
 .badge--tier-t1 {
-  font-size: 10px;
-  padding: 1px var(--space-1);
+  font-size: var(--dashboard-type-label);
+  padding: 2px var(--space-2);
   color: var(--color-tier-1);
   background: var(--color-tier-1-bg);
 }
 .badge--tier-t2 {
-  font-size: 10px;
-  padding: 1px var(--space-1);
+  font-size: var(--dashboard-type-label);
+  padding: 2px var(--space-2);
   color: var(--color-tier-2);
   background: var(--color-tier-2-bg);
 }
 .badge--tier-t3 {
-  font-size: 10px;
-  padding: 1px var(--space-1);
+  font-size: var(--dashboard-type-label);
+  padding: 2px var(--space-2);
   color: var(--color-tier-3);
   background: var(--color-tier-3-bg);
 }
 
 /* Blast radius */
 .badge--blast-high {
-  font-size: 10px;
-  padding: 1px var(--space-1);
+  font-size: var(--dashboard-type-label);
+  padding: 2px var(--space-2);
   color: var(--color-blast-high);
   background: var(--color-blast-high-bg);
 }
 .badge--blast-medium {
-  font-size: 10px;
-  padding: 1px var(--space-1);
+  font-size: var(--dashboard-type-label);
+  padding: 2px var(--space-2);
   color: var(--color-blast-medium);
   background: var(--color-blast-medium-bg);
 }
 .badge--blast-low {
-  font-size: 10px;
-  padding: 1px var(--space-1);
+  font-size: var(--dashboard-type-label);
+  padding: 2px var(--space-2);
   color: var(--color-blast-low);
   background: var(--color-blast-low-bg);
 }
 
 .badge--load-bearing {
-  font-size: 10px;
-  padding: 1px var(--space-1);
+  font-size: var(--dashboard-type-label);
+  padding: 2px var(--space-2);
   color: var(--color-fails);
   background: var(--color-fails-bg);
   border: 1px solid var(--color-confidence-broken-border);

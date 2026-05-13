@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
-import type { PanelId } from '../../model/types';
+import type { HypothesisId, PanelId } from '../../model/types';
+import { buildPanelUrl, isAddressablePanelId } from '../../model/panels';
 import type { GovernorBriefView } from '../../views/governor-brief';
+import {
+  resolveGovernorBriefResearchTrace,
+  type BuildPassProvenanceManifest,
+} from '../../views/governorBriefProvenance';
+import { InlineMarkdownText } from '../shared/InlineMarkdownText';
 import { renderOrderedSections } from './sections/renderOrderedSections';
 import './StrategySeedPanel.css';
 
@@ -18,6 +24,11 @@ interface StrategySeedView {
   currentReality: string;
   strategicBet: string;
   validationStandard: string;
+}
+
+interface ResearchItem {
+  label: string;
+  markdown: string;
 }
 
 function extractMarkdownSection(markdown: string, heading: string): string {
@@ -61,11 +72,33 @@ function parseStrategySeed(markdown: string): StrategySeedView | null {
   };
 }
 
+function parseWhatWasResearched(markdown: string): ResearchItem[] {
+  const section = extractMarkdownSection(markdown, 'What Was Researched');
+  if (!section) return [];
+
+  return section
+    .split(/\n(?=-\s+)/)
+    .map(item => item.trim())
+    .filter(Boolean)
+    .map(item => item.replace(/^-+\s*/, ''))
+    .map(item => {
+      const match = item.match(/^\*\*(.+?)\*\*:\s*(.+)$/s);
+      if (!match) return null;
+      return {
+        label: match[1].trim(),
+        markdown: item.replace(/\s+/g, ' ').trim(),
+      };
+    })
+    .filter((item): item is ResearchItem => item !== null);
+}
+
 export function StrategySeedPanel({ view, sectionOrder, onSelectPanel }: Props) {
-  void view;
   void onSelectPanel;
 
   const [strategySeed, setStrategySeed] = useState<string | null>(null);
+  const [buildPassComplete, setBuildPassComplete] = useState<string | null>(null);
+  const [provenanceManifest, setProvenanceManifest] = useState<BuildPassProvenanceManifest | null>(null);
+  const [activeResearchSourcesLabel, setActiveResearchSourcesLabel] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -77,14 +110,22 @@ export function StrategySeedPanel({ view, sectionOrder, onSelectPanel }: Props) 
       return text.trim() || null;
     };
 
-    loadText('/problem.md')
-      .then(problemText => {
+    const loadJson = async <T,>(path: string): Promise<T | null> => {
+      const response = await fetch(path);
+      if (!response.ok) return null;
+      return response.json() as Promise<T>;
+    };
+
+    Promise.all([
+      loadText('/problem.md').catch(() => null),
+      loadText('/build-pass-complete.md').catch(() => null),
+      loadJson<BuildPassProvenanceManifest>('/build-pass-complete.provenance.json').catch(() => null),
+    ])
+      .then(([problemText, buildPassText, manifest]) => {
         if (cancelled) return;
         setStrategySeed(problemText);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setStrategySeed(null);
+        setBuildPassComplete(buildPassText);
+        setProvenanceManifest(manifest);
       });
 
     return () => {
@@ -93,6 +134,30 @@ export function StrategySeedPanel({ view, sectionOrder, onSelectPanel }: Props) 
   }, []);
 
   const parsedSeed = strategySeed ? parseStrategySeed(strategySeed) : null;
+
+  const researchedItems = resolveGovernorBriefResearchTrace(
+    buildPassComplete ? parseWhatWasResearched(buildPassComplete) : [],
+    provenanceManifest,
+    view.sourceEntriesByHypothesis,
+  );
+  const activeResearchItem = activeResearchSourcesLabel
+    ? researchedItems.find(item => item.label === activeResearchSourcesLabel) ?? null
+    : null;
+
+  function openResearchSources(label: string) {
+    setActiveResearchSourcesLabel(label);
+  }
+
+  function closeResearchSources() {
+    setActiveResearchSourcesLabel(null);
+  }
+
+  function hypothesisPanelUrl(id: HypothesisId): string {
+    if (typeof window === 'undefined' || !isAddressablePanelId(id)) {
+      return `?panel=${id}`;
+    }
+    return buildPanelUrl(id, window.location.href);
+  }
 
   return (
     <section
@@ -171,7 +236,118 @@ export function StrategySeedPanel({ view, sectionOrder, onSelectPanel }: Props) 
             )
           ),
         },
+        {
+          id: 'researchFindings',
+          render: () => researchedItems.length > 0 && (
+            <div className="governor-brief__section">
+              <div className="governor-brief__section-header">
+                <h3 className="governor-brief__section-title">Research Summary</h3>
+              </div>
+              <ul className="governor-brief__research-list">
+                {researchedItems.map(item => (
+                  <li key={item.label} className="governor-brief__research-item">
+                    <p className="governor-brief__research-summary">
+                      <InlineMarkdownText text={item.markdown} />
+                      {item.sources.length > 0 && (
+                        <>
+                          {' '}
+                          <button
+                            type="button"
+                            className="governor-brief__research-toggle"
+                            onClick={() => openResearchSources(item.label)}
+                          >
+                            View sources
+                          </button>
+                        </>
+                      )}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+        },
       ])}
+
+      {activeResearchItem && (
+        <div
+          className="governor-brief__sources-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="strategy-seed-sources-title"
+          onClick={event => {
+            if (event.target === event.currentTarget) {
+              closeResearchSources();
+            }
+          }}
+        >
+          <div className="governor-brief__sources-dialog">
+            <div className="governor-brief__sources-dialog-header">
+              <div className="governor-brief__sources-dialog-heading">
+                <p className="governor-brief__sources-dialog-eyebrow">Research Summary</p>
+                <h3 className="governor-brief__sources-dialog-title" id="strategy-seed-sources-title">
+                  Sources
+                </h3>
+                <p className="governor-brief__sources-dialog-label">{activeResearchItem.label}</p>
+              </div>
+              <button
+                type="button"
+                className="governor-brief__sources-dialog-close"
+                onClick={closeResearchSources}
+                aria-label="Close sources"
+              >
+                Close
+              </button>
+            </div>
+
+            <ul className="governor-brief__research-sources">
+              {activeResearchItem.sources.map(source => (
+                <li
+                  key={[
+                    source.hypothesisId,
+                    source.kind,
+                    source.url ?? '',
+                    source.name ?? '',
+                    source.raw,
+                  ].join('::')}
+                  className="governor-brief__research-source"
+                >
+                  <div className="governor-brief__research-source-meta">
+                    <a
+                      href={hypothesisPanelUrl(source.hypothesisId)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="governor-brief__research-source-pill"
+                    >
+                      {source.hypothesisLabel}
+                    </a>
+                    <span className="governor-brief__research-source-kind">
+                      {source.kind === 'evidence' ? 'Evidence' : 'Research'}
+                    </span>
+                  </div>
+                  <p className="governor-brief__research-source-text">
+                    {source.url ? (
+                      <>
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="source-link"
+                        >
+                          {source.name ?? source.url}
+                        </a>
+                        {source.note && <>: {source.note}</>}
+                      </>
+                    ) : (
+                      source.name ?? source.description
+                    )}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

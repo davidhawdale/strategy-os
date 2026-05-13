@@ -4,8 +4,8 @@
 }
 
 .risk-group__heading {
-  font-size: var(--dashboard-type-label);
-  font-weight: var(--dashboard-type-label-weight);
+  font-size: var(--dashboard-type-section-label);
+  font-weight: var(--dashboard-type-section-label-weight);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin: 0 0 var(--space-3);

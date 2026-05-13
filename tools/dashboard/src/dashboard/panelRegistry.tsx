@@ -116,12 +116,11 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
   {
     id: 'governorBrief',
     navigation: {
-      label: 'Governor Brief',
-      shortLabel: 'Brief',
+      label: 'Actions',
+      shortLabel: 'Actions',
       group: 'now',
-      description: 'Research findings, blocking escalations, and top-ranked gaps requiring governor attention.',
+      description: 'Blocking escalations and top-ranked gaps requiring governor attention.',
       sections: [
-        { id: 'researchFindings', label: 'Research Findings' },
         { id: 'escalations', label: 'Blocking Escalations' },
         { id: 'gaps', label: 'Top Gaps' },
       ],
@@ -140,9 +139,10 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
       label: 'Strategy Seed',
       shortLabel: 'Seed',
       group: 'now',
-      description: 'Strategy seed context for governor review.',
+      description: 'Strategy seed and research findings for governor review.',
       sections: [
         { id: 'strategySeed', label: 'Strategy Seed' },
+        { id: 'researchFindings', label: 'Research Summary' },
       ],
     },
     render: ({ register, gapAnalysis, queueView, sectionOrders, onSelectPanel }) => (
@@ -300,8 +300,8 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
   {
     id: 'risk',
     navigation: {
-      label: 'Risk',
-      shortLabel: 'Risk',
+      label: 'Assumptions',
+      shortLabel: 'Assumptions',
       group: 'diagnose',
       description: 'Load-bearing assumptions, criticality summary, and kill signals.',
       sections: [

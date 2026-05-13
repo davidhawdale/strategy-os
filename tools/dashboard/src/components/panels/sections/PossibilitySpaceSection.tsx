@@ -33,6 +33,25 @@ export function PossibilitySpaceSection({ possibilitySpace: ps, label }: Props) 
         </div>
       )}
 
+      {ps.entries.length > 0 && (
+        <div className="possibility-zone">
+          <h4 className="subsection-heading">Considered</h4>
+          <ul className="possibility-considered-list">
+            {ps.entries.map((entry, i) => {
+              const clean = stripMd(entry);
+              const colonIdx = clean.indexOf(':');
+              const label = colonIdx !== -1 ? clean.slice(0, colonIdx + 1) : null;
+              const rest = colonIdx !== -1 ? clean.slice(colonIdx + 1).trim() : clean;
+              return (
+                <li key={i} className="possibility-considered-item">
+                  {label && <strong>{label}</strong>}{label ? ' ' : ''}{rest}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       {ps.carried.length > 0 && (
         <div className="possibility-zone">
           <h4 className="subsection-heading">Alternatives carried</h4>
@@ -50,15 +69,9 @@ export function PossibilitySpaceSection({ possibilitySpace: ps, label }: Props) 
                   : { name: stripMd(dashIdx !== -1 ? c.slice(0, dashIdx) : c).trim(), desc: undefined };
                 return (
                   <li key={i} className="possibility-carried-item">
-                    <span className="possibility-carried-item__entry">
-                      <strong>{entryName} (#{numMatch[1]})</strong>
-                      {entryDesc && <> — {entryDesc}</>}
-                    </span>
-                    {reason && (
-                      <ul className="possibility-subbullet-list">
-                        <li className="possibility-subbullet">{reason}</li>
-                      </ul>
-                    )}
+                    <strong>{entryName} (#{numMatch[1]})</strong>
+                    {entryDesc && <> — {entryDesc}</>}
+                    {reason && <> — {reason}</>}
                   </li>
                 );
               }
@@ -66,12 +79,8 @@ export function PossibilitySpaceSection({ possibilitySpace: ps, label }: Props) 
               const entryText = dashIdx !== -1 ? c.slice(0, dashIdx) : c;
               return (
                 <li key={i} className="possibility-carried-item">
-                  <span className="possibility-carried-item__entry"><strong>{stripMd(entryText)}</strong></span>
-                  {reason && (
-                    <ul className="possibility-subbullet-list">
-                      <li className="possibility-subbullet">{reason}</li>
-                    </ul>
-                  )}
+                  <strong>{stripMd(entryText)}</strong>
+                  {reason && <> — {reason}</>}
                 </li>
               );
             })}
@@ -96,15 +105,9 @@ export function PossibilitySpaceSection({ possibilitySpace: ps, label }: Props) 
               const detail = rawDetail?.replace(/^eliminated:\s*/i, '');
               return (
                 <li key={i} className="possibility-eliminated-item">
-                  <span className="possibility-eliminated-item__entry">
-                    <strong>{entryName}{numMatch ? ` (#${numMatch[1]})` : ''}</strong>
-                    {entryDesc && <> — {entryDesc}</>}
-                  </span>
-                  {detail && (
-                    <ul className="possibility-subbullet-list">
-                      <li className="possibility-subbullet">{stripMd(detail)}</li>
-                    </ul>
-                  )}
+                  <strong>{entryName}{numMatch ? ` (#${numMatch[1]})` : ''}</strong>
+                  {entryDesc && <> — {entryDesc}</>}
+                  {detail && <> — {stripMd(detail)}</>}
                 </li>
               );
             })}

@@ -522,7 +522,7 @@ export function extractPossibilitySpace(text: string): PossibilitySpace | undefi
       if (trimmed.startsWith('-')) {
         const itemText = trimmed.replace(/^-\s*/, '');
         // Try splitting on " -- "
-        const parts = itemText.split(/\s+--\s+/);
+        const parts = itemText.split(/\s+(?:--|—)\s+/);
         if (parts.length >= 2) {
           eliminated.push({
             candidate: parts[0].trim(),

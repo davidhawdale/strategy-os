@@ -1,5 +1,6 @@
 .kill-condition-block {
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: var(--color-on-surface);
   line-height: var(--leading-relaxed);
   padding: var(--space-4);
