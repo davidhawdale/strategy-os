@@ -22,20 +22,18 @@ export interface Section {
 }
 
 const SECTION_PATTERNS: [RegExp, SectionId][] = [
-  [/^##\s+1\.\s+Problem/i, 'problem'],
-  [/^##\s+2\.\s+Segment/i, 'segment'],
-  [/^##\s+3\.\s+Unit\s+Economics/i, 'unitEconomics'],
-  [/^##\s+4\.\s+Value\s+Proposition/i, 'valueProposition'],
-  [/^##\s+5\.\s+Growth\s+Architecture/i, 'growthArchitecture'],
-  [/^##\s+6\.\s+Solution\s+Design/i, 'solutionDesign'],
-  [/^##\s+7\.\s+GTM\s+Plan/i, 'gtmPlan'],
-  [/^##\s+8\.\s+Destruction\s+Log/i, 'destructionLog'],
-  [/^##\s+9\.\s+Gap\s+Ledger/i, 'gapLedger'],
+  [/^##\s+\d+\.\s+Problem\s*$/i, 'problem'],
+  [/^##\s+\d+\.\s+Segment\s*$/i, 'segment'],
+  [/^##\s+\d+\.\s+Unit\s+Economics\s*$/i, 'unitEconomics'],
+  [/^##\s+\d+\.\s+Value\s+Proposition\s*$/i, 'valueProposition'],
+  [/^##\s+\d+\.\s+Growth\s+Architecture(?:\s+\(.+\))?\s*$/i, 'growthArchitecture'],
+  [/^##\s+\d+\.\s+Solution\s+Design(?:\s+\(.+\))?\s*$/i, 'solutionDesign'],
+  [/^##\s+\d+\.\s+GTM\s+Plan(?:\s+\(.+\))?\s*$/i, 'gtmPlan'],
+  [/^##\s+\d+\.\s+Destruction\s+Log\s*$/i, 'destructionLog'],
+  [/^##\s+\d+\.\s+Gap\s+Ledger\s*$/i, 'gapLedger'],
   // Fallback unnumbered patterns
   [/^##\s+Destruction\s+Log/i, 'destructionLog'],
   [/^##\s+Gap\s+Ledger/i, 'gapLedger'],
-  // Legacy: ## 4. Solution Design (old numbering before Value Proposition existed)
-  [/^##\s+4\.\s+Solution/i, 'solutionDesign'],
 ];
 
 function identifySection(text: string): SectionId | null {

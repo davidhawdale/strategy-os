@@ -28,6 +28,7 @@ export function parseTermHelpMarkdown(markdown: string): TermHelpMap {
 
   const keyIndex = header.indexOf('key');
   const termIndex = header.indexOf('term');
+  const dashboardLabelIndex = header.indexOf('dashboard label');
   const helpIndex = header.indexOf('help text');
   const sourceIndex = header.indexOf('canonical source');
   if (keyIndex < 0 || termIndex < 0 || helpIndex < 0) return {};
@@ -41,6 +42,7 @@ export function parseTermHelpMarkdown(markdown: string): TermHelpMap {
     const entry: TermHelpEntry = {
       key,
       term,
+      dashboardLabel: dashboardLabelIndex >= 0 ? row[dashboardLabelIndex]?.trim() || undefined : undefined,
       helpText,
       canonicalSource: sourceIndex >= 0 ? row[sourceIndex]?.trim() || undefined : undefined,
     };

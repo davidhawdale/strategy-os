@@ -5,15 +5,16 @@ import { parseTermHelpMarkdown } from '../parser';
 describe('parseTermHelpMarkdown', () => {
   it('parses keyed term help rows from markdown', () => {
     const terms = parseTermHelpMarkdown(`
-| Key | Term | Help Text | Canonical Source |
-| --- | --- | --- | --- |
-| assumptions | Assumptions | Things that must be true. | STANDARDS.md |
-| t3 | T3 | Needs real-world validation. | CLAUDE.md |
+| Key | Term | Dashboard Label | Help Text | Canonical Source |
+| --- | --- | --- | --- | --- |
+| assumptions | Assumptions | Dependencies | Things that must be true. | STANDARDS.md |
+| t3 | T3 | | Needs real-world validation. | CLAUDE.md |
 `);
 
     expect(terms.assumptions).toEqual({
       key: 'assumptions',
       term: 'Assumptions',
+      dashboardLabel: 'Dependencies',
       helpText: 'Things that must be true.',
       canonicalSource: 'STANDARDS.md',
     });

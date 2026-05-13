@@ -119,3 +119,37 @@ describe('confidence field variants', () => {
     expect(h.evidence).toHaveLength(0);
   });
 });
+
+describe('section numbering tolerance', () => {
+  it('recognizes Unit Economics by name when the heading number has drifted', () => {
+    const md = `
+## 3. Value Proposition
+
+**Claim:** A value proposition claim.
+
+## 4. Unit Economics
+
+**Claim:** A unit economics claim.
+
+**Confidence:** RESEARCHED
+
+**Evidence:**
+- [WEB_RESEARCH] [T1] 2026-05-10 -- [Source](https://example.com): supporting evidence.
+
+## 5. Solution Design (Proposed)
+
+**Support State:** PROPOSED
+`;
+
+    const sections = splitSections(md);
+    const section = sections.get('unitEconomics')!;
+    const h = parseHypothesis(section, 'unitEconomics').hypothesis;
+
+    expect(section).toBeDefined();
+    expect(section.rawText).toContain('A unit economics claim.');
+    expect(section.rawText).not.toContain('Solution Design');
+    expect(h.claim).toBe('A unit economics claim.');
+    expect(h.confidence).toBe('RESEARCHED');
+    expect(h.evidence).toHaveLength(1);
+  });
+});
