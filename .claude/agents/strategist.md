@@ -125,7 +125,7 @@ Autonomous end-to-end strategy construction from governor input.
    - UNVALIDATED: Stated, no qualifying evidence
    - BROKEN: Evidence contradicts the claim
 
-6. Write `strategy/hypotheses.md` with complete register (sections 1-7). Leave sections 8 (Destruction Log) and 9 (Gap Ledger) for Gap Definer.
+6. Write `strategy/hypotheses.md` with the complete register, using exactly this section numbering: 1 Problem, 2 Segment, 3 Unit Economics, 4 Value Proposition, 5 Growth Architecture, 6 Solution Design, 7 GTM Plan. Leave sections 8 (Destruction Log) and 9 (Gap Ledger) for Gap Definer.
 
 7. **Escalation check.** If any escalation conditions were triggered (values decisions, ground-truth gaps blocking strategy, conflicting evidence requiring judgment), write escalations to the path declared in `escalates-to` in the frontmatter, following the Escalation ID Convention in STANDARDS.md.
 
