@@ -15,11 +15,11 @@ export function GapLedgerPanel({ view, sectionOrder }: Props) {
     <section
       id="panel-gapLedger"
       role="tabpanel"
-      aria-label="Gap Ledger"
+      aria-label="Gaps"
       className="panel"
     >
       <div className="panel__header">
-        <h2 className="panel__title">Gap Ledger</h2>
+        <h2 className="panel__title">Gaps</h2>
         <p className="panel__subtitle">Ranked gaps and gate decision</p>
       </div>
 

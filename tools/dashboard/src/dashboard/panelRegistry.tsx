@@ -208,7 +208,7 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
   {
     id: 'gapLedger',
     navigation: {
-      label: 'Gap Ledger',
+      label: 'Gaps',
       shortLabel: 'Gaps',
       group: 'diagnose',
       description: 'Ranked strategic gaps, gate decision, and full gap records.',
