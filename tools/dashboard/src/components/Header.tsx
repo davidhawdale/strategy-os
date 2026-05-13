@@ -11,6 +11,7 @@ interface Props {
   onRefresh: () => void;
   onOpenDiagnostics: () => void;
   onOpenLayoutEditor: () => void;
+  onOpenSeedDialog?: () => void;
   onReset?: () => void;
   hasGapAnalysis: boolean;
 }
@@ -25,6 +26,7 @@ export function Header({
   onRefresh,
   onOpenDiagnostics,
   onOpenLayoutEditor,
+  onOpenSeedDialog,
   onReset,
   hasGapAnalysis,
 }: Props) {
@@ -87,6 +89,11 @@ export function Header({
           <button className="header__refresh" onClick={onOpenLayoutEditor} aria-label="Open layout editor">
             Layout
           </button>
+          {onOpenSeedDialog && (
+            <button className="header__refresh" onClick={onOpenSeedDialog} aria-label="Open demo seed dialog">
+              Demo Seed Dialog
+            </button>
+          )}
           {onReset && (
             <button className="header__reset" onClick={onReset} aria-label="Reset to blank state">
               Start Over

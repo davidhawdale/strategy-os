@@ -1031,6 +1031,7 @@ export interface HypothesisDetailView {
 
 export type PanelId =
   | 'governorBrief'
+  | 'strategySeed'
   | 'problem'
   | 'segment'
   | 'unitEconomics'

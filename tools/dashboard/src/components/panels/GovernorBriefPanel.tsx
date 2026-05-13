@@ -16,16 +16,6 @@ interface Props {
   onSelectPanel: (panel: PanelId) => void;
 }
 
-interface StrategySeedView {
-  title: string;
-  date?: string;
-  mode?: string;
-  futureState: string;
-  currentReality: string;
-  strategicBet: string;
-  validationStandard: string;
-}
-
 interface GovernorBriefResearchItem {
   label: string;
   markdown: string;
@@ -39,37 +29,6 @@ function extractMarkdownSection(markdown: string, heading: string): string {
   const after = markdown.slice(match.index + match[0].length);
   const nextHeading = after.search(/\n##\s+/);
   return (nextHeading === -1 ? after : after.slice(0, nextHeading)).trim();
-}
-
-function extractSection(markdown: string, heading: string): string {
-  return extractMarkdownSection(markdown, heading).replace(/\s+/g, ' ');
-}
-
-function extractField(markdown: string, label: string): string | undefined {
-  const match = markdown.match(new RegExp(`^${label}:\\s*(.+)$`, 'im'));
-  return match?.[1]?.trim();
-}
-
-function parseStrategySeed(markdown: string): StrategySeedView | null {
-  const title = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim();
-  const futureState = extractSection(markdown, 'Future State');
-  const currentReality = extractSection(markdown, 'Current Reality');
-  const strategicBet = extractSection(markdown, 'Strategic Bet');
-  const validationStandard = extractSection(markdown, 'Validation Standard');
-
-  if (!title || !futureState || !currentReality || !strategicBet || !validationStandard) {
-    return null;
-  }
-
-  return {
-    title,
-    date: extractField(markdown, 'Date'),
-    mode: extractField(markdown, 'Mode'),
-    futureState,
-    currentReality,
-    strategicBet,
-    validationStandard,
-  };
 }
 
 function parseWhatWasResearched(markdown: string): GovernorBriefResearchItem[] {
@@ -94,7 +53,8 @@ function parseWhatWasResearched(markdown: string): GovernorBriefResearchItem[] {
 }
 
 export function GovernorBriefPanel({ view, sectionOrder, onSelectPanel }: Props) {
-  const [strategySeed, setStrategySeed] = useState<string | null>(null);
+  void onSelectPanel;
+
   const [buildPassComplete, setBuildPassComplete] = useState<string | null>(null);
   const [provenanceManifest, setProvenanceManifest] = useState<BuildPassProvenanceManifest | null>(null);
   const [activeResearchSourcesLabel, setActiveResearchSourcesLabel] = useState<string | null>(null);
@@ -116,23 +76,20 @@ export function GovernorBriefPanel({ view, sectionOrder, onSelectPanel }: Props)
     };
 
     Promise.all([
-      loadText('/problem.md').catch(() => null),
       loadText('/build-pass-complete.md').catch(() => null),
       loadJson<BuildPassProvenanceManifest>('/build-pass-complete.provenance.json').catch(() => null),
     ])
-      .then(([problemText, buildPassText, manifest]) => {
+      .then(([buildPassText, manifest]) => {
         if (cancelled) return;
-        setStrategySeed(problemText);
         setBuildPassComplete(buildPassText);
         setProvenanceManifest(manifest);
-      })
+      });
 
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const parsedSeed = strategySeed ? parseStrategySeed(strategySeed) : null;
   const researchedItems = resolveGovernorBriefResearchTrace(
     buildPassComplete ? parseWhatWasResearched(buildPassComplete) : [],
     provenanceManifest,
@@ -158,6 +115,14 @@ export function GovernorBriefPanel({ view, sectionOrder, onSelectPanel }: Props)
     return buildPanelUrl(id, window.location.href);
   }
 
+  function dashboardPanelUrl(panel: PanelId): string {
+    if (typeof window === 'undefined' || !isAddressablePanelId(panel)) {
+      return `?panel=${panel}`;
+    }
+
+    return buildPanelUrl(panel, window.location.href);
+  }
+
   return (
     <section
       id="panel-governor-brief"
@@ -168,100 +133,137 @@ export function GovernorBriefPanel({ view, sectionOrder, onSelectPanel }: Props)
       <div className="governor-brief-panel__header">
         <h2 className="governor-brief-panel__title">Governor Brief</h2>
         <p className="governor-brief-panel__subtitle">
-          Blocking escalations and top-ranked gaps requiring governor attention.
+          Research findings, blocking escalations, and top-ranked gaps requiring governor attention.
         </p>
       </div>
 
-      {strategySeed && (
-        parsedSeed ? (
-          <section className="governor-brief__seed-card" aria-label="Strategy Seed">
-            <div className="governor-brief__seed-header">
-              <h3 className="governor-brief__seed-title">{parsedSeed.title}</h3>
-              <div className="governor-brief__seed-meta">
-                {parsedSeed.date && (
-                  <span className="governor-brief__seed-meta-item">
-                    <span className="governor-brief__seed-meta-label">Date:</span>
-                    <span>{parsedSeed.date}</span>
-                  </span>
-                )}
-                {parsedSeed.mode && (
-                  <span className="governor-brief__seed-mode">{parsedSeed.mode}</span>
+      {renderOrderedSections(sectionOrder, [
+        {
+          id: 'researchFindings',
+          render: () => researchedItems.length > 0 && (
+            <div className="governor-brief__section">
+              <div className="governor-brief__section-header">
+                <h3 className="governor-brief__section-title">Research Findings</h3>
+              </div>
+              <ul className="governor-brief__research-list">
+                {researchedItems.map(item => (
+                  <li key={item.label} className="governor-brief__research-item">
+                    <p className="governor-brief__research-summary">
+                      <InlineMarkdownText text={item.markdown} />
+                      {item.sources.length > 0 && (
+                        <>
+                          {' '}
+                          <button
+                            type="button"
+                            className="governor-brief__research-toggle"
+                            onClick={() => openResearchSources(item.label)}
+                          >
+                            View sources
+                          </button>
+                        </>
+                      )}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+        },
+        {
+          id: 'escalations',
+          render: () => (
+            <div className="governor-brief__section">
+              <div className="governor-brief__section-header">
+                <h3 className="governor-brief__section-title">Blocking Escalations</h3>
+                {view.openEscalations.length > 0 && (
+                  <a
+                    className="governor-brief__section-link"
+                    href={dashboardPanelUrl('escalations')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View all →
+                  </a>
                 )}
               </div>
+              {view.openEscalations.length === 0 ? (
+                <div className="governor-brief__empty">No open escalations.</div>
+              ) : (
+                <div className="governor-brief__link-list">
+                  {view.openEscalations.map(e => (
+                    <a
+                      key={e.id}
+                      className="governor-brief__link-item"
+                      href={dashboardPanelUrl('escalations')}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="governor-brief__link-item-body">
+                        <span className="governor-brief__link-item-id">{e.id}</span>
+                        <span className="governor-brief__link-item-title">{e.title}</span>
+                      </span>
+                      {e.blastRadius && (
+                        <span className="governor-brief__link-item-meta">{e.blastRadius}</span>
+                      )}
+                      <span className="governor-brief__link-arrow">→</span>
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
-
-            <div className="governor-brief__seed-grid">
-              <article className="governor-brief__seed-panel">
-                <div className="governor-brief__seed-panel-label">
-                  <span className="governor-brief__seed-panel-icon governor-brief__seed-panel-icon--blue" aria-hidden="true">◎</span>
-                  <span>Future State</span>
+          ),
+        },
+        {
+          id: 'gaps',
+          render: () => (
+            <div className="governor-brief__section">
+              <div className="governor-brief__section-header">
+                <h3 className="governor-brief__section-title">Top Gaps</h3>
+                {view.topGaps.length > 0 && (
+                  <a
+                    className="governor-brief__section-link"
+                    href={dashboardPanelUrl('gapLedger')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View all →
+                  </a>
+                )}
+              </div>
+              {view.topGaps.length === 0 ? (
+                <div className="governor-brief__empty">
+                  No gap analysis found. Run the Gap Definer to compute gaps.
                 </div>
-                <p className="governor-brief__seed-panel-text">{parsedSeed.futureState}</p>
-              </article>
-
-              <article className="governor-brief__seed-panel">
-                <div className="governor-brief__seed-panel-label">
-                  <span className="governor-brief__seed-panel-icon governor-brief__seed-panel-icon--amber" aria-hidden="true">ϟ</span>
-                  <span>Current Reality</span>
+              ) : (
+                <div className="governor-brief__link-list">
+                  {view.topGaps.map((gap, i) => (
+                    <a
+                      key={gap.id ?? i}
+                      className="governor-brief__link-item"
+                      href={dashboardPanelUrl('gapLedger')}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="governor-brief__link-item-body">
+                        <span className="governor-brief__link-item-id">{gap.id ?? `G-0${i + 1}`}</span>
+                        <span className="governor-brief__link-item-title">
+                          {gap.target} — {gap.dimension}
+                        </span>
+                      </span>
+                      {gap.finalPriorityScore !== undefined && (
+                        <span className="governor-brief__link-item-meta">
+                          Priority {gap.finalPriorityScore}
+                        </span>
+                      )}
+                      <span className="governor-brief__link-arrow">→</span>
+                    </a>
+                  ))}
                 </div>
-                <p className="governor-brief__seed-panel-text">{parsedSeed.currentReality}</p>
-              </article>
-
-              <article className="governor-brief__seed-panel">
-                <div className="governor-brief__seed-panel-label">
-                  <span className="governor-brief__seed-panel-icon governor-brief__seed-panel-icon--green" aria-hidden="true">↗</span>
-                  <span>Strategic Bet</span>
-                </div>
-                <p className="governor-brief__seed-panel-text">{parsedSeed.strategicBet}</p>
-              </article>
-
-              <article className="governor-brief__seed-panel">
-                <div className="governor-brief__seed-panel-label">
-                  <span className="governor-brief__seed-panel-icon governor-brief__seed-panel-icon--purple" aria-hidden="true">☑</span>
-                  <span>Validation Standard</span>
-                </div>
-                <p className="governor-brief__seed-panel-text">{parsedSeed.validationStandard}</p>
-              </article>
+              )}
             </div>
-          </section>
-        ) : (
-          <div className="governor-brief__section">
-            <div className="governor-brief__section-header">
-              <h3 className="governor-brief__section-title">Strategy Seed</h3>
-            </div>
-            <pre className="governor-brief__strategy-seed">{strategySeed}</pre>
-          </div>
-        )
-      )}
-
-      {researchedItems.length > 0 && (
-        <div className="governor-brief__section">
-          <div className="governor-brief__section-header">
-            <h3 className="governor-brief__section-title">Research Findings</h3>
-          </div>
-          <ul className="governor-brief__research-list">
-            {researchedItems.map(item => (
-              <li key={item.label} className="governor-brief__research-item">
-                <p className="governor-brief__research-summary">
-                  <InlineMarkdownText text={item.markdown} />
-                  {item.sources.length > 0 && (
-                    <>
-                      {' '}
-                      <button
-                        type="button"
-                        className="governor-brief__research-toggle"
-                        onClick={() => openResearchSources(item.label)}
-                      >
-                        View sources
-                      </button>
-                    </>
-                  )}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+          ),
+        },
+      ])}
 
       {activeResearchItem && (
         <div
@@ -303,7 +305,7 @@ export function GovernorBriefPanel({ view, sectionOrder, onSelectPanel }: Props)
                     source.url ?? '',
                     source.name ?? '',
                     source.raw,
-                ].join('::')}
+                  ].join('::')}
                   className="governor-brief__research-source"
                 >
                   <div className="governor-brief__research-source-meta">
@@ -342,95 +344,6 @@ export function GovernorBriefPanel({ view, sectionOrder, onSelectPanel }: Props)
           </div>
         </div>
       )}
-
-      {renderOrderedSections(sectionOrder, [
-        {
-          id: 'escalations',
-          render: () => (
-            <div className="governor-brief__section">
-              <div className="governor-brief__section-header">
-                <h3 className="governor-brief__section-title">Blocking Escalations</h3>
-                {view.openEscalations.length > 0 && (
-                  <button
-                    className="governor-brief__section-link"
-                    onClick={() => onSelectPanel('escalations')}
-                  >
-                    View all →
-                  </button>
-                )}
-              </div>
-              {view.openEscalations.length === 0 ? (
-                <div className="governor-brief__empty">No open escalations.</div>
-              ) : (
-                <div className="governor-brief__link-list">
-                  {view.openEscalations.map(e => (
-                    <button
-                      key={e.id}
-                      className="governor-brief__link-item"
-                      onClick={() => onSelectPanel('escalations')}
-                    >
-                      <span className="governor-brief__link-item-body">
-                        <span className="governor-brief__link-item-id">{e.id}</span>
-                        <span className="governor-brief__link-item-title">{e.title}</span>
-                      </span>
-                      {e.blastRadius && (
-                        <span className="governor-brief__link-item-meta">{e.blastRadius}</span>
-                      )}
-                      <span className="governor-brief__link-arrow">→</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ),
-        },
-        {
-          id: 'gaps',
-          render: () => (
-            <div className="governor-brief__section">
-              <div className="governor-brief__section-header">
-                <h3 className="governor-brief__section-title">Top Gaps</h3>
-                {view.topGaps.length > 0 && (
-                  <button
-                    className="governor-brief__section-link"
-                    onClick={() => onSelectPanel('gapLedger')}
-                  >
-                    View all →
-                  </button>
-                )}
-              </div>
-              {view.topGaps.length === 0 ? (
-                <div className="governor-brief__empty">
-                  No gap analysis found. Run the Gap Definer to compute gaps.
-                </div>
-              ) : (
-                <div className="governor-brief__link-list">
-                  {view.topGaps.map((gap, i) => (
-                    <button
-                      key={gap.id ?? i}
-                      className="governor-brief__link-item"
-                      onClick={() => onSelectPanel('gapLedger')}
-                    >
-                      <span className="governor-brief__link-item-body">
-                        <span className="governor-brief__link-item-id">{gap.id ?? `G-0${i + 1}`}</span>
-                        <span className="governor-brief__link-item-title">
-                          {gap.target} — {gap.dimension}
-                        </span>
-                      </span>
-                      {gap.finalPriorityScore !== undefined && (
-                        <span className="governor-brief__link-item-meta">
-                          Priority {gap.finalPriorityScore}
-                        </span>
-                      )}
-                      <span className="governor-brief__link-arrow">→</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ),
-        },
-      ])}
     </section>
   );
 }

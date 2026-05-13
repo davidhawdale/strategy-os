@@ -55,7 +55,7 @@ export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
           <textarea
             id="onboarding-future-state"
             className="onboarding-textarea"
-            rows={3}
+            rows={2}
             value={futureState}
             onChange={e => setFutureState(e.target.value)}
             placeholder="Describe the destination: what would exist, improve, or become possible if this strategy worked."
@@ -70,7 +70,7 @@ export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
           <textarea
             id="onboarding-current-reality"
             className="onboarding-textarea"
-            rows={3}
+            rows={2}
             value={currentReality}
             onChange={e => setCurrentReality(e.target.value)}
             placeholder="Describe the situation, observation, gap, constraint, trend, or analogue that prompted the question."
@@ -97,7 +97,7 @@ export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
           <textarea
             id="onboarding-strategic-bet"
             className="onboarding-textarea"
-            rows={3}
+            rows={2}
             value={strategicBet}
             onChange={e => setStrategicBet(e.target.value)}
             placeholder="Describe the initial product, market, model, expansion, or positioning bet you want the system to investigate."
@@ -112,7 +112,7 @@ export function OnboardingDialog({ onDismiss, onGenerate }: Props) {
           <textarea
             id="onboarding-validation-standard"
             className="onboarding-textarea"
-            rows={3}
+            rows={2}
             value={validationStandard}
             onChange={e => setValidationStandard(e.target.value)}
             placeholder="Describe what must be true, what evidence would build confidence, and what evidence would kill or change the strategy."

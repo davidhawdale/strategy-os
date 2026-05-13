@@ -795,12 +795,12 @@
   background: #ffffff;
   border: 1px solid #e7e5e4;
   border-radius: var(--radius-lg);
-  padding: var(--space-8);
-  max-width: 560px;
+  padding: var(--space-6);
+  max-width: 840px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -814,22 +814,24 @@
 
 .onboarding-title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
+  font-size: var(--dashboard-type-display-title);
+  font-weight: var(--dashboard-type-display-title-weight);
   color: #1c1917;
   margin: 0;
+  line-height: var(--leading-tight);
 }
 
 .onboarding-subtitle {
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: #78716c;
-  line-height: var(--leading-relaxed);
+  line-height: var(--leading-normal);
   margin: 0;
 }
 
 .onboarding-subtitle code {
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
+  font-size: var(--dashboard-type-body-md);
   background: #f5f5f4;
   padding: 1px 4px;
   border-radius: var(--radius-sm);
@@ -839,18 +841,21 @@
 .onboarding-field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 2px;
 }
 
 .onboarding-label {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-section-label-weight);
   color: #1c1917;
+  line-height: var(--leading-normal);
 }
 
 .onboarding-hint {
-  font-size: var(--text-xs);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: #78716c;
+  line-height: var(--leading-normal);
   margin: 0 0 var(--space-1);
 }
 
@@ -859,11 +864,12 @@
   background: #f5f5f4;
   border: 1px solid #e7e5e4;
   border-radius: var(--radius-md);
-  padding: var(--space-3);
+  padding: var(--space-2);
   font-family: var(--font-sans);
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: #1c1917;
-  line-height: var(--leading-relaxed);
+  line-height: var(--leading-normal);
   resize: vertical;
   box-sizing: border-box;
   transition: border-color var(--transition-fast);
@@ -883,14 +889,14 @@
   align-items: center;
   justify-content: flex-end;
   gap: var(--space-3);
-  padding-top: var(--space-2);
+  padding-top: var(--space-1);
   border-top: 1px solid #e7e5e4;
 }
 
 .onboarding-primary {
   padding: var(--space-2) var(--space-5);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: #1c1917;
   background: #f5f5f4;
   border: 1px solid #d6d3d1;
@@ -910,7 +916,8 @@
 
 .onboarding-skip {
   padding: var(--space-2) var(--space-3);
-  font-size: var(--text-sm);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: #78716c;
   background: transparent;
   border: none;
@@ -930,8 +937,8 @@
 
 .onboarding-mode-pill {
   padding: var(--space-1) var(--space-4);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--dashboard-type-body-md);
+  font-weight: var(--dashboard-type-body-md-weight);
   color: #78716c;
   background: #f5f5f4;
   border: 1px solid #e7e5e4;

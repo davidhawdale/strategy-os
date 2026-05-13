@@ -57,10 +57,11 @@ describe('renderDashboardPanel', () => {
     expect(result).not.toBeNull();
     expect(getDefaultNavigationPanelIds()[0]).toBe('governorBrief');
     expect(getDefaultSectionOrders().governorBrief).toEqual([
-      'strategySeed',
+      'researchFindings',
       'escalations',
       'gaps',
     ]);
+    expect(getDefaultSectionOrders().strategySeed).toEqual(['strategySeed']);
   });
 
   it('does not include the removed queue panel in navigation defaults', () => {

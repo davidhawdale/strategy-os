@@ -20,6 +20,7 @@ import { computeGovernorEscalationsView } from '../views/escalations';
 import { computeDecisionDeadlinesView } from '../views/deadlines';
 import { computeGovernorBriefView } from '../views/governor-brief';
 import { GovernorBriefPanel } from '../components/panels/GovernorBriefPanel';
+import { StrategySeedPanel } from '../components/panels/StrategySeedPanel';
 import type { SectionOrderMap } from './layoutModel';
 import { resolveSectionOrder } from './layoutModel';
 import { HYPOTHESIS_SECTION_PROFILES } from './hypothesisSectionProfiles';
@@ -118,9 +119,9 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
       label: 'Governor Brief',
       shortLabel: 'Brief',
       group: 'now',
-      description: 'Blocking escalations and top-ranked gaps requiring governor attention.',
+      description: 'Research findings, blocking escalations, and top-ranked gaps requiring governor attention.',
       sections: [
-        { id: 'strategySeed', label: 'Strategy Seed' },
+        { id: 'researchFindings', label: 'Research Findings' },
         { id: 'escalations', label: 'Blocking Escalations' },
         { id: 'gaps', label: 'Top Gaps' },
       ],
@@ -129,6 +130,25 @@ export const DASHBOARD_PANELS: DashboardPanelDefinition[] = [
       <GovernorBriefPanel
         view={computeGovernorBriefView(register, gapAnalysis, queueView)}
         sectionOrder={sectionOrders.governorBrief}
+        onSelectPanel={onSelectPanel}
+      />
+    ),
+  },
+  {
+    id: 'strategySeed',
+    navigation: {
+      label: 'Strategy Seed',
+      shortLabel: 'Seed',
+      group: 'now',
+      description: 'Strategy seed context for governor review.',
+      sections: [
+        { id: 'strategySeed', label: 'Strategy Seed' },
+      ],
+    },
+    render: ({ register, gapAnalysis, queueView, sectionOrders, onSelectPanel }) => (
+      <StrategySeedPanel
+        view={computeGovernorBriefView(register, gapAnalysis, queueView)}
+        sectionOrder={sectionOrders.strategySeed}
         onSelectPanel={onSelectPanel}
       />
     ),

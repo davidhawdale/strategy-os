@@ -120,6 +120,10 @@ function App() {
     handleRefresh();
   }
 
+  function handleOpenSeedDialog() {
+    setOnboardingDismissed(false);
+  }
+
   return (
     <TermHelpProvider>
       <div className="app">
@@ -154,6 +158,7 @@ function App() {
         onRefresh={handleRefresh}
         onOpenDiagnostics={() => setDiagnosticsOpen(true)}
         onOpenLayoutEditor={() => setLayoutEditorOpen(true)}
+        onOpenSeedDialog={handleOpenSeedDialog}
         onReset={() => setStartOverOpen(true)}
         hasGapAnalysis={!!loadedGapAnalysis}
       />
